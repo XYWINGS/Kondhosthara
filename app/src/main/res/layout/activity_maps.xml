@@ -14,16 +14,47 @@
         android:layout_height="20dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Your TextView Text Here" />
+        android:text="Your TextView Text Here"
+        android:textSize="16sp" />
 
     <!-- Add the Button -->
     <Button
-        android:id="@+id/locBtn"
+        android:id="@+id/conBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/getLoc" />
+        android:text="@string/conBtn" />
+
+    <Button
+        android:id="@+id/qrGenBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/qrGen" />
+
+    <Button
+        android:id="@+id/qrReadBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/readQR" />
+
+<!--    <fragment-->
+<!--        android:id="@+id/startLocationFragment"-->
+<!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Enter start location" />-->
+
+    <fragment
+        android:id="@+id/endLocationFragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter end location" />
     <!-- Add the map fragment -->
     <fragment
         xmlns:tools="http://schemas.android.com/tools"

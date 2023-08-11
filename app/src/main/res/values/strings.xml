@@ -2,4 +2,7 @@
     <string name="app_name">My Application</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="getLoc">Get Location</string>
+    <string name="conBtn">CalculateRoute</string>
+    <string name="qrGen">Generate QR Code</string>
+    <string name="readQR">Read QR Code</string>
 </resources>
