@@ -126,10 +126,7 @@ class MapsActivity :AppCompatActivity(),
                 Log.i(TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
             }
         })
-//
-//        locBtn.setOnClickListener {
-//
-//        }
+
 
         conBtn.setOnClickListener {
             if (!isJourneyStarted) {
@@ -316,30 +313,8 @@ class MapsActivity :AppCompatActivity(),
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private fun checkPermission(): Boolean {
-        return ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions() {
@@ -367,7 +342,7 @@ class MapsActivity :AppCompatActivity(),
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("debug", "Permissions granted")
+            Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
     }
 
