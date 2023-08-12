@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,7 +19,6 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 
 
-//import kotlinx.android.synthetic.activity_qrread.*
 
 
 class QRReadActivity : AppCompatActivity() {
@@ -25,12 +26,14 @@ class QRReadActivity : AppCompatActivity() {
     private lateinit var cameraSource: CameraSource
     private lateinit var cameraView: SurfaceView
     private val CAMERA_PERMISSION_REQUEST_CODE = 222
+    private lateinit var qrResultView :  TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrread)
 
         cameraView = findViewById(R.id.cameraView)
+        qrResultView = findViewById(R.id.qrResultView)
 
         if (checkPermission()) {
             initializeCameraSource()
@@ -91,10 +94,24 @@ class QRReadActivity : AppCompatActivity() {
                 val barcodes = detections.detectedItems
                 if (barcodes.size() > 0) {
                     val qrContent = barcodes.valueAt(0).displayValue
-                    // startNextActivity(qrContent)
+                    qrResultView.text = qrContent
+                    startNextActivity(qrContent)
                 }
             }
         })
+
+    }
+
+    private fun  startNextActivity(qrContent : String){
+        Toast.makeText(this, "QR DATA IS $qrContent", Toast.LENGTH_LONG)
+            .show()
+    }
+
+    private fun restartActivity() {
+        val intent = Intent(this, QRReadActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
     override fun onRequestPermissionsResult(
@@ -106,6 +123,7 @@ class QRReadActivity : AppCompatActivity() {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initializeCameraSource()
+                restartActivity()
                 Log.d("debug", "Camera Permissions granted")
             }
         }

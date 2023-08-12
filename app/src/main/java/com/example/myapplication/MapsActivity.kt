@@ -284,6 +284,7 @@ class MapsActivity :AppCompatActivity(),
                         isstartmarkerset = true
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+                        requestPermissions()
                     }
                 }
             } else {
@@ -334,6 +335,13 @@ class MapsActivity :AppCompatActivity(),
         )
     }
 
+    private fun restartActivity() {
+        val intent = Intent(this, MapsActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -342,6 +350,7 @@ class MapsActivity :AppCompatActivity(),
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            restartActivity()
             Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
     }
