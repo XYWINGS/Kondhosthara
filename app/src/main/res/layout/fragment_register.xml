@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.RegisterFragment">
+
+    <EditText
+        android:id="@+id/editTextTextRegisterName"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:autofillHints="@string/entername"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/entername"
+        android:inputType="textEmailAddress"
+        android:layout_margin="5dp"/>
+
+    <EditText
+        android:id="@+id/editTextTextRegisterEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:autofillHints="@string/hintemail"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/hintemail"
+        android:inputType="textEmailAddress"
+        android:layout_margin="5dp"/>
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/hintpassword"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/hintpassword"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPasswordConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/retypepass"
+        android:ems="10"
+        android:hint="@string/retypepass"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterIDNumber"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/enterId"
+        android:ems="10"
+        android:hint="@string/enterId"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterAddress"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/enterAddress"
+        android:ems="10"
+        android:hint="@string/enterAddress"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPhoneNum"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/txtphone"
+        android:ems="10"
+        android:hint="@string/txtphone"
+        android:inputType="phone" />
+
+    <RadioGroup
+        android:id="@+id/radioGrp1"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:layout_margin="5dp">
+
+        <RadioButton
+            android:id="@+id/radioButtonOwner"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:gravity="center|left"
+            android:layout_margin="5dp"
+            android:text="@string/txtowner"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPassanger"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:gravity="center|left"
+            android:layout_margin="5dp"
+            android:text="@string/txtpassanger"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/userRegBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="@string/regBtn" />
+
+    <ProgressBar
+        android:id="@+id/registerProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
