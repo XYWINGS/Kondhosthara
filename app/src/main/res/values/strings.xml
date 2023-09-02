@@ -31,5 +31,10 @@
     <string name="txtpassanger">I am a Passanger</string>
     <string name="txtowner">I am a Bus Owner</string>
     <string name="menubtn">Navigation Button</string>
+    <string name="dname">Enter Driver\'s Name</string>
+    <string name="demail">Enter Driver\'s Email</string>
+    <string name="did">Enter Driver\'s NIC Number</string>
+    <string name="daddress">Enter Driver\'s Address</string>
+    <string name="dphn">Enter Driver\'s Phone Number</string>
 
 </resources>

@@ -1,7 +1,7 @@
 package com.example.myapplication.dataclasses
 
 data class Driver(
-      val uid:String? = null,
+      val ownerUid:String? = null,
       val name:String? = null,
       val email:String? = null,
       val phone:String? = null,

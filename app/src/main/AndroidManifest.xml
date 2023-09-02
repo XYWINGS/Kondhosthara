@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".DriverActivity"
+            android:exported="false" />
+        <activity
             android:name=".OwnerActivity"
             android:exported="false" />
         <activity
@@ -43,7 +46,7 @@
         <activity
             android:name=".MapsActivity"
             android:exported="true"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

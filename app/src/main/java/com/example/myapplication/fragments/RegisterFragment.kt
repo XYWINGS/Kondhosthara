@@ -13,6 +13,9 @@ import android.widget.ProgressBar
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.example.myapplication.R
+import com.example.myapplication.dataclasses.Bus
+import com.example.myapplication.dataclasses.Driver
+import com.example.myapplication.dataclasses.Owner
 import com.example.myapplication.dataclasses.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -47,7 +50,7 @@ class RegisterFragment : Fragment() {
                   userType = "Owner"
                 }
                 R.id.radioButtonPassanger -> {
-                 userType = "Passanger"
+                 userType = "Passenger"
                 }
             }
         }
@@ -114,6 +117,7 @@ class RegisterFragment : Fragment() {
         return view
     }
 
+
     private fun addUserToDatabase (  uid: String,
                                     name: String,
                                     email: String,
@@ -122,8 +126,14 @@ class RegisterFragment : Fragment() {
                                     address: String,
                                     type: String) : Boolean {
         return try{
-            FirebaseDatabase.getInstance().reference.child("Users").child(uid).setValue(User(uid,name,email,phoneNum,address,personID,type))
-            true
+
+            FirebaseDatabase.getInstance().reference.child("Users").child(uid).setValue(User(uid,name,email,phoneNum,address,personID,type)).addOnCompleteListener {
+                    Toast.makeText(activity, "Registered successfully.", Toast.LENGTH_LONG).show()
+            }.addOnFailureListener {
+                Toast.makeText(activity, "Registered failed. ${it.message}", Toast.LENGTH_LONG).show()
+            }
+
+          false
         }catch (e : java.lang.Exception){
             false
         }
@@ -162,7 +172,7 @@ class RegisterFragment : Fragment() {
         }else if(!email.matches(emailRegex)){
             Toast.makeText(activity, "Email is not in a valid format...", Toast.LENGTH_LONG).show()
             false
-        }else if(name.length < 4 || personID.length < 10||  address.length < 4){
+        }else if(name.length < 4 || personID.length < 5||  address.length < 4){
             Toast.makeText(activity, "ID numbers and Names must have at least four characters...", Toast.LENGTH_LONG).show()
             false
         }else if(phoneNum.length < 10){

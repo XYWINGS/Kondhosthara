@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myapplication.LoginActivity
 import com.example.myapplication.MapsActivity
+import com.example.myapplication.OwnerActivity
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -31,28 +32,21 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val loginButton = view.findViewById<Button>(R.id.loginBtn)
         val loginEmail = view.findViewById<EditText>(R.id.editTextTextEmailAddress)
         val loginPassword = view.findViewById<EditText>(R.id.editTextTextPassword)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         auth = Firebase.auth
-        val currentUser = auth.currentUser
         val signupButton = view.findViewById<Button>(R.id.regBtn)
         // val passrestButton = view.findViewById<TextView>(R.id.frogot_password_link)
 
         val user = Firebase.auth.currentUser
 
         if (user != null){
-            activity?.let {
-                Toast.makeText(activity, "You have already logged in...", Toast.LENGTH_SHORT).show()
-                val intent = Intent(it, MapsActivity::class.java)
-                it.startActivity(intent)
-            }
+            Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
         }
 
         loginButton.setOnClickListener {
@@ -70,9 +64,7 @@ class LoginFragment : Fragment() {
                     .addOnCompleteListener{ task ->
                         if (task.isSuccessful) {
 
-
-                            Firebase.auth.currentUser?.let { it1 -> getUserType(it1.uid) }
-
+                            Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
                             progressBar.visibility = View.GONE
 
                         } else {
@@ -84,7 +76,6 @@ class LoginFragment : Fragment() {
         }
 
         signupButton.setOnClickListener {
-          //  val transaction = requireFragmentManager().beginTransaction()
             val transaction =  parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fragmentContainerView, RegisterFragment())
             transaction.addToBackStack(null)
@@ -92,7 +83,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun getUserType(uid: String) {
+    private fun redirection(uid: String) {
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(uid)
 
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -101,12 +92,19 @@ class LoginFragment : Fragment() {
 
                     val userType = dataSnapshot.child("type").getValue(String::class.java)
 
-                    activity?.let {
-                        val intent = Intent(it, MapsActivity::class.java)
-                        it.startActivity(intent)
+                    if(userType == "Owner"){
+                        activity?.let {
+                            val intent = Intent(it, OwnerActivity::class.java)
+                            it.startActivity(intent)
+                        }
+                    }else if (userType=="Passenger"){
+                        activity?.let {
+                            val intent = Intent(it, MapsActivity::class.java)
+                            it.startActivity(intent)
+                        }
                     }
-
                 }else{
+
                     Toast.makeText(activity, "User Data Not Found...", Toast.LENGTH_LONG).show()
                 }
             }
