@@ -1,8 +1,40 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps">KONDOSTHARA</string>
     <string name="getLoc">Get Location</string>
     <string name="conBtn">CalculateRoute</string>
     <string name="qrGen">Generate QR Code</string>
     <string name="readQR">Read QR Code</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hintemail">Enter Your Email Address</string>
+    <string name="hintpassword">Enter Your Password</string>
+    <string name="txtlogin">LOGIN</string>
+    <string name="regBtn">Register</string>
+    <string name="txtacrecover">Recover Your Account</string>
+    <string name="txtname">Name</string>
+    <string name="entername">Enter Your Name</string>
+    <string name="retypepass">Retype the Password</string>
+    <string name="enterId">Enter Your NIC Number</string>
+    <string name="enterAddress">Enter Your Address</string>
+    <string name="txtlogout">LOGOUT</string>
+    <string name="txtphone">Enter the Phone Number</string>
+    <string name="txtpassanger">I am a Passanger</string>
+    <string name="txtowner">I am a Bus Owner</string>
+    <string name="menubtn">Navigation Button</string>
+    <string name="dname">Enter Driver\'s Name</string>
+    <string name="demail">Enter Driver\'s Email</string>
+    <string name="did">Enter Driver\'s NIC Number</string>
+    <string name="daddress">Enter Driver\'s Address</string>
+    <string name="dphn">Enter Driver\'s Phone Number</string>
+
 </resources>

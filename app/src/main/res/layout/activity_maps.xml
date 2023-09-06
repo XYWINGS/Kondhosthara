@@ -42,6 +42,14 @@
         android:gravity="center"
         android:text="@string/readQR" />
 
+    <Button
+        android:id="@+id/logOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/txtlogout" />
+
 <!--    <fragment-->
 <!--        android:id="@+id/startLocationFragment"-->
 <!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
@@ -66,9 +74,7 @@
         map:uiRotateGestures="true"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
-  />
-
-
+        tools:layout="@layout/activity_maps" />
 
 </LinearLayout>
 

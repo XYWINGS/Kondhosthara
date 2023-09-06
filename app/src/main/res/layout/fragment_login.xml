@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".fragments.LoginFragment">
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:autofillHints="@string/hintemail"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/hintemail"
+        android:inputType="textEmailAddress"
+        android:layout_margin="5dp"/>
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:autofillHints="@string/hintpassword"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/hintpassword"
+        android:inputType="textPassword"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/txtlogin"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/regBtn"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/regBtn"
+        android:layout_margin="5dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="28dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/txtacrecover"
+        android:textStyle="italic" />
+</LinearLayout>

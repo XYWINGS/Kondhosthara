@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".fragments.OwnerMainFragment">
+
+
+    <EditText
+        android:id="@+id/editTextTextRegisterNameDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/entername"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/dname"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterEmailAddressDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/hintemail"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/demail"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPasswordDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/hintpassword"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="@string/hintpassword"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPasswordConfirmDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/retypepass"
+        android:ems="10"
+        android:hint="@string/retypepass"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterIDNumberDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/enterId"
+        android:ems="10"
+        android:hint="@string/did"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterAddressDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/enterAddress"
+        android:ems="10"
+        android:hint="@string/daddress"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextTextRegisterPhoneNumDriver"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:autofillHints="@string/txtphone"
+        android:ems="10"
+        android:hint="@string/dphn"
+        android:inputType="phone" />
+
+
+    <Button
+        android:id="@+id/userRegBtnDriver"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="@string/regBtn" />
+
+    <Button
+        android:id="@+id/logoutBtnDriver"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="@string/txtlogout" />
+
+    <Button
+        android:id="@+id/buttonTestValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+    <ProgressBar
+        android:id="@+id/registerProgressBarDriver"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
+    </ScrollView>

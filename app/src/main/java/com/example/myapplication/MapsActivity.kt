@@ -1,14 +1,5 @@
 package com.example.myapplication
 import android.Manifest
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.example.myapplication.databinding.ActivityMapsBinding
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -16,32 +7,43 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.R.*
 import com.example.myapplication.R.id.*
+import com.example.myapplication.databinding.ActivityMapsBinding
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import java.util.*
-import com.google.android.gms.common.api.Status
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
+import java.util.*
 import java.util.concurrent.TimeUnit
-import com.google.maps.model.LatLng as DirectionsLatLng
 
 
 class MapsActivity :AppCompatActivity(),
@@ -54,6 +56,7 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var conBtn: Button
     private lateinit var qrGenBtn: Button
     private lateinit var qrReadtn: Button
+    private lateinit var logOutBtn: Button
     private var isJourneyStarted = false
     private var isstartmarkerset = false
     private var totalDistance = 0.0
@@ -75,11 +78,15 @@ class MapsActivity :AppCompatActivity(),
     private var endLocationLng  :Double = 0.0
 
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
+    private lateinit var auth: FirebaseAuth
+
+    private var hasRestarted = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        auth = Firebase.auth
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -92,6 +99,7 @@ class MapsActivity :AppCompatActivity(),
         qrGenBtn = findViewById(id.qrGenBtn)
         qrReadtn = findViewById(id.qrReadBtn)
         conBtn =  findViewById(id.conBtn)
+        logOutBtn = findViewById(id.logOutBtn)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -126,10 +134,7 @@ class MapsActivity :AppCompatActivity(),
                 Log.i(TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
             }
         })
-//
-//        locBtn.setOnClickListener {
-//
-//        }
+
 
         conBtn.setOnClickListener {
             if (!isJourneyStarted) {
@@ -149,6 +154,22 @@ class MapsActivity :AppCompatActivity(),
             val intent = Intent(this, QRReadActivity::class.java)
             startActivity(intent)
         }
+
+        logOutBtn.setOnClickListener {
+            Firebase.auth.signOut()
+            Toast.makeText(this, "Logging Out", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            this.finish()
+        }
+
+//        locText.setOnClickListener {
+//            val userID =auth.currentUser?.uid
+//            Toast.makeText(this, "User id is $userID", Toast.LENGTH_LONG).show()
+//
+//        }
+
+
 
     }
 
@@ -235,8 +256,7 @@ class MapsActivity :AppCompatActivity(),
                 getNewLocation()
 
             } else {
-                Toast.makeText(this, "Please turn on the Location Service", Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(this, "Please turn on the Location Service", Toast.LENGTH_LONG).show()
             }
         } else {
             requestPermissions()
@@ -287,6 +307,7 @@ class MapsActivity :AppCompatActivity(),
                         isstartmarkerset = true
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+                        requestPermissions()
                     }
                 }
             } else {
@@ -316,30 +337,8 @@ class MapsActivity :AppCompatActivity(),
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private fun checkPermission(): Boolean {
-        return ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions() {
@@ -359,6 +358,13 @@ class MapsActivity :AppCompatActivity(),
         )
     }
 
+    private fun restartActivity() {
+        val intent = Intent(this, MapsActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -367,7 +373,13 @@ class MapsActivity :AppCompatActivity(),
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("debug", "Permissions granted")
+
+//            if (!hasRestarted) {
+//                restartActivity();
+//                hasRestarted = true;
+//            }
+
+            Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
     }
 
