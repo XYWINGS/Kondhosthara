@@ -74,9 +74,8 @@
             android:hint="Enter end location" />
 
 
-
         <Button
-            android:id="@+id/userRegBtnDriver"
+            android:id="@+id/busRegBtn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="center"
@@ -84,17 +83,9 @@
             android:gravity="center"
             android:text="@string/regBtn" />
 
-        <Button
-            android:id="@+id/logoutBtnDriver"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:text="@string/txtlogout" />
 
         <Button
-            android:id="@+id/buttonTestValue"
+            android:id="@+id/buttonTestValueAddBus"
             android:layout_width="match_parent"
             android:layout_margin="5dp"
             android:layout_height="60dp"

@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.firebase.auth.FirebaseAuth
@@ -115,6 +116,9 @@ class MapsActivity :AppCompatActivity(),
 
         // Set up PlaceSelectionListener for end location fragment
         endLocationFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
+            .setHint("Select the Journey Destination")
+            .setCountry("LK")
+            .setTypeFilter(TypeFilter.ADDRESS)
 
         endLocationFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
 
