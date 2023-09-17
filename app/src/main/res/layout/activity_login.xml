@@ -12,5 +12,6 @@
         android:name="com.example.myapplication.fragments.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        tools:layout="@layout/fragment_login" />
 </LinearLayout>

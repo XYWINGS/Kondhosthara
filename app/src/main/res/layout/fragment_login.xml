@@ -2,52 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".fragments.LoginFragment">
+    tools:context=".fragments.LoginFragment"
+    android:background="@drawable/embosed_background"
+    android:elevation="4dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginBottom="0dp"
+    android:padding="4dp">
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:autofillHints="@string/hintemail"
         android:ems="10"
         android:gravity="center"
         android:hint="@string/hintemail"
-        android:inputType="textEmailAddress"
-        android:layout_margin="5dp"/>
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:autofillHints="@string/hintpassword"
         android:ems="10"
         android:gravity="center"
         android:hint="@string/hintpassword"
-        android:inputType="textPassword"
-        android:layout_margin="5dp"/>
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:gravity="center"
-        android:text="@string/txtlogin"
-        android:layout_margin="5dp"/>
+        android:text="@string/txtlogin" />
 
     <Button
         android:id="@+id/regBtn"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:gravity="center"
-        android:text="@string/regBtn"
-        android:layout_margin="5dp"/>
+        android:text="@string/regBtn" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -64,3 +72,9 @@
         android:text="@string/txtacrecover"
         android:textStyle="italic" />
 </LinearLayout>
+
+
+
+
+
+

@@ -11,14 +11,19 @@
         android:id="@+id/ownerFragmentContainerView"
         android:name="com.example.myapplication.fragments.OwnerMainFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         tools:layout="@layout/fragment_owner_main" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/embosed_background"
+        android:elevation="4dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp">
 
         <ImageButton
             android:id="@+id/imageButton"

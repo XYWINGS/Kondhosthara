@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="1dp">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/embosed_background"
+        android:elevation="4dp"
+        android:gravity="center"
         android:orientation="vertical"
         tools:context=".fragments.OwnerMainFragment">
 
@@ -21,7 +31,9 @@
             android:ems="10"
             android:gravity="left"
             android:hint="@string/busname"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+
+            />
 
         <EditText
             android:id="@+id/editTextBusRegistrationID"
@@ -87,16 +99,15 @@
         <Button
             android:id="@+id/buttonTestValueAddBus"
             android:layout_width="match_parent"
-            android:layout_margin="5dp"
             android:layout_height="60dp"
+            android:layout_margin="5dp"
             android:text="Button" />
 
-        <ProgressBar
-            android:id="@+id/registerProgressBarDriver"
-            style="?android:attr/progressBarStyleHorizontal"
+        <ImageView
+            android:id="@+id/ownerBusQRView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="177dp"
+            android:src="@android:drawable/ic_menu_gallery" />
 
     </LinearLayout>
 </ScrollView>

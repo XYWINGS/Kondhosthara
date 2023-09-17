@@ -1,33 +1,44 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_marginLeft="3dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginBottom="0dp"
+    android:background="@drawable/embosed_background"
+    android:elevation="4dp"
     android:orientation="vertical"
-    tools:context=".fragments.RegisterFragment">
+    android:padding="4dp">
 
     <EditText
         android:id="@+id/editTextTextRegisterName"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:autofillHints="@string/entername"
         android:ems="10"
         android:gravity="left"
         android:hint="@string/entername"
-        android:inputType="textEmailAddress"
-        android:layout_margin="5dp"/>
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/editTextTextRegisterEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:autofillHints="@string/hintemail"
         android:ems="10"
         android:gravity="left"
         android:hint="@string/hintemail"
-        android:inputType="textEmailAddress"
-        android:layout_margin="5dp"/>
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/editTextTextRegisterPassword"
@@ -96,8 +107,8 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_gravity="center"
-            android:gravity="center|left"
             android:layout_margin="5dp"
+            android:gravity="center|left"
             android:text="@string/txtowner"
             android:textSize="18sp" />
 
@@ -106,8 +117,8 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_gravity="center"
-            android:gravity="center|left"
             android:layout_margin="5dp"
+            android:gravity="center|left"
             android:text="@string/txtpassanger"
             android:textSize="18sp" />
     </RadioGroup>
@@ -126,5 +137,5 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </LinearLayout>
+</ScrollView>
