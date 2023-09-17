@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".fragments.OwnerMainFragment">
+
+
+        <EditText
+            android:id="@+id/editTextBusName"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:autofillHints="@string/entername"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/busname"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/editTextBusRegistrationID"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:autofillHints="@string/hintemail"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/busID"
+            android:inputType="textEmailAddress" />
+
+
+        <EditText
+            android:id="@+id/editTextBusRoutePermitID"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:autofillHints="@string/enterId"
+            android:ems="10"
+            android:hint="@string/busrouteid"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/editTextBusRouteNumber"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:autofillHints="@string/enterId"
+            android:ems="10"
+            android:hint="@string/busriuteid"
+            android:inputType="text" />
+
+
+        <fragment
+            android:id="@+id/busRegStartLocation"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter end location" />
+
+        <fragment
+            android:id="@+id/busRegEndLocation"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter end location" />
+
+
+
+        <Button
+            android:id="@+id/userRegBtnDriver"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="@string/regBtn" />
+
+        <Button
+            android:id="@+id/logoutBtnDriver"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="@string/txtlogout" />
+
+        <Button
+            android:id="@+id/buttonTestValue"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"
+            android:layout_height="60dp"
+            android:text="Button" />
+
+        <ProgressBar
+            android:id="@+id/registerProgressBarDriver"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+</ScrollView>

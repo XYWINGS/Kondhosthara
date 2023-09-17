@@ -105,14 +105,13 @@ class OwnerMainFragment : Fragment() {
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
                   FirebaseDatabase.getInstance().reference.child("Drivers").child(ownerUid).child(randomCode)
-                    .setValue(Driver(ownerUid,name,email,phoneNum,address,personID,"Driver","")).addOnCompleteListener { profileTask ->
-                        if (profileTask.isSuccessful) {
-                            Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
-                        }
+                    .setValue(Driver(ownerUid,name,email,phoneNum,address,personID,"Driver","")).addOnCompleteListener {
                     }
             }.addOnFailureListener {
                     Toast.makeText(activity, "Registration failed. ${it.message}", Toast.LENGTH_LONG).show()
-                }
+                }.addOnCompleteListener {
+                Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
+            }
 
             true
         }catch (e : java.lang.Exception){

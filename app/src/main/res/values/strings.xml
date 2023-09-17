@@ -36,5 +36,9 @@
     <string name="did">Enter Driver\'s NIC Number</string>
     <string name="daddress">Enter Driver\'s Address</string>
     <string name="dphn">Enter Driver\'s Phone Number</string>
+    <string name="busname">Name of the Bus</string>
+    <string name="busID">Regitration Number of the Bus</string>
+    <string name="busrouteid">Route Permit Number</string>
+    <string name="busriuteid">Route Number</string>
 
 </resources>
