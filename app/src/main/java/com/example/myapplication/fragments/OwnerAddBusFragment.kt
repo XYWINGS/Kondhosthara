@@ -43,8 +43,10 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import java.nio.charset.Charset
+import java.util.Base64
 import java.util.EnumMap
 import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.math.log
 
@@ -142,16 +144,16 @@ class OwnerAddBusFragment : Fragment() {
         return view
     }
     private fun checkPermission(): Boolean {
-        return context?.let { ActivityCompat.checkSelfPermission(it, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) } == PackageManager.PERMISSION_GRANTED || context?.let {
+        return context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) } == PackageManager.PERMISSION_GRANTED || context?.let {
             ActivityCompat.checkSelfPermission(
-                it, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                it, Manifest.permission.READ_EXTERNAL_STORAGE)
         } == PackageManager.PERMISSION_GRANTED
     }
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             context as Activity, arrayOf(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ), PERMISSIONCODE
         )
     }
@@ -172,36 +174,37 @@ class OwnerAddBusFragment : Fragment() {
                 }
             }
     }
-    private fun encrypt(text: String, key: String): ByteArray {
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-        val keyBytes = hexStringToByteArray(key)
-        val secretKey = SecretKeySpec(keyBytes, "AES")
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-        return cipher.doFinal(text.toByteArray())
+
+    private fun caesarEncrypt(input: String): String {
+        val result = StringBuilder()
+        val shift = 5
+        for (char in input) {
+            if (char.isLetter()) {
+                val isUpperCase = char.isUpperCase()
+                val base = if (isUpperCase) 'A' else 'a'
+                val shiftedChar = ((char.toInt() - base.toInt() + shift) % 26 + 26) % 26 + base.toInt()
+                result.append(shiftedChar.toChar())
+            } else {
+                result.append(char)
+            }
+        }
+
+        return result.toString()
     }
 
-    private fun hexStringToByteArray(hexString: String): ByteArray {
-        val len = hexString.length
-        val data = ByteArray(len / 2)
-        var i = 0
-        while (i < len) {
-            data[i / 2] = ((Character.digit(hexString[i], 16) shl 4)
-                    + Character.digit(hexString[i + 1], 16)).toByte()
-            i += 2
-        }
-        return data
-    }
+
 
     private fun qrCodeCaller(ownerID: String, busRegNum: String) {
-        val combinedData = "$ownerID|$busRegNum"
-        val encryptionKey = "5D6A7D723EAD6F586DCCDEA0847CA6565D6A7D723EAD6F586DCCDEA0847CA656"
-        val encryptedData = encrypt(combinedData, encryptionKey)
-        val qrCodeBitmap = generateQRCodeBitmap(encryptedData, busRegNum ,800, 800)
+        val combinedData = "$ownerID,$busRegNum"
+        val encryptedData = caesarEncrypt(combinedData)
+
+        val qrCodeBitmap = generateQRCodeBitmap(encryptedData.toByteArray(Charsets.UTF_8), busRegNum ,800, 800)
         if (qrCodeBitmap != null) {
             saveQRCodeToGallery(qrCodeBitmap,busRegNum)
         }
         qrCodeImageView?.setImageBitmap(qrCodeBitmap)
     }
+
 
     private fun generateQRCodeBitmap(data: ByteArray, heading: String, width: Int, height: Int): Bitmap? {
         try {

@@ -17,8 +17,10 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-
-
+import java.nio.charset.StandardCharsets
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 
 class QRReadActivity : AppCompatActivity() {
@@ -40,7 +42,9 @@ class QRReadActivity : AppCompatActivity() {
         } else {
             requestCameraPermission()
         }
+
     }
+
 
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
@@ -94,17 +98,41 @@ class QRReadActivity : AppCompatActivity() {
                 val barcodes = detections.detectedItems
                 if (barcodes.size() > 0) {
                     val qrContent = barcodes.valueAt(0).displayValue
-                    qrResultView.text = qrContent
-                    startNextActivity(qrContent)
+                    Log.d("Debug","QR Content is $qrContent --------------------------------------------------")
+
+                    val result = caesarDecrypt(qrContent)
+                  //  val contentBytes = qrContent.toByteArray(Charsets.UTF_8)
+
+                    qrResultView.text ="$qrContent"
+
+                   // Log.d("Debug","Data is $decryptedCombinedData  ----------------------------------------------")
+
                 }
             }
         })
-
     }
 
+
+    fun caesarDecrypt(input: String): String {
+        val result = StringBuilder()
+        val shift = -5
+        for (char in input) {
+            if (char.isLetter()) {
+                val isUpperCase = char.isUpperCase()
+                val base = if (isUpperCase) 'A' else 'a'
+                val shiftedChar = ((char.toInt() - base.toInt() + shift) % 26 + 26) % 26 + base.toInt()
+                result.append(shiftedChar.toChar())
+            } else {
+                result.append(char)
+            }
+        }
+
+        return result.toString()
+    }
+
+
     private fun  startNextActivity(qrContent : String){
-        Toast.makeText(this, "QR DATA IS $qrContent", Toast.LENGTH_LONG)
-            .show()
+        Toast.makeText(this, "QR DATA IS $qrContent", Toast.LENGTH_LONG).show()
     }
 
     private fun restartActivity() {

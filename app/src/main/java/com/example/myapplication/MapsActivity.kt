@@ -173,8 +173,6 @@ class MapsActivity :AppCompatActivity(),
 //
 //        }
 
-
-
     }
 
 
@@ -241,7 +239,7 @@ class MapsActivity :AppCompatActivity(),
 
         // Convert DirectionsLatLng to Google Maps LatLng
         val googleMapsLatLngList = route.map { directionsLatLng ->
-            com.google.android.gms.maps.model.LatLng(directionsLatLng.lat, directionsLatLng.lng)
+            LatLng(directionsLatLng.lat, directionsLatLng.lng)
         }
 
         // Draw the route on the map

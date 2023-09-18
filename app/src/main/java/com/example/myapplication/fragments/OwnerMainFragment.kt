@@ -134,6 +134,26 @@ class OwnerMainFragment : Fragment() {
                                     Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
                                 }
                             }
+
+                        val dataMap = hashMapOf(
+                            "ownerUid" to ownerUid,
+                            "nic" to personID,
+                            "name" to name,
+                            "type" to "Driver"
+                        )
+
+                        FirebaseDatabase.getInstance().reference
+                            .child("Users")
+                            .child(randomCode)
+                            .setValue(dataMap)
+                            .addOnCompleteListener { registrationCompleteTask ->
+                                if (registrationCompleteTask.isSuccessful) {
+                                    Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
                     } else {
                         Toast.makeText(activity, "Registration failed. ${registrationTask.exception?.message}", Toast.LENGTH_LONG).show()
                     }

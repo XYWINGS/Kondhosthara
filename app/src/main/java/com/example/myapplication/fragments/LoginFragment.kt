@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.myapplication.DriverActivity
 import com.example.myapplication.LoginActivity
 import com.example.myapplication.MapsActivity
 import com.example.myapplication.OwnerActivity
@@ -60,18 +61,17 @@ class LoginFragment : Fragment() {
                 progressBar.visibility = View.GONE
             }else{
 
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener{ task ->
-                        if (task.isSuccessful) {
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{ task ->
+                    if (task.isSuccessful) {
 
-                            Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
-                            progressBar.visibility = View.GONE
+                        Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
+                        progressBar.visibility = View.GONE
 
-                        } else {
-                            Toast.makeText(activity, "Authentication failed.", Toast.LENGTH_LONG).show()
-                            progressBar.visibility = View.GONE
-                        }
+                    } else {
+                        Toast.makeText(activity, "No account found for the login details", Toast.LENGTH_LONG).show()
+                        progressBar.visibility = View.GONE
                     }
+                }
             }
         }
 
@@ -104,8 +104,11 @@ class LoginFragment : Fragment() {
                         }
                     }
                 }else{
-
-                    Toast.makeText(activity, "User Data Not Found...", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Logging as a driver", Toast.LENGTH_LONG).show()
+                    activity?.let {
+                        val intent = Intent(it, DriverActivity::class.java)
+                        it.startActivity(intent)
+                    }
                 }
             }
 
@@ -114,7 +117,6 @@ class LoginFragment : Fragment() {
 
             }
         })
-
     }
 
 
