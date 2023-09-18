@@ -17,6 +17,15 @@
         android:text="Your TextView Text Here"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/detailsText"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Your TextView Text Here"
+        android:textSize="16sp" />
+
     <!-- Add the Button -->
     <Button
         android:id="@+id/conBtn"

@@ -40,5 +40,6 @@
     <string name="busID">Regitration Number of the Bus</string>
     <string name="busrouteid">Route Permit Number</string>
     <string name="busriuteid">Route Number</string>
+    <string name="busseactcount">Number of Passanger Seats</string>
 
 </resources>

@@ -20,6 +20,7 @@ data class Bus(
     val ownerPhn:String? = null,
 
     val passngrCount : Int ? = null,
+    val seatCount : Int ? = null,
 
     val crntLang:String? = null,
     val crntLong:String? = null,

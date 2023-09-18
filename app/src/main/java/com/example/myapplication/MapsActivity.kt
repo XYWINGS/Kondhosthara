@@ -49,7 +49,6 @@ import java.util.concurrent.TimeUnit
 
 class MapsActivity :AppCompatActivity(),
     OnMapReadyCallback {
-
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locText: TextView
@@ -58,29 +57,27 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var qrGenBtn: Button
     private lateinit var qrReadtn: Button
     private lateinit var logOutBtn: Button
+    private lateinit var detailsTexts : TextView
     private var isJourneyStarted = false
     private var isstartmarkerset = false
     private var totalDistance = 0.0
     private var previousUpdateTime = 0L
     private var previousLocation: Location? = null
-
     private var PERMISSIONCODE = 111
+    private var destinationMarker: Marker? = null
+    private var originMarker: Marker? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationsRequest: com.google.android.gms.location.LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
     private var startLocationMarker: Marker? = null
     private var currentLocationMarker: Marker? = null
-
    // private lateinit var startLocationFragment: AutocompleteSupportFragment
     private lateinit var endLocationFragment: AutocompleteSupportFragment
-
     private var startLocationLatLng  :LatLng? = null
     private var endLocationLat  :Double = 0.0
     private var endLocationLng  :Double = 0.0
-
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
     private lateinit var auth: FirebaseAuth
-
     private var hasRestarted = false
 
 
@@ -91,34 +88,27 @@ class MapsActivity :AppCompatActivity(),
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         locText =  findViewById(id.locText)
         qrGenBtn = findViewById(id.qrGenBtn)
-        qrReadtn = findViewById(id.qrReadBtn)
+        qrReadtn = findViewById(qrReadBtn)
         conBtn =  findViewById(id.conBtn)
         logOutBtn = findViewById(id.logOutBtn)
+        detailsTexts = findViewById(detailsText)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         Places.initialize(applicationContext, APIKEY)
 
-//        startLocationFragment =
-//            supportFragmentManager.findFragmentById(id.startLocationFragment) as AutocompleteSupportFragment
-
         endLocationFragment =
             supportFragmentManager.findFragmentById(id.endLocationFragment) as AutocompleteSupportFragment
 
-
-
-        // Set up PlaceSelectionListener for end location fragment
         endLocationFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
             .setHint("Select the Journey Destination")
             .setCountry("LK")
-            .setTypeFilter(TypeFilter.ADDRESS)
 
         endLocationFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
 
@@ -126,19 +116,21 @@ class MapsActivity :AppCompatActivity(),
                 endLocationLat = place.latLng!!.latitude
                 endLocationLng = place.latLng!!.longitude
 
-                mMap.addMarker(
-                    MarkerOptions().position(LatLng(endLocationLat,endLocationLng))
-                        .title("End Location")
-                )
+                addMarker(LatLng(endLocationLat,endLocationLng), "Destination")
+
+//                mMap.addMarker(
+//                    MarkerOptions().position(LatLng(endLocationLat,endLocationLng))
+//                        .title("End Location")
+//                )
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(place.latLng!!.latitude,place.latLng!!.longitude)))
-                routeHandler()
+              //  routeHandler()
             }
 
             override fun onError(status: Status) {
                 Log.i(TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
             }
         })
-
 
         conBtn.setOnClickListener {
             if (!isJourneyStarted) {
@@ -166,15 +158,19 @@ class MapsActivity :AppCompatActivity(),
             startActivity(intent)
             this.finish()
         }
-
-//        locText.setOnClickListener {
-//            val userID =auth.currentUser?.uid
-//            Toast.makeText(this, "User id is $userID", Toast.LENGTH_LONG).show()
-//
-//        }
-
     }
 
+    private fun addMarker(latLng: LatLng, type: String) {
+        // Remove existing markers if they exist
+
+        if (type == "Destination") {
+            destinationMarker?.remove()
+            destinationMarker = mMap.addMarker(MarkerOptions().position(latLng).title("Destination"))
+        } else if (type == "Origin") {
+            originMarker?.remove()
+            originMarker = mMap.addMarker(MarkerOptions().position(latLng).title("Origin"))
+        }
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -184,14 +180,12 @@ class MapsActivity :AppCompatActivity(),
         showCurrentLocation()
     }
 
-
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult) {
             val currentLocation = p0.lastLocation
             if (currentLocation != null) {
                 val cityName: String? = getCityName(currentLocation.latitude, currentLocation.longitude)
-                locText.text =
-                    "Lat : ${currentLocation.latitude} long : ${currentLocation.longitude} The city is $cityName"
+                locText.text = "Lat : ${currentLocation.latitude} long : ${currentLocation.longitude} The city is $cityName"
 
                 // Calculate distance between consecutive locations and update total distance
                 if (isJourneyStarted && journeyLocations.isNotEmpty()) {
@@ -203,48 +197,50 @@ class MapsActivity :AppCompatActivity(),
                         totalDistance += distance
                     }
                 }
-
-                // Add current location to the journeyLocations list
                 journeyLocations.add(currentLocation)
-
             }
-
         }
-
     }
 
     private fun routeHandler() {
-        val startLocation = journeyLocations.first()
-        Log.d("Map", "START LOC LAT ${startLocation.latitude}----------------------------------------------------------")
-        Log.d("Map", "START LOC LNG ${startLocation.latitude}----------------------------------------------------------")
-        Log.d("Map", "END LOC LAT ${endLocationLat}----------------------------------------------------------")
-        Log.d("Map", "EMD LOC LNG ${endLocationLng}----------------------------------------------------------")
 
+            val startLocation = journeyLocations.first()
+            Log.d("Map", "START LOC LAT ${startLocation.latitude}----------------------------------------------------------")
+            Log.d("Map", "START LOC LNG ${startLocation.latitude}----------------------------------------------------------")
+            Log.d("Map", "END LOC LAT ${endLocationLat}----------------------------------------------------------")
+            Log.d("Map", "EMD LOC LNG ${endLocationLng}----------------------------------------------------------")
+        if (journeyLocations != null ){
 
-        val context = GeoApiContext.Builder()
-            .apiKey(APIKEY)
-            .queryRateLimit(3)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
+            val context = GeoApiContext.Builder()
+                .apiKey(APIKEY)
+                .queryRateLimit(3)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build()
 
-        val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
-            .mode(TravelMode.DRIVING) // Choose travel mode
-            .origin("${startLocation.latitude},${startLocation.longitude}")
-            .destination("$endLocationLat,$endLocationLng")
-            .await()
+            val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
+                .mode(TravelMode.DRIVING) // Choose travel mode
+                .origin("${startLocation.latitude},${startLocation.longitude}")
+                .destination("$endLocationLat,$endLocationLng")
+                .await()
 
-        val route = directionsResult.routes[0].overviewPolyline.decodePath()
+            val route = directionsResult.routes[0].overviewPolyline.decodePath()
 
-        // Convert DirectionsLatLng to Google Maps LatLng
-        val googleMapsLatLngList = route.map { directionsLatLng ->
-            LatLng(directionsLatLng.lat, directionsLatLng.lng)
+            if (route != null){
+                // Convert DirectionsLatLng to Google Maps LatLng
+                val googleMapsLatLngList = route.map { directionsLatLng ->
+                    LatLng(directionsLatLng.lat, directionsLatLng.lng)
+                }
+
+                // Draw the route on the map
+                val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
+                mMap.addPolyline(polylineOptions)
+            }else{
+                Log.d("debug", "---------------------------------List is Empty----------------------------")
+            }
+
         }
-
-        // Draw the route on the map
-        val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
-        mMap.addPolyline(polylineOptions)
     }
 
     private fun startJourney(){
@@ -264,7 +260,6 @@ class MapsActivity :AppCompatActivity(),
             requestPermissions()
         }
     }
-
 
     @SuppressLint("MissingPermission")
     private fun getNewLocation() {
@@ -299,11 +294,11 @@ class MapsActivity :AppCompatActivity(),
                     if (location != null) {
                         val currentLatLng = LatLng(location.latitude, location.longitude)
                         if (currentLocationMarker == null) {
-                            currentLocationMarker = mMap.addMarker(
-                                MarkerOptions().position(currentLatLng).title("Current Location")
-                            )
+                            addMarker(currentLatLng, "Origin")
+                            journeyLocations.add(location)
                         } else {
                             currentLocationMarker?.position = currentLatLng
+                            addMarker(currentLatLng, "Origin")
                         }
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 8.0f))
                         isstartmarkerset = true
@@ -317,8 +312,6 @@ class MapsActivity :AppCompatActivity(),
             }
         }
     }
-
-
 
     private fun stopJourney() {
         isJourneyStarted = false
@@ -337,7 +330,6 @@ class MapsActivity :AppCompatActivity(),
         // Display the total distance
         locText.text = "Total Distance Traveled: ${String.format("%.2f", totalDistance)} meters"
     }
-
 
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -367,11 +359,7 @@ class MapsActivity :AppCompatActivity(),
         finish()
     }
 
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -384,6 +372,5 @@ class MapsActivity :AppCompatActivity(),
             Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
     }
-
 
 }

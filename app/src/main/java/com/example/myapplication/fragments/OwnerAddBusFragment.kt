@@ -15,7 +15,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import android.Manifest
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -25,12 +24,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import com.example.myapplication.R
 import com.example.myapplication.dataclasses.Bus
-import com.example.myapplication.dataclasses.Driver
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.firebase.auth.FirebaseAuth
@@ -42,13 +38,9 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
+import java.lang.Integer.parseInt
 import java.nio.charset.Charset
-import java.util.Base64
 import java.util.EnumMap
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
-import kotlin.math.log
 
 class OwnerAddBusFragment : Fragment() {
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
@@ -69,8 +61,10 @@ class OwnerAddBusFragment : Fragment() {
         val busRegID = view.findViewById<EditText>(R.id.editTextBusRegistrationID)
         val busPermID = view.findViewById<EditText>(R.id.editTextBusRoutePermitID)
         val busRouteNum = view.findViewById<EditText>(R.id.editTextBusRouteNumber)
+        val seatCount = view.findViewById<EditText>(R.id.editTextBusSeatCount)
         val busRegBtn = view.findViewById<Button>(R.id.busRegBtn)
         val testValBtn = view.findViewById<Button>(R.id.buttonTestValueAddBus)
+
 
         qrCodeImageView = view.findViewById(R.id.ownerBusQRView)
 
@@ -85,25 +79,27 @@ class OwnerAddBusFragment : Fragment() {
             .setCountry("LK")
 
         busRegBtn.setOnClickListener{
-        val busOwnerID =user!!.uid
-        val busRouteNumber = busRouteNum.text.toString()
-        val busPermitID = busPermID.text.toString()
-        val busRegNumber =  busRegID.text.toString()
-        val busName = busNme.text.toString()
+            val busOwnerID =user!!.uid
+            val busRouteNumber = busRouteNum.text.toString()
+            val busPermitID = busPermID.text.toString()
+            val busRegNumber =  busRegID.text.toString()
+            val busName = busNme.text.toString()
+            val numOfSeats = parseInt(seatCount.text.toString())
 
-        if (checkPermission()){
-            if(validation(busName,busRegNumber,busPermitID,busRouteNumber)){
-                addBusToSystem(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber)
-                busNme.setText("")
-                busRegID.setText("")
-                busPermID.setText("")
-                busRouteNum.setText("")
-                startLocationFragment.setText("")
-                endLocationFragment.setText("")
+            if (checkPermission()){
+                if(validation(busName,busRegNumber,busPermitID,busRouteNumber,numOfSeats)){
+                    addBusToSystem(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber, numOfSeats)
+                    busNme.setText("")
+                    busRegID.setText("")
+                    busPermID.setText("")
+                    busRouteNum.setText("")
+                    startLocationFragment.setText("")
+                    endLocationFragment.setText("")
+                    seatCount.setText("")
+                }
+            }else{
+                requestPermissions()
             }
-        }else{
-            requestPermissions()
-        }
 
 
     }
@@ -115,6 +111,8 @@ class OwnerAddBusFragment : Fragment() {
             busRouteNum.setText("76")
             startLocationFragment.setText("Kandy")
             endLocationFragment.setText("Malabe")
+            seatCount.setText("56")
+
         }
 
         startLocationFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
@@ -140,7 +138,6 @@ class OwnerAddBusFragment : Fragment() {
                 Log.i(ContentValues.TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
             }
         })
-
         return view
     }
     private fun checkPermission(): Boolean {
@@ -157,14 +154,14 @@ class OwnerAddBusFragment : Fragment() {
             ), PERMISSIONCODE
         )
     }
-    private fun addBusToSystem(busOwnerID: String, busName: String, busRegNumber: String, busPermitID: String, busRouteNumber: String) {
+    private fun addBusToSystem(busOwnerID: String, busName: String, busRegNumber: String, busPermitID: String, busRouteNumber: String ,  numOfSeats: Int) {
         FirebaseDatabase.getInstance().reference
             .child("Buses")
             .child(busOwnerID)
             .child(busRegNumber)
             .setValue(Bus(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber,
                 startLocation,endLocation,"","",
-                "",0,"","","Home"))
+                "",0, numOfSeats,"","Home"))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Bus Details added to the system", Toast.LENGTH_LONG).show()
@@ -192,8 +189,6 @@ class OwnerAddBusFragment : Fragment() {
         return result.toString()
     }
 
-
-
     private fun qrCodeCaller(ownerID: String, busRegNum: String) {
         val combinedData = "$ownerID,$busRegNum"
         val encryptedData = caesarEncrypt(combinedData)
@@ -204,8 +199,6 @@ class OwnerAddBusFragment : Fragment() {
         }
         qrCodeImageView?.setImageBitmap(qrCodeBitmap)
     }
-
-
     private fun generateQRCodeBitmap(data: ByteArray, heading: String, width: Int, height: Int): Bitmap? {
         try {
             val hints: MutableMap<EncodeHintType, Any> = EnumMap(EncodeHintType::class.java)
@@ -257,7 +250,12 @@ class OwnerAddBusFragment : Fragment() {
         }
     }
 
-    private fun validation(busName: String, busRegNumber: String, busPermitID: String, busRouteNumber: String
+    private fun validation(
+        busName: String,
+        busRegNumber: String,
+        busPermitID: String,
+        busRouteNumber: String,
+        numOfSeats: Int
     ): Boolean {
         return when {
             busName.isEmpty() || busRegNumber.isEmpty() || busPermitID.isEmpty() || busRouteNumber.isEmpty() -> {
@@ -274,10 +272,14 @@ class OwnerAddBusFragment : Fragment() {
             }startLocation == null && endLocation == null ->{
                 Toast.makeText(context, "Please Select the Journey Origin and Destination ", Toast.LENGTH_LONG).show()
                 false
+            } numOfSeats <= 0 || numOfSeats > 80 ->{
+                Toast.makeText(context, "Please Select the correct number of seats ", Toast.LENGTH_LONG).show()
+                false
             }
             else -> true
         }
     }
+
     private fun isValidBusRegNumber(busRegNumber: String): Boolean {
         val regex = """^[A-Z]+-\d+$""".toRegex()
         return regex.matches(busRegNumber)
