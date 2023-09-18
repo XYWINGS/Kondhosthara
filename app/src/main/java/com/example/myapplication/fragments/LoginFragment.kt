@@ -96,11 +96,13 @@ class LoginFragment : Fragment() {
                         activity?.let {
                             val intent = Intent(it, OwnerActivity::class.java)
                             it.startActivity(intent)
+                            it.finish()
                         }
                     }else if (userType=="Passenger"){
                         activity?.let {
                             val intent = Intent(it, MapsActivity::class.java)
                             it.startActivity(intent)
+                            it.finish()
                         }
                     }
                 }else{

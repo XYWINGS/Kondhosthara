@@ -12,4 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Button" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="110dp"
+        android:layout_height="100dp"
+        app:fabCustomSize="95dp"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_dialog_map"
+        app:backgroundTint="@color/purple_200"
+        app:elevation="6dp"
+        app:maxImageSize="56dp"
+        app:rippleColor="@color/white"
+        android:layout_margin="16dp"
+      />
+
 </LinearLayout>

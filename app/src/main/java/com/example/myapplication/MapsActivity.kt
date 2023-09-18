@@ -148,6 +148,7 @@ class MapsActivity :AppCompatActivity(),
 
         qrReadtn.setOnClickListener {
             val intent = Intent(this, QRReadActivity::class.java)
+            intent.putExtra("UserType", "Passenger")
             startActivity(intent)
         }
 

@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -29,6 +30,8 @@ class QRReadActivity : AppCompatActivity() {
     private lateinit var cameraView: SurfaceView
     private val CAMERA_PERMISSION_REQUEST_CODE = 222
     private lateinit var qrResultView :  TextView
+    private lateinit var userType : String
+    var qrCodeCaptured = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +40,17 @@ class QRReadActivity : AppCompatActivity() {
         cameraView = findViewById(R.id.cameraView)
         qrResultView = findViewById(R.id.qrResultView)
 
+        val receivedIntent = intent
+        if (receivedIntent != null && receivedIntent.hasExtra("UserType")) {
+            userType = receivedIntent.getStringExtra("UserType").toString()
+        }
+
         if (checkPermission()) {
             initializeCameraSource()
         } else {
             requestCameraPermission()
         }
-
     }
-
 
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
@@ -91,27 +97,60 @@ class QRReadActivity : AppCompatActivity() {
             }
         })
 
+
+
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
             override fun release() {}
 
             override fun receiveDetections(detections: Detector.Detections<Barcode>) {
-                val barcodes = detections.detectedItems
-                if (barcodes.size() > 0) {
-                    val qrContent = barcodes.valueAt(0).displayValue
-                    Log.d("Debug","QR Content is $qrContent --------------------------------------------------")
-
-                    val result = caesarDecrypt(qrContent)
-                  //  val contentBytes = qrContent.toByteArray(Charsets.UTF_8)
-
-                    qrResultView.text ="$qrContent"
-
-                   // Log.d("Debug","Data is $decryptedCombinedData  ----------------------------------------------")
-
+                if (!qrCodeCaptured) { // Check if a QR code hasn't been captured yet
+                    val barcodes = detections.detectedItems
+                    if (barcodes.size() > 0) {
+                        val qrContent = barcodes.valueAt(0).displayValue
+                        handleRedirection(caesarDecrypt(qrContent))
+                       // Set the flag to true after capturing a valid QR code
+                    }
                 }
             }
         })
     }
 
+    private fun handleRedirection(result: String) {
+
+        val busData = result.split(",")
+        val busID = busData[1]
+        val ownerID = busData[0]
+        if (ownerID.length==28 && busID.length >6){
+            qrCodeCaptured = true
+
+            if (userType == "Driver"){
+                AlertDialog.Builder(this)
+                    .setTitle("Confirmation of the Bus")
+                    .setMessage("Confirm the registration as this bus's driver?")
+                    .setPositiveButton("Confirm") { dialog, which ->
+                        val intent = Intent(this, DriverActivity::class.java)
+                        intent.putExtra("BusID", "$busID")
+                        intent.putExtra("OwnerID", "$ownerID")
+                        startActivity(intent)
+                        finish()
+                    }
+                    .setNegativeButton("Cancel") { dialog, which ->
+                        Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                    }
+                    .show()
+            }else if(userType=="Passenger"){
+                val intent = Intent(this, MapsActivity::class.java)
+                intent.putExtra("BusID", "$busID")
+                intent.putExtra("OwnerID", "$ownerID")
+                startActivity(intent)
+                finish()
+            }
+        }else{
+            Toast.makeText(this, "Invalid QR Code", Toast.LENGTH_SHORT).show()
+        }
+
+    // qrResultView.text ="$busID"
+    }
 
     fun caesarDecrypt(input: String): String {
         val result = StringBuilder()
@@ -129,7 +168,6 @@ class QRReadActivity : AppCompatActivity() {
 
         return result.toString()
     }
-
 
     private fun  startNextActivity(qrContent : String){
         Toast.makeText(this, "QR DATA IS $qrContent", Toast.LENGTH_LONG).show()
