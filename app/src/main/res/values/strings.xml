@@ -41,5 +41,8 @@
     <string name="busrouteid">Route Permit Number</string>
     <string name="busriuteid">Route Number</string>
     <string name="busseactcount">Number of Passanger Seats</string>
+    <string name="logout_button">logOut Button</string>
+    <string name="profile_button">Profile Button</string>
+    <string name="add_bus_button">Add bus button</string>
 
 </resources>

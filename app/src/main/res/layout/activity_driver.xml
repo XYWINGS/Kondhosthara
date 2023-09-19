@@ -5,26 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DriverActivity" >
-
-    <Button
-        android:id="@+id/driverLogOutBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+    tools:context=".DriverActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="110dp"
+        android:id="@+id/fabDriverBusQR"
+        android:layout_width="100dp"
         android:layout_height="100dp"
-        app:fabCustomSize="95dp"
-        android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_dialog_map"
-        app:backgroundTint="@color/purple_200"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_margin="16dp"
+        android:src="@drawable/sharp_directions_bus_24"
+        app:backgroundTint="#ECDDFD"
         app:elevation="6dp"
+        app:fabCustomSize="100dp"
         app:maxImageSize="56dp"
         app:rippleColor="@color/white"
+        android:contentDescription="@string/add_bus_button"/>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDriverProfile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center|center_horizontal|center_vertical"
         android:layout_margin="16dp"
-      />
+        android:src="@drawable/baseline_perm_identity_24"
+        app:backgroundTint="#ECDDFD"
+        app:elevation="6dp"
+        app:fabCustomSize="100dp"
+        app:maxImageSize="56dp"
+        app:rippleColor="@color/white"
+        android:contentDescription="@string/profile_button"/>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDriverLogOut"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_margin="16dp"
+        android:src="@drawable/baseline_logout_24"
+        app:backgroundTint="#ECDDFD"
+        app:elevation="6dp"
+        app:fabCustomSize="100dp"
+        app:maxImageSize="56dp"
+        app:rippleColor="@color/white"
+        android:contentDescription="@string/logout_button"/>
+
 
 </LinearLayout>

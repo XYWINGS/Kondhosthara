@@ -64,6 +64,7 @@ class OwnerMainFragment : Fragment() {
             Toast.makeText(context, "Logging Out", Toast.LENGTH_SHORT).show()
             val intent = Intent(context, LoginActivity::class.java)
             startActivity(intent)
+            requireActivity().finish()
         }
         submitBtn.setOnClickListener {
             val email = userEmail.text.toString()

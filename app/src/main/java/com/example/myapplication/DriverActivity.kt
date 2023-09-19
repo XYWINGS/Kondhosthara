@@ -15,12 +15,16 @@ class DriverActivity : AppCompatActivity() {
         setContentView(R.layout.activity_driver)
 
 
-        val logOutBtn : Button = findViewById(R.id.driverLogOutBtn)
+        val logOutBtn : Button = findViewById(R.id.fabDriverLogOut)
+        val profileBtn : Button = findViewById(R.id.fabDriverProfile)
+        val busScanBtn : Button = findViewById(R.id.fabDriverBusQR)
+
         logOutBtn.setOnClickListener {
             Firebase.auth.signOut()
             Toast.makeText(this, "Logging Out", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
 
