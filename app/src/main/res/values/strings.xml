@@ -60,5 +60,8 @@
     <string name="your_current_location_kandy">Your Current Location : Kandy</string>
     <string name="sign_out_from_the_app">Sign Out from the App</string>
     <string name="welcome_back_chalith">Welcome Back Chalith</string>
+    <string name="title_activity_bus_view_map">BusViewMap</string>
+    <string name="enter_end_location">Enter the Destination</string>
+    <string name="search_radius">Search Radius :</string>
 
 </resources>

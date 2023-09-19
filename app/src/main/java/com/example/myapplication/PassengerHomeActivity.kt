@@ -28,7 +28,7 @@ class PassengerHomeActivity : AppCompatActivity() {
         }
 
         viewMapBtn.setOnClickListener {
-            val intent = Intent(this, MapsActivity::class.java)
+            val intent = Intent(this,BusViewMap::class.java)
             intent.putExtra("UserType", "Passenger")
             startActivity(intent)
             finish()
