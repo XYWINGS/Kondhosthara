@@ -9,19 +9,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import java.nio.charset.StandardCharsets
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 
 
 class QRReadActivity : AppCompatActivity() {
@@ -29,20 +30,21 @@ class QRReadActivity : AppCompatActivity() {
     private lateinit var cameraSource: CameraSource
     private lateinit var cameraView: SurfaceView
     private val CAMERA_PERMISSION_REQUEST_CODE = 222
-    private lateinit var qrResultView :  TextView
-    private lateinit var userType : String
+    private lateinit var userType: String
+    private lateinit var auth: FirebaseAuth
     var qrCodeCaptured = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrread)
-
         cameraView = findViewById(R.id.cameraView)
-        qrResultView = findViewById(R.id.qrResultView)
+        auth = Firebase.auth
+
 
         val receivedIntent = intent
         if (receivedIntent != null && receivedIntent.hasExtra("UserType")) {
             userType = receivedIntent.getStringExtra("UserType").toString()
+            intent.removeExtra("UserType")
         }
 
         if (checkPermission()) {
@@ -98,7 +100,6 @@ class QRReadActivity : AppCompatActivity() {
         })
 
 
-
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
             override fun release() {}
 
@@ -108,7 +109,6 @@ class QRReadActivity : AppCompatActivity() {
                     if (barcodes.size() > 0) {
                         val qrContent = barcodes.valueAt(0).displayValue
                         handleRedirection(caesarDecrypt(qrContent))
-                       // Set the flag to true after capturing a valid QR code
                     }
                 }
             }
@@ -117,81 +117,161 @@ class QRReadActivity : AppCompatActivity() {
 
     private fun handleRedirection(result: String) {
 
-        val busData = result.split(",")
-        val busID = busData[1]
-        val ownerID = busData[0]
-        if (ownerID.length==28 && busID.length >6){
-            qrCodeCaptured = true
+        runOnUiThread {
+            val busData = result.split(",")
+            val busID = busData[1]
+            val ownerID = busData[0]
+            if (ownerID.length == 28 && busID.length > 6) {
+                qrCodeCaptured = true
+                Log.d(
+                    "UserTypeDebug",
+                    "userType: $userType --------------------------------------------------------------"
+                )
+                if (userType == "Driver") {
 
-            if (userType == "Driver"){
-                AlertDialog.Builder(this)
-                    .setTitle("Confirmation of the Bus")
-                    .setMessage("Confirm the registration as this bus's driver?")
-                    .setPositiveButton("Confirm") { dialog, which ->
-                        val intent = Intent(this, DriverActivity::class.java)
-                        intent.putExtra("BusID", "$busID")
-                        intent.putExtra("OwnerID", "$ownerID")
-                        startActivity(intent)
-                        finish()
+                    AlertDialog.Builder(this@QRReadActivity)
+                        .setTitle("Confirmation of the Bus")
+                        .setMessage("Confirm your registration as the driver of the bus with ID $busID ")
+                        .setPositiveButton("Confirm") { dialog, which ->
+
+                            updateUserData(busID) { success ->
+
+                                val intent = Intent(this@QRReadActivity, DriverActivity::class.java)
+                                if (success) {
+                                    startActivity(intent)
+                                    finish()
+                                } else {
+                                    Toast.makeText(
+                                        this@QRReadActivity,
+                                        "Operation Failed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
+                        }
+                        .setNegativeButton("Cancel") { dialog, which ->
+                            Toast.makeText(this@QRReadActivity, "Cancelled", Toast.LENGTH_SHORT).show()
+                        }
+                        .show()
+                } else if (userType == "Passenger") {
+
+                    updateUserData(busID) { success ->
+
+                        val intent = Intent(this, MapsActivity::class.java)
+
+                        if (success) {
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@QRReadActivity,
+                                "Operation Failed",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                            startActivity(intent)
+                            finish()
+                        }
                     }
-                    .setNegativeButton("Cancel") { dialog, which ->
-                        Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
-                    }
-                    .show()
-            }else if(userType=="Passenger"){
-                val intent = Intent(this, MapsActivity::class.java)
-                intent.putExtra("BusID", "$busID")
-                intent.putExtra("OwnerID", "$ownerID")
-                startActivity(intent)
-                finish()
-            }
-        }else{
-            Toast.makeText(this, "Invalid QR Code", Toast.LENGTH_SHORT).show()
-        }
+                }
 
-    // qrResultView.text ="$busID"
-    }
-
-    fun caesarDecrypt(input: String): String {
-        val result = StringBuilder()
-        val shift = -5
-        for (char in input) {
-            if (char.isLetter()) {
-                val isUpperCase = char.isUpperCase()
-                val base = if (isUpperCase) 'A' else 'a'
-                val shiftedChar = ((char.toInt() - base.toInt() + shift) % 26 + 26) % 26 + base.toInt()
-                result.append(shiftedChar.toChar())
             } else {
-                result.append(char)
-            }
-        }
-
-        return result.toString()
-    }
-
-    private fun  startNextActivity(qrContent : String){
-        Toast.makeText(this, "QR DATA IS $qrContent", Toast.LENGTH_LONG).show()
-    }
-
-    private fun restartActivity() {
-        val intent = Intent(this, QRReadActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initializeCameraSource()
-                restartActivity()
-                Log.d("debug", "Camera Permissions granted")
+                Toast.makeText(this@QRReadActivity, "Invalid QR Code", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
-}
+
+        private fun updateUserData(busID: String, callback: (Boolean) -> Unit) {
+            runOnUiThread {
+                val userID = auth.currentUser?.uid
+                val userReference =
+                    FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
+
+                userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            val updates = hashMapOf(
+                                "busID" to busID
+                            )
+                            userReference.updateChildren(updates as Map<String, Any>)
+                                .addOnSuccessListener {
+                                    Toast.makeText(
+                                        this@QRReadActivity,
+                                        "Bus Registered Successfully",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    callback(true) // Signal success
+                                }.addOnFailureListener {
+                                    Toast.makeText(
+                                        this@QRReadActivity,
+                                        "Error Occurred ${it.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    callback(false) // Signal failure
+                                }
+                        } else {
+                            Toast.makeText(
+                                this@QRReadActivity,
+                                "Error Occurred Try Again",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            callback(false) // Signal failure
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Toast.makeText(
+                            this@QRReadActivity,
+                            "Error Occurred ${databaseError.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        callback(false) // Signal failure
+                    }
+                })
+            }
+        }
+
+        fun caesarDecrypt(input: String): String {
+            val result = StringBuilder()
+            val shift = -5
+            for (char in input) {
+                if (char.isLetter()) {
+                    val isUpperCase = char.isUpperCase()
+                    val base = if (isUpperCase) 'A' else 'a'
+                    val shiftedChar =
+                        ((char.toInt() - base.toInt() + shift) % 26 + 26) % 26 + base.toInt()
+                    result.append(shiftedChar.toChar())
+                } else {
+                    result.append(char)
+                }
+            }
+
+            return result.toString()
+        }
+
+        private fun restartActivity() {
+            val intent = Intent(this@QRReadActivity, QRReadActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+        ) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initializeCameraSource()
+                    restartActivity()
+                    Log.d("debug", "Camera Permissions granted")
+                }
+            }
+        }
+    }
+

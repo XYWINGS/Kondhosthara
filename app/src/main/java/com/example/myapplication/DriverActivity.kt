@@ -1,12 +1,13 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import com.example.myapplication.interfaces.DriverJourneyActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -19,22 +20,45 @@ import com.google.firebase.ktx.Firebase
 class DriverActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var busID : String
+    private lateinit var DriverData : DataSnapshot
+    private lateinit var welcomeView : TextView
+    private lateinit var busNameView : TextView
+    private lateinit var distanceView : TextView
+    private lateinit var hoursView : TextView
+    private lateinit var multiView : TextView
+    private var isBusSelected = false
+    private lateinit var logOutBtn : FloatingActionButton
+    private lateinit var busScanBtn :  FloatingActionButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_driver)
 
-        val imageView = ImageView(this)
-        imageView.setImageResource(R.drawable.back)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        setContentView(imageView)
-
         auth = Firebase.auth
         val user = auth.currentUser
-        val emailName = user!!.email!!.split("@")[0]
 
-        val logOutBtn : FloatingActionButton = findViewById(R.id.fabDriverLogOut)
-    //    val profileBtn :  FloatingActionButton = findViewById(R.id.fabDriverProfile)
-        val busScanBtn :  FloatingActionButton = findViewById(R.id.fabDriverBusQR)
+        logOutBtn = findViewById(R.id.fabDriverLogOut)
+        busScanBtn = findViewById(R.id.fabDriverBusQR)
+        welcomeView = findViewById(R.id.textViewDriverWelcome)
+        busNameView = findViewById(R.id.textViewDriverBusID)
+        distanceView = findViewById(R.id.textViewDriverDisTravel)
+        hoursView = findViewById(R.id.textViewDriverHrs)
+        multiView = findViewById(R.id.textViewAddBus)
+
+        getDriverData()
+
+        busScanBtn.setOnClickListener {
+            if (isBusSelected){
+                val intent = Intent(this, DriverJourneyActivity::class.java)
+                startActivity(intent)
+                finish()
+            }else{
+                val intent = Intent(this, QRReadActivity::class.java)
+                intent.putExtra("UserType", "Driver")
+                startActivity(intent)
+            }
+        }
 
         logOutBtn.setOnClickListener {
             Firebase.auth.signOut()
@@ -44,33 +68,68 @@ class DriverActivity : AppCompatActivity() {
             finish()
         }
 
-        val driverReference = FirebaseDatabase.getInstance().reference.child("Drivers")
-        val userID =user!!.uid
+    }
 
-        driverReference.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun getDriverData(){
+        val userID = auth.currentUser?.uid
+
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
+        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (ownerSnapshot in dataSnapshot.children) {
-                    val ownerID = ownerSnapshot.key
-                    for (driverSnapshot in ownerSnapshot.children) {
-                        val driverEmailName = driverSnapshot.key
-                        if (driverEmailName == emailName){
-                            val driverData = driverSnapshot.value
-                            driverSnapshot.ref.removeValue()
-                            val newDriverReference = ownerID?.let { driverReference.child(it).child(userID) }
-                            newDriverReference?.setValue(driverData)
-                        }
-                    }
+                if (dataSnapshot.exists()) {
+                    DriverData = dataSnapshot
+//                    updateDriverDetails(dataSnapshot)
+                    updateDriverDetails(dataSnapshot)
+                } else {
+                    Toast.makeText(
+                        this@DriverActivity,
+                        "Error Occurred.Try Again.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@DriverActivity, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@DriverActivity,
+                    "Error Occurred ${databaseError.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
-
-
-
     }
 
+    private fun updateDriverDetails(driverData: DataSnapshot) {
+        val driverName = driverData.child("name").value.toString()
+        welcomeView.text = "Welcome Back $driverName"
 
+        val busID = driverData.child("busID").value.toString()
+
+        isBusSelected = busID.isNotEmpty()
+        if (isBusSelected){
+            busScanBtn.setImageResource(R.drawable.baseline_directions_run_24)
+            multiView.text = "Start the Journey"
+            busNameView.text ="Selected Bus : $busID "
+            busScanBtn.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#CBA7F4"))
+
+        }else{
+            busScanBtn.setImageResource(R.drawable.sharp_directions_bus_24)
+            busScanBtn.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ECDDFD"))
+            multiView.text = "Scan Bus's QR"
+            busNameView.text = "Select a Bus"
+        }
+        val distanceTraveled = driverData.child("distTraval").value.toString()
+        if ( distanceTraveled== "" || distanceTraveled == "0"){
+            distanceView.text = "No Travel Records Yet"
+        }else{
+            distanceView.text = "Distance Traveled : $distanceTraveled kms"
+        }
+
+        val hrsDrive = driverData.child("drvHrs").value.toString()
+        if (hrsDrive == "" || hrsDrive == "0"){
+            hoursView.text = "No Driving Records Yet"
+        }else{
+            hoursView.text = "Total Driving Time : $hrsDrive hrs"
+        }
+    }
 }

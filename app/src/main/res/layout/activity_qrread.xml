@@ -4,23 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".QRReadActivity">
+    tools:context=".QRReadActivity"
+    android:background="@drawable/back2">
 
     <SurfaceView
         android:id="@+id/cameraView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginBottom="50dp"
+        android:layout_width="333dp"
+        android:layout_height="308dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginStart="50dp"/>
-
-    <TextView
-        android:id="@+id/qrResultView"
-        android:layout_width="match_parent"
-        android:layout_height="118dp"
-        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:elevation="4dp"
         android:gravity="center"
-        android:textSize="24sp" />
+        android:orientation="vertical"
+        android:padding="30dp"/>
+
 </LinearLayout>

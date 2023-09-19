@@ -10,5 +10,6 @@ data class User(
     val type:String? = null,
     val busID :String? = null,
     val passID :String? = null,
+    val walletBalance : String ?= null
 
 )
