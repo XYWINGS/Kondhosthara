@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -15,9 +16,9 @@ class DriverActivity : AppCompatActivity() {
         setContentView(R.layout.activity_driver)
 
 
-        val logOutBtn : Button = findViewById(R.id.fabDriverLogOut)
-        val profileBtn : Button = findViewById(R.id.fabDriverProfile)
-        val busScanBtn : Button = findViewById(R.id.fabDriverBusQR)
+        val logOutBtn : FloatingActionButton = findViewById(R.id.fabDriverLogOut)
+        val profileBtn :  FloatingActionButton = findViewById(R.id.fabDriverProfile)
+        val busScanBtn :  FloatingActionButton = findViewById(R.id.fabDriverBusQR)
 
         logOutBtn.setOnClickListener {
             Firebase.auth.signOut()
