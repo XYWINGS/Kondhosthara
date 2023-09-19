@@ -84,6 +84,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun redirection(uid: String) {
+
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(uid)
 
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -115,10 +116,11 @@ class LoginFragment : Fragment() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(activity, "Connection error. Please try again...", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
 
             }
-        })
+        }
+        )
     }
 
 

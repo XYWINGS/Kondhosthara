@@ -8,5 +8,8 @@ data class Driver(
       val address:String? = null,
       val nic:String? = null,
       val type:String? = null,
-      val busID : String ?= null
+      val busID : String ?= null,
+      val drvHrs : String ?= null,
+      val distTraval : String ?= null,
+      val uid : String ?= null
     )

@@ -2,10 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="3dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/embosed_background"
+    android:elevation="4dp"
+    android:gravity="center"
     android:orientation="vertical"
+    android:padding="30dp"
     tools:context=".DriverActivity">
+
+
+    <TextView
+        android:id="@+id/textViewDriverName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/drivername"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/textViewDriverHrs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/driver_hours"
+        android:layout_margin="5dp"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/textViewDriverDisTravel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/driver_distance_traveled"
+        android:layout_margin="5dp"
+        android:padding="5dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDriverBusQR"
@@ -13,28 +51,36 @@
         android:layout_height="100dp"
         android:layout_gravity="center|center_horizontal|center_vertical"
         android:layout_margin="16dp"
+        android:contentDescription="@string/add_bus_button"
         android:src="@drawable/sharp_directions_bus_24"
         app:backgroundTint="#ECDDFD"
         app:elevation="6dp"
         app:fabCustomSize="100dp"
         app:maxImageSize="56dp"
-        app:rippleColor="@color/white"
-        android:contentDescription="@string/add_bus_button"/>
+        app:rippleColor="@color/white" />
+    <TextView
+        android:id="@+id/textViewAddBus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/scan_the_bus_s_qr_code"
+        android:layout_margin="5dp"
+        android:padding="5dp"/>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabDriverProfile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center|center_horizontal|center_vertical"
-        android:layout_margin="16dp"
-        android:src="@drawable/baseline_perm_identity_24"
-        app:backgroundTint="#ECDDFD"
-        app:elevation="6dp"
-        app:fabCustomSize="100dp"
-        app:maxImageSize="56dp"
-        app:rippleColor="@color/white"
-        android:contentDescription="@string/profile_button"/>
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/fabDriverProfile"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_gravity="center|center_horizontal|center_vertical"-->
+    <!--        android:layout_margin="16dp"-->
+    <!--        android:src="@drawable/baseline_perm_identity_24"-->
+    <!--        app:backgroundTint="#ECDDFD"-->
+    <!--        app:elevation="6dp"-->
+    <!--        app:fabCustomSize="100dp"-->
+    <!--        app:maxImageSize="56dp"-->
+    <!--        app:rippleColor="@color/white"-->
+    <!--        android:contentDescription="@string/profile_button"/>-->
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -43,13 +89,21 @@
         android:layout_height="100dp"
         android:layout_gravity="center|center_horizontal|center_vertical"
         android:layout_margin="16dp"
+        android:contentDescription="@string/logout_button"
         android:src="@drawable/baseline_logout_24"
         app:backgroundTint="#ECDDFD"
         app:elevation="6dp"
         app:fabCustomSize="100dp"
         app:maxImageSize="56dp"
-        app:rippleColor="@color/white"
-        android:contentDescription="@string/logout_button"/>
+        app:rippleColor="@color/white" />
+    <TextView
+        android:id="@+id/textViewLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/logout"
+        android:layout_margin="5dp"
+        android:padding="5dp"/>
 
 
 </LinearLayout>

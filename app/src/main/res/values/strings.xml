@@ -44,5 +44,10 @@
     <string name="logout_button">logOut Button</string>
     <string name="profile_button">Profile Button</string>
     <string name="add_bus_button">Add bus button</string>
+    <string name="drivername">Driver Name</string>
+    <string name="driver_hours">Driver Hours</string>
+    <string name="driver_distance_traveled">Driver Distance Traveled</string>
+    <string name="scan_the_bus_s_qr_code">Scan the Bus\'s QR Code</string>
+    <string name="logout">LOGOUT</string>
 
 </resources>
