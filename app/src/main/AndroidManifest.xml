@@ -22,7 +22,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".PessangerHomeActivity"
+            android:name=".PassengerHomeActivity"
             android:exported="false" />
         <activity
             android:name=".interfaces.DriverJourneyActivity"

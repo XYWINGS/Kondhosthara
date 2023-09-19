@@ -55,5 +55,10 @@
     <string name="scan_qr">Scan QR</string>
     <string name="map">Map</string>
     <string name="view_the_map">View the Map</string>
+    <string name="credits_left_0">Credits Left : 0</string>
+    <string name="distance_can_be_traveled_0km">Distance Can be Traveled : 0km</string>
+    <string name="your_current_location_kandy">Your Current Location : Kandy</string>
+    <string name="sign_out_from_the_app">Sign Out from the App</string>
+    <string name="welcome_back_chalith">Welcome Back Chalith</string>
 
 </resources>

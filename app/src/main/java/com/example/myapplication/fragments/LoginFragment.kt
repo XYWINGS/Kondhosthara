@@ -11,8 +11,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myapplication.DriverActivity
-import com.example.myapplication.MapsActivity
 import com.example.myapplication.OwnerActivity
+import com.example.myapplication.PassengerHomeActivity
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -107,7 +107,7 @@ class LoginFragment : Fragment() {
                         }
                     }else if (userType=="Passenger"){
                         activity?.let {
-                            val intent = Intent(it, MapsActivity::class.java)
+                            val intent = Intent(it, PassengerHomeActivity::class.java)
                             it.startActivity(intent)
                             it.finish()
                         }
