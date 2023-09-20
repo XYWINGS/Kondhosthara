@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -81,6 +82,8 @@ class MapsActivity :AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapsInitializer.initialize(this, MapsInitializer.Renderer.LATEST) {
+        }
 
         auth = Firebase.auth
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -351,7 +354,7 @@ class MapsActivity :AppCompatActivity(),
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             if (!hasRestarted) {
-                restartActivity();
+              //  restartActivity();
                 hasRestarted = true;
             }
 

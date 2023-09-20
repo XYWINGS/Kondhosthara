@@ -156,13 +156,37 @@
                 app:rippleColor="@color/white" />
 
             <TextView
-                android:id="@+id/textViewLogout"
+                android:id="@+id/textViewProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="View the Profile" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabPassengerLogout"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center|center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/logout"
+                android:src="@drawable/baseline_logout_24"
+                app:backgroundTint="#ECDDFD"
+                app:elevation="6dp"
+                app:fabCustomSize="90dp"
+                app:maxImageSize="56dp"
+                app:rippleColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textViewLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/logout" />
 
 
         </LinearLayout>

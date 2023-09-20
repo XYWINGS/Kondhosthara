@@ -123,10 +123,7 @@ class QRReadActivity : AppCompatActivity() {
             val ownerID = busData[0]
             if (ownerID.length == 28 && busID.length > 6) {
                 qrCodeCaptured = true
-                Log.d(
-                    "UserTypeDebug",
-                    "userType: $userType --------------------------------------------------------------"
-                )
+
                 if (userType == "Driver") {
 
                     AlertDialog.Builder(this@QRReadActivity)

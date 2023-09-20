@@ -3,12 +3,16 @@ package com.example.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 private lateinit var scanQRBtn : FloatingActionButton
 private lateinit var viewMapBtn : FloatingActionButton
 private lateinit var viewWalletBtn : FloatingActionButton
 private lateinit var viewProfileBtn : FloatingActionButton
+private lateinit var viewLogOutBtn : FloatingActionButton
 
 class PassengerHomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +23,15 @@ class PassengerHomeActivity : AppCompatActivity() {
         viewMapBtn = findViewById(R.id.fabPassengerMap)
         viewProfileBtn = findViewById(R.id.fabPassengerProfile)
         viewWalletBtn = findViewById(R.id.fabPassengerWallet)
+        viewLogOutBtn = findViewById(R.id.fabPassengerLogout)
+
+        viewLogOutBtn.setOnClickListener{
+            Firebase.auth.signOut()
+            Toast.makeText(this, "Logging Out", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            this.finish()
+        }
 
         scanQRBtn.setOnClickListener {
             val intent = Intent(this, QRReadActivity::class.java)
