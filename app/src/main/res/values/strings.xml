@@ -44,5 +44,24 @@
     <string name="logout_button">logOut Button</string>
     <string name="profile_button">Profile Button</string>
     <string name="add_bus_button">Add bus button</string>
+    <string name="drivername">Driver Name</string>
+    <string name="driver_hours">Driver Hours</string>
+    <string name="driver_distance_traveled">Driver Distance Traveled</string>
+    <string name="scan_the_bus_s_qr_code">Scan the Bus\'s QR Code</string>
+    <string name="logout">LOGOUT</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="map_button">Map Button</string>
+    <string name="wallet">Wallet</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="map">Map</string>
+    <string name="view_the_map">View the Map</string>
+    <string name="credits_left_0">Credits Left : 0</string>
+    <string name="distance_can_be_traveled_0km">Distance Can be Traveled : 0km</string>
+    <string name="your_current_location_kandy">Your Current Location : Kandy</string>
+    <string name="sign_out_from_the_app">Sign Out from the App</string>
+    <string name="welcome_back_chalith">Welcome Back Chalith</string>
+    <string name="title_activity_bus_view_map">BusViewMap</string>
+    <string name="enter_end_location">Enter the Destination</string>
+    <string name="search_radius">Search Radius :</string>
 
 </resources>

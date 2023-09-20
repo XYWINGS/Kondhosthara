@@ -86,9 +86,7 @@ class OwnerMainFragment : Fragment() {
                 userIDNum.setText("")
                 userPhnNum.setText("")
             }
-
         }
-
         return view
     }
 
@@ -101,33 +99,16 @@ class OwnerMainFragment : Fragment() {
                                      password: String
                                      ) : Boolean {
         return try{
+          //  val emailData =
 
-            val random = java.util.Random()
-            val letters = ('A'..'Z').toList()
-            val randomLetters = List(5) { letters[random.nextInt(letters.size)] }
-            val randomNumbers = (1..10).joinToString("") { random.nextInt(10).toString() }
-            val randomCode = randomLetters.joinToString("") + randomNumbers
-
-
-            //FirebaseDatabase.getInstance().reference.child("Users").child(ownerUid).child("drivers").setValue(Driver("",name,email,phoneNum,address,personID,"Driver"))
-//            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-//
-//                  FirebaseDatabase.getInstance().reference.child("Drivers").child(ownerUid).child(randomCode)
-//                    .setValue(Driver(ownerUid,name,email,phoneNum,address,personID,"Driver","")).addOnCompleteListener {
-//                    }
-//            }.addOnFailureListener {
-//                    Toast.makeText(activity, "Registration failed. ${it.message}", Toast.LENGTH_LONG).show()
-//                }.addOnCompleteListener {
-//                Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
-//            }
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { registrationTask ->
                     if (registrationTask.isSuccessful) {
                         FirebaseDatabase.getInstance().reference
                             .child("Drivers")
                             .child(ownerUid)
-                            .child(randomCode)
-                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", ""))
+                            .child(email.split("@")[0])
+                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "","0","0"))
                             .addOnCompleteListener { registrationCompleteTask ->
                                 if (registrationCompleteTask.isSuccessful) {
                                     Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
@@ -135,26 +116,6 @@ class OwnerMainFragment : Fragment() {
                                     Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
                                 }
                             }
-
-                        val dataMap = hashMapOf(
-                            "ownerUid" to ownerUid,
-                            "nic" to personID,
-                            "name" to name,
-                            "type" to "Driver"
-                        )
-
-                        FirebaseDatabase.getInstance().reference
-                            .child("Users")
-                            .child(randomCode)
-                            .setValue(dataMap)
-                            .addOnCompleteListener { registrationCompleteTask ->
-                                if (registrationCompleteTask.isSuccessful) {
-                                    Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
-                                } else {
-                                    Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
-                                }
-                            }
-
                     } else {
                         Toast.makeText(activity, "Registration failed. ${registrationTask.exception?.message}", Toast.LENGTH_LONG).show()
                     }

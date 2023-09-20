@@ -11,9 +11,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myapplication.DriverActivity
-import com.example.myapplication.LoginActivity
-import com.example.myapplication.MapsActivity
 import com.example.myapplication.OwnerActivity
+import com.example.myapplication.PassengerHomeActivity
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -26,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 class LoginFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var emailName : String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,10 +44,13 @@ class LoginFragment : Fragment() {
         val signupButton = view.findViewById<Button>(R.id.regBtn)
         // val passrestButton = view.findViewById<TextView>(R.id.frogot_password_link)
 
-        val user = Firebase.auth.currentUser
+        val user = auth.currentUser
 
         if (user != null){
-            Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
+            Firebase.auth.currentUser?.let { it1 ->
+                    emailName = user.email?.split("@")?.get(0).toString()
+                    redirection(it1.uid,emailName)
+            }
         }
 
         loginButton.setOnClickListener {
@@ -64,7 +67,12 @@ class LoginFragment : Fragment() {
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{ task ->
                     if (task.isSuccessful) {
 
-                        Firebase.auth.currentUser?.let { it1 ->  redirection(it1.uid) }
+                        Firebase.auth.currentUser?.let { it1 ->
+                            val emailName = it1.email?.split("@")?.get(0)
+                            if (emailName != null) {
+                                redirection(it1.uid,emailName)
+                            }
+                        }
                         progressBar.visibility = View.GONE
 
                     } else {
@@ -83,15 +91,14 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun redirection(uid: String) {
+    private fun redirection(uid: String, emailName: String) {
+
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(uid)
 
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-
                     val userType = dataSnapshot.child("type").getValue(String::class.java)
-
                     if(userType == "Owner"){
                         activity?.let {
                             val intent = Intent(it, OwnerActivity::class.java)
@@ -100,26 +107,64 @@ class LoginFragment : Fragment() {
                         }
                     }else if (userType=="Passenger"){
                         activity?.let {
-                            val intent = Intent(it, MapsActivity::class.java)
+                            val intent = Intent(it, PassengerHomeActivity::class.java)
+                            it.startActivity(intent)
+                            it.finish()
+                        }
+                    }else if (userType=="Driver"){
+                        activity?.let {
+                            val intent = Intent(it, DriverActivity::class.java)
                             it.startActivity(intent)
                             it.finish()
                         }
                     }
                 }else{
-                    Toast.makeText(activity, "Logging as a driver", Toast.LENGTH_LONG).show()
-                    activity?.let {
-                        val intent = Intent(it, DriverActivity::class.java)
-                        it.startActivity(intent)
-                    }
+                    handleDriverLogin(uid,emailName)
                 }
             }
-
             override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(activity, "Connection error. Please try again...", Toast.LENGTH_LONG).show()
-
+                Toast.makeText(activity, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
+    private fun handleDriverLogin(userID: String, emailName: String) {
+        val driverReference = FirebaseDatabase.getInstance().reference.child("Drivers")
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
+
+        try {
+            driverReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (ownerSnapshot in dataSnapshot.children) {
+                        val ownerID = ownerSnapshot.key
+                        for (driverSnapshot in ownerSnapshot.children) {
+                            val driverEmailName = driverSnapshot.key
+                            if (driverEmailName == emailName){
+                                val driverData = driverSnapshot.value
+                                driverSnapshot.ref.removeValue()
+                                val newDriverReference = ownerID?.let { driverReference.child(it).child(userID) }
+                                userReference.setValue(driverData).addOnSuccessListener {
+                                    newDriverReference?.setValue(driverData)?.addOnSuccessListener {
+                                        Toast.makeText(activity, "Logging as a driver", Toast.LENGTH_LONG).show()
+                                        activity?.let {
+                                            val intent = Intent(it, DriverActivity::class.java)
+                                            it.startActivity(intent)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(context, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        }catch (e : Exception){
+            Toast.makeText(context, "Error Occurred ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
 
 

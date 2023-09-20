@@ -37,7 +37,8 @@
         android:ems="10"
         android:gravity="center"
         android:hint="@string/hintpassword"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="123456" />
 
     <Button
         android:id="@+id/loginBtn"

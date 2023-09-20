@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,6 +21,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
+
+        <activity
+            android:name=".BusViewMap"
+            android:exported="false"
+            android:label="@string/title_activity_bus_view_map" />
+        <activity
+            android:name=".PassengerHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".interfaces.DriverJourneyActivity"
+            android:exported="false" />
         <activity
             android:name=".DriverActivity"
             android:exported="false" />
@@ -40,11 +59,6 @@
         <activity
             android:name=".QRGenerateActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
-
         <activity
             android:name=".MapsActivity"
             android:exported="true"

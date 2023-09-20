@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import com.google.maps.model.LatLng
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -161,7 +162,7 @@ class OwnerAddBusFragment : Fragment() {
             .child(busRegNumber)
             .setValue(Bus(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber,
                 startLocation,endLocation,"","",
-                "",0, numOfSeats,"","Home"))
+                "",0, numOfSeats,"","","Home",LatLng( 7.1635,80.5702)))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Bus Details added to the system", Toast.LENGTH_LONG).show()

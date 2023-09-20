@@ -127,7 +127,7 @@ class RegisterFragment : Fragment() {
                                     type: String) : Boolean {
         return try{
 
-            FirebaseDatabase.getInstance().reference.child("Users").child(uid).setValue(User(uid,name,email,phoneNum,address,personID,type)).addOnCompleteListener {
+            FirebaseDatabase.getInstance().reference.child("Users").child(uid).setValue(User(uid,name,email,phoneNum,address,personID,type,"","","0")).addOnCompleteListener {
                     Toast.makeText(activity, "Registered successfully.", Toast.LENGTH_LONG).show()
             }.addOnFailureListener {
                 Toast.makeText(activity, "Registered failed. ${it.message}", Toast.LENGTH_LONG).show()

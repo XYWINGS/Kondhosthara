@@ -54,8 +54,6 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var locText: TextView
     //private lateinit var locBtn: Button
     private lateinit var conBtn: Button
-    private lateinit var qrGenBtn: Button
-    private lateinit var qrReadtn: Button
     private lateinit var logOutBtn: Button
     private lateinit var detailsTexts : TextView
     private var isJourneyStarted = false
@@ -93,8 +91,6 @@ class MapsActivity :AppCompatActivity(),
         mapFragment.getMapAsync(this)
 
         locText =  findViewById(id.locText)
-        qrGenBtn = findViewById(id.qrGenBtn)
-        qrReadtn = findViewById(qrReadBtn)
         conBtn =  findViewById(id.conBtn)
         logOutBtn = findViewById(id.logOutBtn)
         detailsTexts = findViewById(detailsText)
@@ -139,17 +135,6 @@ class MapsActivity :AppCompatActivity(),
             } else {
                 stopJourney()
             }
-        }
-
-        qrGenBtn.setOnClickListener {
-            val intent = Intent(this, QRGenerateActivity::class.java)
-            startActivity(intent)
-        }
-
-        qrReadtn.setOnClickListener {
-            val intent = Intent(this, QRReadActivity::class.java)
-            intent.putExtra("UserType", "Passenger")
-            startActivity(intent)
         }
 
         logOutBtn.setOnClickListener {
@@ -365,10 +350,10 @@ class MapsActivity :AppCompatActivity(),
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-//            if (!hasRestarted) {
-//                restartActivity();
-//                hasRestarted = true;
-//            }
+            if (!hasRestarted) {
+                restartActivity();
+                hasRestarted = true;
+            }
 
             Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
