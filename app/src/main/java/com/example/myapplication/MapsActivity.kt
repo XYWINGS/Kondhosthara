@@ -1,8 +1,6 @@
 package com.example.myapplication
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -18,9 +16,9 @@ import androidx.core.app.ActivityCompat
 import com.example.myapplication.R.*
 import com.example.myapplication.R.id.*
 import com.example.myapplication.databinding.ActivityMapsBinding
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -33,10 +31,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -53,9 +48,6 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locText: TextView
-    //private lateinit var locBtn: Button
-    private lateinit var conBtn: Button
-    private lateinit var logOutBtn: Button
     private lateinit var detailsTexts : TextView
     private var isJourneyStarted = false
     private var isstartmarkerset = false
@@ -66,13 +58,12 @@ class MapsActivity :AppCompatActivity(),
     private var destinationMarker: Marker? = null
     private var originMarker: Marker? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationsRequest: com.google.android.gms.location.LocationRequest
+    private lateinit var locationsRequest: LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
     private var startLocationMarker: Marker? = null
     private var currentLocationMarker: Marker? = null
-   // private lateinit var startLocationFragment: AutocompleteSupportFragment
-    private lateinit var endLocationFragment: AutocompleteSupportFragment
-    private var startLocationLatLng  :LatLng? = null
+   // private lateinit var endLocationFragment: AutocompleteSupportFragment
+   // private var startLocationLatLng  :LatLng? = null
     private var endLocationLat  :Double = 0.0
     private var endLocationLng  :Double = 0.0
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
@@ -94,59 +85,61 @@ class MapsActivity :AppCompatActivity(),
         mapFragment.getMapAsync(this)
 
         locText =  findViewById(id.locText)
-        conBtn =  findViewById(id.conBtn)
-        logOutBtn = findViewById(id.logOutBtn)
+//        conBtn =  findViewById(id.conBtn)
+//        logOutBtn = findViewById(id.logOutBtn)
         detailsTexts = findViewById(detailsText)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         Places.initialize(applicationContext, APIKEY)
-
-        endLocationFragment =
-            supportFragmentManager.findFragmentById(id.endLocationFragment) as AutocompleteSupportFragment
-
-        endLocationFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
-            .setHint("Select the Journey Destination")
-            .setCountry("LK")
-
-        endLocationFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-
-            override fun onPlaceSelected(place: Place) {
-                endLocationLat = place.latLng!!.latitude
-                endLocationLng = place.latLng!!.longitude
-
-                addMarker(LatLng(endLocationLat,endLocationLng), "Destination")
-
+//
+//        endLocationFragment =
+//            supportFragmentManager.findFragmentById(id.endLocationFragment) as AutocompleteSupportFragment
+//
+//        endLocationFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
+//            .setHint("Select the Journey Destination")
+//            .setCountry("LK")
+//
+//        endLocationFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+//
+//            override fun onPlaceSelected(place: Place) {
+//                endLocationLat = place.latLng!!.latitude
+//                endLocationLng = place.latLng!!.longitude
+//
+//                addMarker(LatLng(endLocationLat,endLocationLng), "Destination")
+//
 //                mMap.addMarker(
 //                    MarkerOptions().position(LatLng(endLocationLat,endLocationLng))
 //                        .title("End Location")
 //                )
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(place.latLng!!.latitude,place.latLng!!.longitude)))
-              //  routeHandler()
-            }
-
-            override fun onError(status: Status) {
-                Log.i(TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
-            }
-        })
-
-        conBtn.setOnClickListener {
-            if (!isJourneyStarted) {
-                startJourney()
-                Log.i(TAG, "An error occurred: ---------------------------------------------------------------------------------------------------------------")
-            } else {
-                stopJourney()
-            }
-        }
-
-        logOutBtn.setOnClickListener {
-            Firebase.auth.signOut()
-            Toast.makeText(this, "Logging Out", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            this.finish()
-        }
+//
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(place.latLng!!.latitude,place.latLng!!.longitude)))
+//              //  routeHandler()
+//            }
+//
+//            override fun onError(status: Status) {
+//                Log.i(TAG, "An error occurred: $status---------------------------------------------------------------------------------------------------------------")
+//            }
+//        })
+//
+//
+//
+//        conBtn.setOnClickListener {
+//            if (!isJourneyStarted) {
+//                startJourney()
+//                Log.i(TAG, "An error occurred: ---------------------------------------------------------------------------------------------------------------")
+//            } else {
+//                stopJourney()
+//            }
+//        }
+//
+//        logOutBtn.setOnClickListener {
+//            Firebase.auth.signOut()
+//            Toast.makeText(this, "Logging Out", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//            this.finish()
+//        }
     }
 
     private fun addMarker(latLng: LatLng, type: String) {
@@ -173,7 +166,7 @@ class MapsActivity :AppCompatActivity(),
         override fun onLocationResult(p0: LocationResult) {
             val currentLocation = p0.lastLocation
             if (currentLocation != null) {
-                val cityName: String? = getCityName(currentLocation.latitude, currentLocation.longitude)
+                val cityName: String = getCityName(currentLocation.latitude, currentLocation.longitude)
                 locText.text = "Lat : ${currentLocation.latitude} long : ${currentLocation.longitude} The city is $cityName"
 
                 // Calculate distance between consecutive locations and update total distance
@@ -198,38 +191,36 @@ class MapsActivity :AppCompatActivity(),
             Log.d("Map", "START LOC LNG ${startLocation.latitude}----------------------------------------------------------")
             Log.d("Map", "END LOC LAT ${endLocationLat}----------------------------------------------------------")
             Log.d("Map", "EMD LOC LNG ${endLocationLng}----------------------------------------------------------")
-        if (journeyLocations != null ){
 
-            val context = GeoApiContext.Builder()
-                .apiKey(APIKEY)
-                .queryRateLimit(3)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .build()
+        val context = GeoApiContext.Builder()
+            .apiKey(APIKEY)
+            .queryRateLimit(3)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .build()
 
-            val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
-                .mode(TravelMode.DRIVING) // Choose travel mode
-                .origin("${startLocation.latitude},${startLocation.longitude}")
-                .destination("$endLocationLat,$endLocationLng")
-                .await()
+        val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
+            .mode(TravelMode.DRIVING) // Choose travel mode
+            .origin("${startLocation.latitude},${startLocation.longitude}")
+            .destination("$endLocationLat,$endLocationLng")
+            .await()
 
-            val route = directionsResult.routes[0].overviewPolyline.decodePath()
+        val route = directionsResult.routes[0].overviewPolyline.decodePath()
 
-            if (route != null){
-                // Convert DirectionsLatLng to Google Maps LatLng
-                val googleMapsLatLngList = route.map { directionsLatLng ->
-                    LatLng(directionsLatLng.lat, directionsLatLng.lng)
-                }
-
-                // Draw the route on the map
-                val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
-                mMap.addPolyline(polylineOptions)
-            }else{
-                Log.d("debug", "---------------------------------List is Empty----------------------------")
+        if (route != null){
+            // Convert DirectionsLatLng to Google Maps LatLng
+            val googleMapsLatLngList = route.map { directionsLatLng ->
+                LatLng(directionsLatLng.lat, directionsLatLng.lng)
             }
 
+            // Draw the route on the map
+            val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
+            mMap.addPolyline(polylineOptions)
+        }else{
+            Log.d("debug", "---------------------------------List is Empty----------------------------")
         }
+
     }
 
     private fun startJourney(){
@@ -253,25 +244,28 @@ class MapsActivity :AppCompatActivity(),
     @SuppressLint("MissingPermission")
     private fun getNewLocation() {
         Toast.makeText(this, "Waiting for the location", Toast.LENGTH_LONG).show()
-        locationsRequest = com.google.android.gms.location.LocationRequest()
+        locationsRequest = LocationRequest()
         locationsRequest.priority =
-            com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+            LocationRequest.PRIORITY_HIGH_ACCURACY
         locationsRequest.interval = 3000
         locationsRequest.fastestInterval = 2000
         locationsRequest.numUpdates = 200
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
 
-        fusedLocationProviderClient!!.requestLocationUpdates(
+        fusedLocationProviderClient.requestLocationUpdates(
             locationsRequest, locationCallback, Looper.myLooper()
         )
     }
 
+
+
+
     private fun getCityName(lat:Double,long:Double):String{
         var cityName ="Not Found"
-        var geoCoder = Geocoder(this, Locale.getDefault())
-        var address = geoCoder.getFromLocation(lat,long,1)
+        val geoCoder = Geocoder(this, Locale.getDefault())
+        val address = geoCoder.getFromLocation(lat,long,1)
         if (address != null) {
-            cityName = address.get(0)?.locality.toString()
+            cityName = address[0]?.locality.toString()
         }
         return  cityName
     }
@@ -341,12 +335,6 @@ class MapsActivity :AppCompatActivity(),
         )
     }
 
-    private fun restartActivity() {
-        val intent = Intent(this, MapsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
@@ -355,7 +343,7 @@ class MapsActivity :AppCompatActivity(),
 
             if (!hasRestarted) {
               //  restartActivity();
-                hasRestarted = true;
+                hasRestarted = true
             }
 
             Log.d("debug", "----------------------------------location Permissions granted----------------------------------")

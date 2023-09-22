@@ -300,7 +300,9 @@ class OwnerAddBusFragment : Fragment() {
 
         uri?.let { imageUri ->
             val outputStream = resolver.openOutputStream(imageUri)
-            qrCodeBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            if (outputStream != null) {
+                qrCodeBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            }
             outputStream?.close()
 
             // Notify the MediaScanner about the new image

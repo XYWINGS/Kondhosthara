@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+>
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -68,6 +73,37 @@
             android:padding="5dp"
             android:text="@string/drivername" />
 
+        <TextView
+            android:id="@+id/textViewSelectLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Select the Start Location of the Journey" />
+
+
+        <RadioGroup
+            android:id="@+id/selectLocRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radioButtonDriverOrigin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/origin" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDriverDestination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/destination" />
+
+        </RadioGroup>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabDriverBusQR"
             android:layout_width="100dp"
@@ -119,3 +155,5 @@
     </LinearLayout>
 </LinearLayout>
 
+
+</ScrollView>

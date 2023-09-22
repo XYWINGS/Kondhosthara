@@ -131,7 +131,7 @@ class QRReadActivity : AppCompatActivity() {
                         .setMessage("Confirm your registration as the driver of the bus with ID $busID ")
                         .setPositiveButton("Confirm") { dialog, which ->
 
-                            updateUserData(busID) { success ->
+                            updateUserData(busID,ownerID) { success ->
 
                                 val intent = Intent(this@QRReadActivity, DriverActivity::class.java)
                                 if (success) {
@@ -154,7 +154,7 @@ class QRReadActivity : AppCompatActivity() {
                         .show()
                 } else if (userType == "Passenger") {
 
-                    updateUserData(busID) { success ->
+                    updateUserData(busID,ownerID) { success ->
 
                         val intent = Intent(this, MapsActivity::class.java)
 
@@ -181,11 +181,46 @@ class QRReadActivity : AppCompatActivity() {
         }
     }
 
-        private fun updateUserData(busID: String, callback: (Boolean) -> Unit) {
+        private fun updateUserData(busID: String, ownerID : String, callback: (Boolean) -> Unit) {
             runOnUiThread {
                 val userID = auth.currentUser?.uid
+
                 val userReference =
                     FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
+
+                val busReference =
+                    FirebaseDatabase.getInstance().reference.child("Buses").child(ownerID).child(busID)
+
+                busReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            val updates = hashMapOf(
+                                "driverID" to userID
+                            )
+                            busReference.updateChildren(updates as Map<String, Any>)
+                                .addOnSuccessListener {
+                                callback(true)
+                            }.addOnFailureListener {
+                                callback(false) // Signal failure
+                            }
+                        } else {
+                            Toast.makeText(
+                                this@QRReadActivity,
+                                "Bus Data not Found",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            callback(false) // Signal failure
+                        }
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Toast.makeText(
+                            this@QRReadActivity,
+                            "Error Occurred ${databaseError.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        callback(false) // Signal failure
+                    }
+                })
 
                 userReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -212,7 +247,7 @@ class QRReadActivity : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this@QRReadActivity,
-                                "Error Occurred Try Again",
+                                "User data not Found",
                                 Toast.LENGTH_SHORT
                             ).show()
                             callback(false) // Signal failure

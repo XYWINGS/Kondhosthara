@@ -37,14 +37,12 @@ class PassengerHomeActivity : AppCompatActivity() {
             val intent = Intent(this, QRReadActivity::class.java)
             intent.putExtra("UserType", "Passenger")
             startActivity(intent)
-            finish()
         }
 
         viewMapBtn.setOnClickListener {
             val intent = Intent(this,BusViewMap::class.java)
             intent.putExtra("UserType", "Passenger")
             startActivity(intent)
-            finish()
         }
 
 
