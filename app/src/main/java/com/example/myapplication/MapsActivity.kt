@@ -258,8 +258,6 @@ class MapsActivity :AppCompatActivity(),
     }
 
 
-
-
     private fun getCityName(lat:Double,long:Double):String{
         var cityName ="Not Found"
         val geoCoder = Geocoder(this, Locale.getDefault())
