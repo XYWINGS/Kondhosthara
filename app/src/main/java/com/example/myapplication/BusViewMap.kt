@@ -150,7 +150,6 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 getNewLocation()
-
             } else {
                 Toast.makeText(this, "Please turn on the Location Service", Toast.LENGTH_LONG).show()
             }

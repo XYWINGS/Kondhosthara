@@ -4,52 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/locText"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text=""
-        android:textSize="16sp" />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="2"
+        android:columnCount="3"
+        android:alignmentMode="alignMargins"
+        android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/detailsText"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text=""
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/textViewUserCurrentLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/current_location"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-<!--    <Button-->
-<!--        android:id="@+id/conBtn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:gravity="center"-->
-<!--        android:text="@string/conBtn" />-->
+        <TextView
+            android:id="@+id/textViewUserDistantTravel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/distance_traveled"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
+        <TextView
+            android:id="@+id/textViewUserCurrentSpeed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/current_speed"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-<!--    <Button-->
-<!--        android:id="@+id/logOutBtn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:gravity="center"-->
-<!--        android:text="@string/txtlogout" />-->
+        <TextView
+            android:id="@+id/textViewUserOriginLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/origin"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-<!--    <fragment-->
-<!--        android:id="@+id/endLocationFragment"-->
-<!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="@string/enter_end_location" />-->
+        <TextView
+            android:id="@+id/textViewUserCreditLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/credits_left"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
+        <TextView
+            android:id="@+id/textViewUserComplains"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/complains"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-    <fragment
+    </GridLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabUserNotifyExit"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/notify_exit"
+        android:src="@drawable/baseline_bus_alert_24"
+        app:backgroundTint="#ECDDFD"
+        app:elevation="6dp"
+        app:fabCustomSize="80dp"
+        app:maxImageSize="56dp"
+        app:rippleColor="@color/white" />
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -57,6 +111,5 @@
         map:uiZoomControls="true"
         map:uiRotateGestures="true"
         tools:context=".MapsActivity" />
-
 
 </LinearLayout>

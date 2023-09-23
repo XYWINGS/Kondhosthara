@@ -11,9 +11,11 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myapplication.DriverActivity
+import com.example.myapplication.MapsActivity
 import com.example.myapplication.OwnerActivity
 import com.example.myapplication.PassengerHomeActivity
 import com.example.myapplication.R
+import com.example.myapplication.interfaces.DriverJourneyActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -106,18 +108,38 @@ class LoginFragment : Fragment() {
                             it.finish()
                         }
                     }else if (userType=="Passenger"){
-                        activity?.let {
-                            val intent = Intent(it, PassengerHomeActivity::class.java)
-                            it.startActivity(intent)
-                            it.finish()
+                        val busId = dataSnapshot.child("busID").value.toString()
+                        if (busId.length > 5){
+                            activity?.let {
+                                val intent = Intent(it, MapsActivity::class.java)
+                                it.startActivity(intent)
+                                it.finish()
+                            }
+                        }else{
+                            activity?.let {
+                                val intent = Intent(it, PassengerHomeActivity::class.java)
+                                it.startActivity(intent)
+                                it.finish()
+                            }
                         }
+
                     }else if (userType=="Driver"){
-                        activity?.let {
-                            val intent = Intent(it, DriverActivity::class.java)
-                            it.startActivity(intent)
-                            it.finish()
+                        val busId = dataSnapshot.child("busID").value.toString()
+                        val status = dataSnapshot.child("status").value.toString()
+                        if(status=="driving"){
+                            activity?.let {
+                                    val intent = Intent(it, DriverJourneyActivity::class.java)
+                                    it.startActivity(intent)
+                                    it.finish()
+                                }
+                            }
+                        }else{
+                            activity?.let {
+                                val intent = Intent(it, DriverActivity::class.java)
+                                it.startActivity(intent)
+                                it.finish()
+                            }
                         }
-                    }
                 }else{
                     handleDriverLogin(uid,emailName)
                 }

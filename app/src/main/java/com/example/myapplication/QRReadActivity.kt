@@ -194,8 +194,13 @@ class QRReadActivity : AppCompatActivity() {
                 busReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (dataSnapshot.exists()) {
+                            var passCount = Integer.parseInt(dataSnapshot.child("passngrCount").value.toString())
+                            if (userType == "Passenger"){
+                               passCount +=1
+                            }
                             val updates = hashMapOf(
-                                "driverID" to userID
+                                "driverID" to userID,
+                                "passngrCount" to passCount
                             )
                             busReference.updateChildren(updates as Map<String, Any>)
                                 .addOnSuccessListener {
@@ -226,7 +231,8 @@ class QRReadActivity : AppCompatActivity() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (dataSnapshot.exists()) {
                             val updates = hashMapOf(
-                                "busID" to busID
+                                "busID" to busID,
+                                "status" to "registered"
                             )
                             userReference.updateChildren(updates as Map<String, Any>)
                                 .addOnSuccessListener {
