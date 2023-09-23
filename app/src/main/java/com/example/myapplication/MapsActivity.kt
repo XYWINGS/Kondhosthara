@@ -1,6 +1,7 @@
 package com.example.myapplication
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -35,6 +36,10 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
@@ -78,8 +83,9 @@ class MapsActivity :AppCompatActivity(),
     private var endTime: Long = 0
     private var journeyStartedTime : HashMap<String,Any> ?= null
     private var journeyEndedTime : HashMap<String,Any> ?= null
-
-
+    private var usersData : DataSnapshot ?= null
+    private var currentWalletBalance : Int?=null
+    private var finalCost : Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,8 +101,6 @@ class MapsActivity :AppCompatActivity(),
             .findFragmentById(map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        //conBtn =  findViewById(id.conBtn)
-        //logOutBtn = findViewById(id.logOutBtn)
         textCurrentLocation =  findViewById(textViewUserCurrentLocation)
         textTravelDistance = findViewById(textViewUserDistantTravel)
         textCurrentSpeed = findViewById(textViewUserCurrentSpeed)
@@ -120,10 +124,8 @@ class MapsActivity :AppCompatActivity(),
         val sriLankaLatLng = LatLng(7.8731, 80.7718)
         val zoomLevel = 8.0f
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, zoomLevel))
-        startJourney()
+        getUserData()
     }
-
-
 
 
     private fun startJourney(){
@@ -135,7 +137,6 @@ class MapsActivity :AppCompatActivity(),
                 previousLocation = null
                 journeyLocations.clear()
                 getNewLocation()
-
                 val currentTime = Calendar.getInstance()
                 val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
                 val minutes = currentTime.get(Calendar.MINUTE)
@@ -168,6 +169,7 @@ class MapsActivity :AppCompatActivity(),
     }
 
     private val locationCallback = object : LocationCallback() {
+        @SuppressLint("SuspiciousIndentation")
         override fun onLocationResult(p0: LocationResult) {
             val currentLocation = p0.lastLocation
             if (currentLocation != null) {
@@ -179,14 +181,13 @@ class MapsActivity :AppCompatActivity(),
 
                         val previousLocation = journeyLocations.last()
                         val distance = previousLocation.distanceTo(currentLocation)
+                        val currentTime = Calendar.getInstance()
 
                         currentLocationMarker?.remove()
 
                         currentLocationMarker = mMap.addMarker(MarkerOptions()
                             .position(LatLng(currentLocation.latitude,currentLocation.longitude))
                             .title("Current Location"))
-
-                        val currentTime = Calendar.getInstance()
 
                         if (distance > 1000) {
                             totalDistance += distance
@@ -263,23 +264,112 @@ class MapsActivity :AppCompatActivity(),
 
         textCurrentLocation.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
 
-
         mMap.addMarker(
             MarkerOptions().position(LatLng(lastLocation.latitude,lastLocation.longitude))
                 .title("Origin Point")
                 .icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
         )
+        calculateCost()
+      //journeyStopDBHandler()
+    }
 
-        journeyStopDBHandler()
+    private fun calculateCost() {
+        if (totalDistance != null && totalDistance > 0) {
 
+            val toatalDistance = 120
+            val disInKm = totalDistance / 1000
+            finalCost = 20
+
+            finalCost += if (disInKm < 5) {
+                40
+            } else if (disInKm < 10) {
+                90
+            } else if (disInKm < 20) {
+                120
+            } else if (disInKm < 50) {
+                140
+            } else if (disInKm < 100) {
+                200
+            } else {
+                (Integer.parseInt(totalDistance.toString())/ 1000) * 3
+            }
+            textOrigin.text = totalDistance.toString()
+        }
     }
 
     private fun journeyStopDBHandler() {
-        TODO("Not yet implemented")
+        val userID = auth.currentUser!!.uid
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
+
+        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val updates = hashMapOf(
+                        "busID" to "",
+                        "status" to "idle",
+                        "walletBalance" to ""
+                    )
+                    userReference.updateChildren(updates as Map<String, Any>)
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                this@MapsActivity,
+                                "Bus Registered Successfully",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                this@MapsActivity,
+                                "Error Occurred ${it.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+                } else {
+                    Toast.makeText(
+                        this@MapsActivity,
+                        "User data not Found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(
+                    this@MapsActivity,
+                    "Error Occurred ${databaseError.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+        })
+
     }
 
+    private fun getUserData() {
+        val userID = auth.currentUser!!.uid
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
 
+        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    startJourney()
+                    usersData = dataSnapshot
+                    currentWalletBalance = Integer.parseInt(dataSnapshot.child("walletBalance").value.toString())
+                }else{
+                    Toast.makeText(this@MapsActivity, "Error Occurred. Please try Again.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@MapsActivity, PassengerHomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@MapsActivity, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
 
 

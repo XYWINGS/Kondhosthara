@@ -13,4 +13,5 @@ data class User(
     val walletBalance : String ?= null,
     val status : String ?= null
 
+
 )

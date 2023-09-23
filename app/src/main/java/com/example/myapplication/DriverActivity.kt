@@ -100,7 +100,7 @@ class DriverActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         it.context,
-                        "Please Select the Journey Start Location ",
+                        "Please Select the Journey Destination ",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -131,7 +131,6 @@ class DriverActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
     }
 
 

@@ -132,14 +132,14 @@ class LoginFragment : Fragment() {
                                     it.startActivity(intent)
                                     it.finish()
                                 }
-                            }
-                        }else{
+                            } else if(status =="idle" || status=="registered"){
                             activity?.let {
                                 val intent = Intent(it, DriverActivity::class.java)
                                 it.startActivity(intent)
                                 it.finish()
                             }
                         }
+                    }
                 }else{
                     handleDriverLogin(uid,emailName)
                 }
