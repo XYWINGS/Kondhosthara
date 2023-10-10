@@ -18,7 +18,6 @@ import com.example.myapplication.R.id.*
 import com.example.myapplication.databinding.ActivityMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
@@ -45,11 +44,9 @@ import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
-import java.sql.Time
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.text.SimpleDateFormat
 import kotlin.collections.HashMap
 
 
@@ -85,8 +82,6 @@ class MapsActivity :AppCompatActivity(),
     private var journeyEndedTime : HashMap<String,Any> ?= null
     private var usersData : DataSnapshot ?= null
     private var currentWalletBalance : Int?=null
-    private var finalCost : Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,9 +168,13 @@ class MapsActivity :AppCompatActivity(),
         override fun onLocationResult(p0: LocationResult) {
             val currentLocation = p0.lastLocation
             if (currentLocation != null) {
-                val cityName: String = getCityName(currentLocation.latitude, currentLocation.longitude)
 
-                textCurrentLocation.text = "Area name: $cityName"
+                val cityName: String ?= getCityName(currentLocation.latitude, currentLocation.longitude)
+                if (cityName != null && cityName !=""){
+                    textCurrentLocation.text = "Area name: $cityName"
+                }else{
+                    textCurrentLocation.text = "Not Available"
+                }
 
                     if (isJourneyStarted && journeyLocations.isNotEmpty()) {
 
@@ -262,7 +261,7 @@ class MapsActivity :AppCompatActivity(),
             "minutes" to minutes
         )
 
-        textCurrentLocation.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
+        textTravelDistance.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
 
         mMap.addMarker(
             MarkerOptions().position(LatLng(lastLocation.latitude,lastLocation.longitude))
@@ -270,17 +269,14 @@ class MapsActivity :AppCompatActivity(),
                 .icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
         )
-        calculateCost()
-      //journeyStopDBHandler()
+
+        journeyStopDBHandler( calculateCost())
     }
 
-    private fun calculateCost() {
+    private fun calculateCost() : Int{
+        var finalCost = 20
         if (totalDistance != null && totalDistance > 0) {
-
-            val toatalDistance = 120
             val disInKm = totalDistance / 1000
-            finalCost = 20
-
             finalCost += if (disInKm < 5) {
                 40
             } else if (disInKm < 10) {
@@ -294,27 +290,30 @@ class MapsActivity :AppCompatActivity(),
             } else {
                 (Integer.parseInt(totalDistance.toString())/ 1000) * 3
             }
-            textOrigin.text = totalDistance.toString()
+            textOrigin.text = "Total Cost Rs:$finalCost"
+            textCurrentSpeed.text = "Stopped"
         }
+        return finalCost
     }
 
-    private fun journeyStopDBHandler() {
+    private fun journeyStopDBHandler( totCost : Int) {
         val userID = auth.currentUser!!.uid
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
-
+        val walletBalance = currentWalletBalance?.minus(totCost)
+        textCreditLeft.text = "Wallet Balance Rs$walletBalance"
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val updates = hashMapOf(
                         "busID" to "",
                         "status" to "idle",
-                        "walletBalance" to ""
+                        "walletBalance" to walletBalance
                     )
                     userReference.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
                             Toast.makeText(
                                 this@MapsActivity,
-                                "Bus Registered Successfully",
+                                "Journey Completed",
                                 Toast.LENGTH_LONG
                             ).show()
 
@@ -342,7 +341,6 @@ class MapsActivity :AppCompatActivity(),
                     "Error Occurred ${databaseError.message}",
                     Toast.LENGTH_SHORT
                 ).show()
-
             }
         })
 
