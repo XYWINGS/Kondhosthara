@@ -11,5 +11,6 @@ data class Driver(
       val busID : String ?= null,
       val drvHrs : String ?= null,
       val distTraval : String ?= null,
-      val uid : String ?= null
+      val uid : String ?= null,
+      val status : String ? =null
     )

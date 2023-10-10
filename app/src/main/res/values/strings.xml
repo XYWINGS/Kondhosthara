@@ -66,5 +66,12 @@
     <string name="originlocation">OriginLocation</string>
     <string name="destination">Destination</string>
     <string name="origin">Origin</string>
+    <string name="current_location">Current Location</string>
+    <string name="distance_traveled">Distance Traveled</string>
+    <string name="notify_exit">Notify Exit</string>
+    <string name="current_speed">Current Speed</string>
+    <string name="credits_left">Credits Left</string>
+    <string name="complains">Complains</string>
+    <string name="select_the_destination">Select the Destination</string>
 
 </resources>

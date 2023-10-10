@@ -150,7 +150,6 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 getNewLocation()
-
             } else {
                 Toast.makeText(this, "Please turn on the Location Service", Toast.LENGTH_LONG).show()
             }
@@ -239,39 +238,37 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
         removeAllMarkers()
 
         busDataList.forEach { busSnapshot ->
-            val destinationLat = busSnapshot.child("endLocation").child("latLng").child("latitude").value
-            val destinationLong = busSnapshot.child("endLocation").child("latLng").child("longitude").value
-            val busLocation = LatLng(destinationLat as Double, destinationLong as Double)
-            val busID = busSnapshot.key.toString()
-            val destination = busSnapshot.child("journeyStatus").value.toString()
-            val userLoc = currentUserLocation
-            val distance = areLatLngsWithinRadius(busLocation,userLoc)
-            val seatsLeft  =   Integer.parseInt(busSnapshot.child("seatCount").value.toString()) -  Integer.parseInt(
-                busSnapshot.child("passngrCount").value.toString()
-            )
 
-            if (distance  <= (selectedRadius*1000)){
-                addMarker(busLocation , busID, distance , destination ,seatsLeft)
+            val driverID = busSnapshot.child("driverID").value.toString()
+            if (driverID !=""){
+                val destinationLat = busSnapshot.child("currentLocation").child("lat").value
+                val destinationLong = busSnapshot.child("currentLocation").child("lng").value
+                val busLocation = LatLng(destinationLat as Double, destinationLong as Double)
+                val busID = busSnapshot.key.toString()
+                val destination = busSnapshot.child("journeyStatus").value.toString()
+                val userLoc = currentUserLocation
+                val distance = areLatLngsWithinRadius(busLocation,userLoc)
+                val seatsLeft  =   Integer.parseInt(busSnapshot.child("seatCount").value.toString()) -  Integer.parseInt(
+                    busSnapshot.child("passngrCount").value.toString()
+                )
+                if (distance  <= (selectedRadius*1000)){
+                    addMarker(busLocation , busID, distance , destination ,seatsLeft)
+                }
             }
-        //    busDataTextView.text = destinationLong.toString()
         }
     }
 
     private fun areLatLngsWithinRadius(latLngA: LatLng, currentUserLocation: LatLng ): Double {
-        val earthRadius = 6371000.0
 
+        val earthRadius = 6371000.0
         val lat1 = Math.toRadians(latLngA.latitude)
         val lon1 = Math.toRadians(latLngA.longitude)
-
         val lat2 = Math.toRadians(currentUserLocation.latitude)
         val lon2 = Math.toRadians(currentUserLocation.longitude)
-
         val dLat = lat2 - lat1
         val dLon = lon2 - lon1
-
         val a = sin(dLat / 2).pow(2) + cos(lat1) * cos(lat2) * sin(dLon / 2).pow(2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
         val distance = earthRadius * c
 
         return distance

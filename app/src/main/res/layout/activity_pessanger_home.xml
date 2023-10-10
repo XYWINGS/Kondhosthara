@@ -39,36 +39,6 @@
             android:padding="20dp"
             tools:context=".DriverActivity">
 
-            <TextView
-                android:id="@+id/textViewPassengerCredit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/credits_left_0" />
-
-            <TextView
-                android:id="@+id/textViewPassengerPossibleDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/distance_can_be_traveled_0km" />
-
-            <TextView
-                android:id="@+id/textViewPassengerCurrentLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/your_current_location_kandy" />
-
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabPassengerQRScan"

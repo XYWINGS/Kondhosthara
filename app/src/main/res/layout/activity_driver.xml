@@ -81,7 +81,7 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Select the Start Location of the Journey" />
+            android:text="@string/select_the_destination" />
 
 
         <RadioGroup
