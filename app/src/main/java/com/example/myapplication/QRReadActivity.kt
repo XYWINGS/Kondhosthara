@@ -68,51 +68,53 @@ class QRReadActivity : AppCompatActivity() {
     }
 
     private fun initializeCameraSource() {
-        val barcodeDetector = BarcodeDetector.Builder(this)
-            .setBarcodeFormats(Barcode.QR_CODE)
-            .build()
+        runOnUiThread {
+            val barcodeDetector = BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.QR_CODE)
+                .build()
 
-        cameraSource = CameraSource.Builder(this, barcodeDetector)
-            .setAutoFocusEnabled(true)
-            .build()
+            cameraSource = CameraSource.Builder(this, barcodeDetector)
+                .setAutoFocusEnabled(true)
+                .build()
 
-        cameraView.holder.addCallback(object : SurfaceHolder.Callback {
-            @SuppressLint("MissingPermission")
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                try {
-                    cameraSource.start(holder)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            override fun surfaceChanged(
-                holder: SurfaceHolder,
-                format: Int,
-                width: Int,
-                height: Int
-            ) {
-            }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-                cameraSource.stop()
-            }
-        })
-
-
-        barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
-            override fun release() {}
-
-            override fun receiveDetections(detections: Detector.Detections<Barcode>) {
-                if (!qrCodeCaptured) { // Check if a QR code hasn't been captured yet
-                    val barcodes = detections.detectedItems
-                    if (barcodes.size() > 0) {
-                        val qrContent = barcodes.valueAt(0).displayValue
-                        handleRedirection(caesarDecrypt(qrContent))
+            cameraView.holder.addCallback(object : SurfaceHolder.Callback {
+                @SuppressLint("MissingPermission")
+                override fun surfaceCreated(holder: SurfaceHolder) {
+                    try {
+                        cameraSource.start(holder)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
-            }
-        })
+
+                override fun surfaceChanged(
+                    holder: SurfaceHolder,
+                    format: Int,
+                    width: Int,
+                    height: Int
+                ) {
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    cameraSource.stop()
+                }
+            })
+
+
+            barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
+                override fun release() {}
+
+                override fun receiveDetections(detections: Detector.Detections<Barcode>) {
+                    if (!qrCodeCaptured) { // Check if a QR code hasn't been captured yet
+                        val barcodes = detections.detectedItems
+                        if (barcodes.size() > 0) {
+                            val qrContent = barcodes.valueAt(0).displayValue
+                            handleRedirection(caesarDecrypt(qrContent))
+                        }
+                    }
+                }
+            })
+        }
     }
 
     private fun handleRedirection(result: String) {
@@ -129,7 +131,7 @@ class QRReadActivity : AppCompatActivity() {
                     AlertDialog.Builder(this@QRReadActivity)
                         .setTitle("Confirmation of the Bus")
                         .setMessage("Confirm your registration as the driver of the bus with ID $busID ")
-                        .setPositiveButton("Confirm") { dialog, which ->
+                        .setPositiveButton("Confirm") { _, _ ->
 
                             updateUserData(busID,ownerID) { success ->
 
@@ -148,7 +150,7 @@ class QRReadActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        .setNegativeButton("Cancel") { dialog, which ->
+                        .setNegativeButton("Cancel") { _, _ ->
                             Toast.makeText(this@QRReadActivity, "Cancelled", Toast.LENGTH_SHORT).show()
                         }
                         .show()

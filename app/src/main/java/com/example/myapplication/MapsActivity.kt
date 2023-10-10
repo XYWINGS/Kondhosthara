@@ -1,8 +1,10 @@
 package com.example.myapplication
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
@@ -16,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import com.example.myapplication.R.*
 import com.example.myapplication.R.id.*
 import com.example.myapplication.databinding.ActivityMapsBinding
+import com.example.myapplication.dataclasses.UserTripRecord
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -30,7 +33,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -40,13 +42,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
-import com.google.maps.DirectionsApi
-import com.google.maps.GeoApiContext
-import com.google.maps.model.DirectionsResult
-import com.google.maps.model.TravelMode
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
 
@@ -61,14 +60,10 @@ class MapsActivity :AppCompatActivity(),
     private var previousUpdateTime = 0L
     private var previousLocation: Location? = null
     private var PERMISSIONCODE = 111
-    private var destinationMarker: Marker? = null
-    private var originMarker: Marker? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationsRequest: LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
     private var currentLocationMarker: Marker? = null
-    private var endLocationLat  :Double = 0.0
-    private var endLocationLng  :Double = 0.0
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
     private lateinit var auth: FirebaseAuth
     private var hasRestarted = false
@@ -78,6 +73,12 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var notifyExitBtn : FloatingActionButton
     private var startTime: Long = 0
     private var endTime: Long = 0
+//    private var destinationMarker: Marker? = null
+//    private var originMarker: Marker? = null
+//    private var endLocationLat  :Double = 0.0
+//    private var endLocationLng  :Double = 0.0
+//    private var tripEndTime: Long = 0
+//    private var tripStartTime: Long = 0
     private var journeyStartedTime : HashMap<String,Any> ?= null
     private var journeyEndedTime : HashMap<String,Any> ?= null
     private var usersData : DataSnapshot ?= null
@@ -122,6 +123,11 @@ class MapsActivity :AppCompatActivity(),
         getUserData()
     }
 
+    fun getCurrentDateTimeSnapshot(): String {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return currentDateTime.format(formatter)
+    }
 
     private fun startJourney(){
         if (checkPermission()) {
@@ -164,7 +170,7 @@ class MapsActivity :AppCompatActivity(),
     }
 
     private val locationCallback = object : LocationCallback() {
-        @SuppressLint("SuspiciousIndentation")
+        @SuppressLint("SuspiciousIndentation", "SetTextI18n")
         override fun onLocationResult(p0: LocationResult) {
             val currentLocation = p0.lastLocation
             if (currentLocation != null) {
@@ -231,51 +237,65 @@ class MapsActivity :AppCompatActivity(),
     private fun getCityName(lat:Double,long:Double):String{
         var cityName ="Not Found"
         val geoCoder = Geocoder(this, Locale.getDefault())
-        val address = geoCoder.getFromLocation(lat,long,1)
+        val address : MutableList<Address>?= geoCoder.getFromLocation(lat,long,1)
         if (address != null) {
             cityName = address[0]?.locality.toString()
         }
         return  cityName
     }
 
+    @SuppressLint("SetTextI18n")
     private fun stopJourney() {
-        isJourneyStarted = false
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        val lastLocation = journeyLocations.last()
-        val currentTime = Calendar.getInstance()
-        val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
-        val minutes = currentTime.get(Calendar.MINUTE)
 
-        // Calculate total distance traveled
-        if (journeyLocations.size >= 2) {
-            for (i in 1 until journeyLocations.size) {
-                val previousLocation = journeyLocations[i - 1]
-                val currentLocation = journeyLocations[i]
-                val distance = previousLocation.distanceTo(currentLocation) // in meters
-                totalDistance += distance
+        AlertDialog.Builder(this@MapsActivity)
+            .setTitle("Confirm the exit")
+            .setMessage("Ring the bell and exit ? ")
+            .setPositiveButton("Yes") { _, _ ->
+
+                isJourneyStarted = false
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+                val lastLocation = journeyLocations.last()
+                val currentTime = Calendar.getInstance()
+                val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
+                val minutes = currentTime.get(Calendar.MINUTE)
+
+                // Calculate total distance traveled
+                if (journeyLocations.size >= 2) {
+                    for (i in 1 until journeyLocations.size) {
+                        val previousLocation = journeyLocations[i - 1]
+                        val currentLocation = journeyLocations[i]
+                        val distance = previousLocation.distanceTo(currentLocation) // in meters
+                        totalDistance += distance
+                    }
+                }
+
+                journeyEndedTime  = hashMapOf(
+                    "hours" to hours,
+                    "minutes" to minutes
+                )
+
+                textTravelDistance.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
+
+                mMap.addMarker(
+                    MarkerOptions().position(LatLng(lastLocation.latitude,lastLocation.longitude))
+                        .title("Origin Point")
+                        .icon(
+                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                )
+
+                journeyStopDBHandler(calculateCost())
+
             }
-        }
-
-        journeyEndedTime  = hashMapOf(
-            "hours" to hours,
-            "minutes" to minutes
-        )
-
-        textTravelDistance.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
-
-        mMap.addMarker(
-            MarkerOptions().position(LatLng(lastLocation.latitude,lastLocation.longitude))
-                .title("Origin Point")
-                .icon(
-                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-        )
-
-        journeyStopDBHandler( calculateCost())
+            .setNegativeButton("Cancel") { _, _ ->
+                Toast.makeText(this@MapsActivity, "Cancelled", Toast.LENGTH_SHORT).show()
+            }
+            .show()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun calculateCost() : Int{
         var finalCost = 20
-        if (totalDistance != null && totalDistance > 0) {
+        if (totalDistance > 0) {
             val disInKm = totalDistance / 1000
             finalCost += if (disInKm < 5) {
                 40
@@ -296,26 +316,80 @@ class MapsActivity :AppCompatActivity(),
         return finalCost
     }
 
-    private fun journeyStopDBHandler( totCost : Int) {
+    @SuppressLint("SetTextI18n")
+    private fun journeyStopDBHandler(totCost : Int) {
         val userID = auth.currentUser!!.uid
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
         val walletBalance = currentWalletBalance?.minus(totCost)
         textCreditLeft.text = "Wallet Balance Rs$walletBalance"
+
+        val origin :String ?=  getCityName(journeyLocations.first().latitude,journeyLocations.first().longitude)
+        val destination :String ?=  getCityName(journeyLocations.last().latitude,journeyLocations.last().longitude)
+
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            var busID : String ?= null
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    busID = dataSnapshot.child("busID").value.toString()
                     val updates = hashMapOf(
                         "busID" to "",
                         "status" to "idle",
-                        "walletBalance" to walletBalance
+                        "walletBalance" to walletBalance,
+                        "distTraval" to totalDistance
                     )
                     userReference.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
-                            Toast.makeText(
-                                this@MapsActivity,
-                                "Journey Completed",
-                                Toast.LENGTH_LONG
-                            ).show()
+
+                            FirebaseDatabase.getInstance().reference
+                                .child("UserTrips")
+                                .child(userID)
+                                .child(getCurrentDateTimeSnapshot())
+                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTime ))
+                                .addOnCompleteListener {
+
+                                    if (busID != null) {
+
+                                        FirebaseDatabase.getInstance().reference
+                                            .child("BusNotify")
+                                            .child(busID!!)
+                                            .setValue("Stop")
+                                            .addOnCompleteListener {
+                                                Toast.makeText(
+                                                    this@MapsActivity,
+                                                    "Journey Completed. Driver Notified",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+
+                                                val intent = Intent(
+                                                    this@MapsActivity,
+                                                    PassengerHomeActivity::class.java
+                                                )
+                                                this@MapsActivity.startActivity(intent)
+                                                this@MapsActivity.finish()
+                                            }
+                                    }else{
+
+                                        Toast.makeText(
+                                            this@MapsActivity,
+                                            "Please Notify the Driver to Exit",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+
+                                        val intent = Intent(
+                                            this@MapsActivity,
+                                            PassengerHomeActivity::class.java
+                                        )
+                                        this@MapsActivity.startActivity(intent)
+                                        this@MapsActivity.finish()
+
+                                    }
+                                }.addOnFailureListener {
+                                    Toast.makeText(
+                                        this@MapsActivity,
+                                        "Error Occurred ${it.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
 
                         }.addOnFailureListener {
                             Toast.makeText(
@@ -323,7 +397,6 @@ class MapsActivity :AppCompatActivity(),
                                 "Error Occurred ${it.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
-
                         }
                 } else {
                     Toast.makeText(
@@ -343,7 +416,6 @@ class MapsActivity :AppCompatActivity(),
                 ).show()
             }
         })
-
     }
 
     private fun getUserData() {
@@ -369,96 +441,6 @@ class MapsActivity :AppCompatActivity(),
         })
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private fun routeHandler() {
-
-        val startLocation = journeyLocations.first()
-        Log.d("Map", "START LOC LAT ${startLocation.latitude}----------------------------------------------------------")
-        Log.d("Map", "START LOC LNG ${startLocation.latitude}----------------------------------------------------------")
-        Log.d("Map", "END LOC LAT ${endLocationLat}----------------------------------------------------------")
-        Log.d("Map", "EMD LOC LNG ${endLocationLng}----------------------------------------------------------")
-
-        val context = GeoApiContext.Builder()
-            .apiKey(APIKEY)
-            .queryRateLimit(3)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-        val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
-            .mode(TravelMode.DRIVING) // Choose travel mode
-            .origin("${startLocation.latitude},${startLocation.longitude}")
-            .destination("$endLocationLat,$endLocationLng")
-            .await()
-
-        val route = directionsResult.routes[0].overviewPolyline.decodePath()
-
-        if (route != null){
-            // Convert DirectionsLatLng to Google Maps LatLng
-            val googleMapsLatLngList = route.map { directionsLatLng ->
-                LatLng(directionsLatLng.lat, directionsLatLng.lng)
-            }
-
-            // Draw the route on the map
-            val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
-            mMap.addPolyline(polylineOptions)
-        }else{
-            Log.d("debug", "---------------------------------List is Empty----------------------------")
-        }
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
@@ -479,8 +461,7 @@ class MapsActivity :AppCompatActivity(),
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONCODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -488,12 +469,58 @@ class MapsActivity :AppCompatActivity(),
               //  restartActivity();
                 hasRestarted = true
             }
-
             Log.d("debug", "----------------------------------location Permissions granted----------------------------------")
         }
     }
 
 }
+
+
+
+
+
+
+
+
+//    private fun routeHandler() {
+//
+//        val startLocation = journeyLocations.first()
+//        Log.d("Map", "START LOC LAT ${startLocation.latitude}----------------------------------------------------------")
+//        Log.d("Map", "START LOC LNG ${startLocation.latitude}----------------------------------------------------------")
+//        Log.d("Map", "END LOC LAT ${endLocationLat}----------------------------------------------------------")
+//        Log.d("Map", "EMD LOC LNG ${endLocationLng}----------------------------------------------------------")
+//
+//        val context = GeoApiContext.Builder()
+//            .apiKey(APIKEY)
+//            .queryRateLimit(3)
+//            .connectTimeout(10, TimeUnit.SECONDS)
+//            .readTimeout(10, TimeUnit.SECONDS)
+//            .writeTimeout(10, TimeUnit.SECONDS)
+//            .build()
+//
+//        val directionsResult: DirectionsResult = DirectionsApi.newRequest(context)
+//            .mode(TravelMode.DRIVING) // Choose travel mode
+//            .origin("${startLocation.latitude},${startLocation.longitude}")
+//            .destination("$endLocationLat,$endLocationLng")
+//            .await()
+//
+//        val route = directionsResult.routes[0].overviewPolyline.decodePath()
+//
+//        if (route != null){
+//            // Convert DirectionsLatLng to Google Maps LatLng
+//            val googleMapsLatLngList = route.map { directionsLatLng ->
+//                LatLng(directionsLatLng.lat, directionsLatLng.lng)
+//            }
+//
+//            // Draw the route on the map
+//            val polylineOptions = PolylineOptions().addAll(googleMapsLatLngList)
+//            mMap.addPolyline(polylineOptions)
+//        }else{
+//            Log.d("debug", "---------------------------------List is Empty----------------------------")
+//        }
+//    }
+//
+
 
 //
 //        endLocationFragment =

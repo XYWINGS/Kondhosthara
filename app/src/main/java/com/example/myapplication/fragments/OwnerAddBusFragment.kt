@@ -162,7 +162,7 @@ class OwnerAddBusFragment : Fragment() {
             .child(busRegNumber)
             .setValue(Bus(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber,
                 startLocation,endLocation,"","",
-                "",0, numOfSeats,"","","Home",LatLng( 7.1635,80.5702)))
+                "",0, numOfSeats,"","","Home",LatLng( 7.1635,80.5702),false))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Bus Details added to the system", Toast.LENGTH_LONG).show()

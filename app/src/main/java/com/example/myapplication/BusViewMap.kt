@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -217,12 +218,12 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
                 busDataList.clear()
                 for (ownerSnapshot in dataSnapshot.children) {
                     for (busSnapshot in ownerSnapshot.children) {
-                        val destinationLat = busSnapshot.child("endLocation").child("latLng").child("latitude").value
-                        val destinationLong = busSnapshot.child("endLocation").child("latLng").child("longitude").value
-
-                        if (destinationLat != null && destinationLong != null) {
+                        val destination = busSnapshot.child("journeyStatus").value.toString()
+                        if (destination != "Home") {
                             busDataList.add(busSnapshot)
+                           // Log.d("Debug" ,"BUS LOG   $busSnapshot   -------------------------------------")
                         }
+
                     }
                 }
                 passDataToFilter()

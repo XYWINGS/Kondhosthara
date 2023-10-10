@@ -124,7 +124,6 @@ class LoginFragment : Fragment() {
                         }
 
                     }else if (userType=="Driver"){
-                        val busId = dataSnapshot.child("busID").value.toString()
                         val status = dataSnapshot.child("status").value.toString()
                         if(status=="driving"){
                             activity?.let {

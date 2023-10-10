@@ -26,5 +26,7 @@ data class Bus(
     val crntLong:String? = null,
 
     val journeyStatus: String?= null,
-    val currentLocation : LatLng? = null
+
+    val currentLocation : LatLng? = null,
+    val isJourneyStarted : Boolean ?= null
 )

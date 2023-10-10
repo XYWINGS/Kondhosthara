@@ -107,7 +107,6 @@ class OwnerMainFragment : Fragment() {
                         FirebaseDatabase.getInstance().reference
                             .child("Drivers")
                             .child(ownerUid)
-                            .child(email.split("@")[0])
                             .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "","0","0","","idle"))
                             .addOnCompleteListener { registrationCompleteTask ->
                                 if (registrationCompleteTask.isSuccessful) {

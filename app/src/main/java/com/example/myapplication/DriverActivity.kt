@@ -141,12 +141,13 @@ class DriverActivity : AppCompatActivity() {
     }
 
     private fun updateBusData(callback: (Boolean) -> Unit) {
-
+        updateDriverData()
         mainBusReference?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val updates = hashMapOf(
-                        "journeyStatus" to selectedJourneyLocation
+                        "journeyStatus" to selectedJourneyLocation,
+                        "isJourneyStarted" to true
                     )
                     mainBusReference!!.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
@@ -175,6 +176,40 @@ class DriverActivity : AppCompatActivity() {
         })
 
     }
+
+    private fun updateDriverData(){
+
+        val userID = auth.currentUser?.uid
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
+
+        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val updates = hashMapOf(
+                        "isJourneyStarted" to true,
+                        "status" to "driving"
+                    )
+                    userReference.updateChildren(updates as Map<String, Any>)
+
+                } else {
+                    Toast.makeText(
+                        this@DriverActivity,
+                        "Error Occurred.Try Again.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(
+                    this@DriverActivity,
+                    "Error Occurred ${databaseError.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
 
     private fun getDriverData(){
         val userID = auth.currentUser?.uid

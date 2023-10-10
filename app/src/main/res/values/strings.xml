@@ -73,5 +73,6 @@
     <string name="credits_left">Credits Left</string>
     <string name="complains">Complains</string>
     <string name="select_the_destination">Select the Destination</string>
+    <string name="distance_traveled_0km">Distance Traveled 0km</string>
 
 </resources>
