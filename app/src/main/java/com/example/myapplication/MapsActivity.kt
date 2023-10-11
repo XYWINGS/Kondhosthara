@@ -71,8 +71,8 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var textCreditLeft : TextView
     private lateinit var textOrigin : TextView
     private lateinit var notifyExitBtn : FloatingActionButton
-    private var startTime: Long = 0
-    private var endTime: Long = 0
+//    private var startTime: Long = 0
+//    private var endTime: Long = 0
 //    private var destinationMarker: Marker? = null
 //    private var originMarker: Marker? = null
 //    private var endLocationLat  :Double = 0.0
@@ -117,6 +117,12 @@ class MapsActivity :AppCompatActivity(),
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isTrafficEnabled = true
+        if (checkPermission() && isLocationEnabled()){
+            mMap.isMyLocationEnabled = true
+        }else{
+            requestPermissions()
+        }
         val sriLankaLatLng = LatLng(7.8731, 80.7718)
         val zoomLevel = 8.0f
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, zoomLevel))
@@ -167,6 +173,7 @@ class MapsActivity :AppCompatActivity(),
         fusedLocationProviderClient.requestLocationUpdates(
             locationsRequest, locationCallback, Looper.myLooper()
         )
+
     }
 
     private val locationCallback = object : LocationCallback() {
@@ -176,51 +183,25 @@ class MapsActivity :AppCompatActivity(),
             if (currentLocation != null) {
 
                 val cityName: String ?= getCityName(currentLocation.latitude, currentLocation.longitude)
+                val speed = currentLocation.speed
+                val speedKmph = (speed * 3.6).toInt()
+                val previousLocation = journeyLocations.last()
+                val distance = previousLocation.distanceTo(currentLocation)
+
                 if (cityName != null && cityName !=""){
                     textCurrentLocation.text = "Area name: $cityName"
                 }else{
                     textCurrentLocation.text = "Not Available"
                 }
+                if (isJourneyStarted && journeyLocations.isNotEmpty()) {
 
-                    if (isJourneyStarted && journeyLocations.isNotEmpty()) {
+                if (distance > 1000) {
+                    totalDistance += distance
+                    textTravelDistance.text = totalDistance.toString()
+                }
 
-                        val previousLocation = journeyLocations.last()
-                        val distance = previousLocation.distanceTo(currentLocation)
-                        val currentTime = Calendar.getInstance()
+                textCurrentSpeed.text = "$speedKmph km/h"
 
-                        currentLocationMarker?.remove()
-
-                        currentLocationMarker = mMap.addMarker(MarkerOptions()
-                            .position(LatLng(currentLocation.latitude,currentLocation.longitude))
-                            .title("Current Location"))
-
-                        if (distance > 1000) {
-                            totalDistance += distance
-                            textTravelDistance.text = totalDistance.toString()
-                        }
-
-                        if (startTime == 0L) {
-                            startTime = currentTime.timeInMillis
-                        } else {
-                            endTime = currentTime.timeInMillis
-                            val elapsedTimeInSeconds =
-                                (endTime - startTime) / 1000.0 // Convert to seconds
-                            val speedMps =
-                                distance / elapsedTimeInSeconds // Speed in meters per second (m/s)
-                            val speedKmph =
-                                (speedMps * 3.6).toFloat()  // Convert to kilometers per hour (km/h)
-
-                            val decimalFormat = DecimalFormat("#.#")
-
-                            val lastResult =  decimalFormat.format(speedKmph).toFloat()
-
-
-                            if (speedKmph > 0){
-                                textCurrentSpeed.text = "$lastResult km/h"
-                            }
-
-                            startTime = endTime
-                        }
                     }else{
                         mMap.addMarker(
                         MarkerOptions().position(LatLng(currentLocation.latitude,currentLocation.longitude))
@@ -477,8 +458,33 @@ class MapsActivity :AppCompatActivity(),
 
 
 
+// line 214
+//                        val currentTime = Calendar.getInstance()
+//
+//                        currentLocationMarker?.remove()
+//
+//                        currentLocationMarker = mMap.addMarker(MarkerOptions()
+//                            .position(LatLng(currentLocation.latitude,currentLocation.longitude))
+//                            .title("Current Location"))
 
-
+//                        if (startTime == 0L) {
+//                            startTime = currentTime.timeInMillis
+//                        } else {
+//                            endTime = currentTime.timeInMillis
+//                            val elapsedTimeInSeconds =
+//                                (endTime - startTime) / 1000.0 // Convert to seconds
+//                            val speedMps =
+//                                distance / elapsedTimeInSeconds // Speed in meters per second (m/s)
+//                            val speedKmph =
+//                                (speedMps * 3.6).toFloat()  // Convert to kilometers per hour (km/h)
+//                            val decimalFormat = DecimalFormat("#.#")
+//                            val lastResult =  decimalFormat.format(speedKmph).toFloat()
+//                            if (speedKmph > 0){
+//                                textCurrentSpeed.text = "$lastResult km/h"
+//                            }
+//
+//                            startTime = endTime
+//                        }
 
 
 

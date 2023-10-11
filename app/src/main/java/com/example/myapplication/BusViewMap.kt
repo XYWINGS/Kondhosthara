@@ -101,20 +101,22 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
                 }else{
                    startThings()
                 }
-
             }
         })
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isTrafficEnabled = true
+        if (checkPermission()){
+            mMap.isMyLocationEnabled = true
+        }else{
+            requestPermissions()
+        }
         val sriLankaLatLng = LatLng(7.8731, 80.7718)
         val zoomLevel = 8.0f
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, zoomLevel))
-
         startThings()
-
     }
 
 
@@ -126,21 +128,21 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
             val currentLLoc = LatLng(currentLocation.latitude,currentLocation.longitude)
                 currentUserLocation =currentLLoc
 
-                val markerOptions = MarkerOptions()
-                    .position( currentLLoc)
-                    .title("My Location")
-                    .icon(
-                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-
-                mMap.addMarker(markerOptions)
-
-                val zoomLevel = 8.0f
-                mMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        currentLLoc,
-                        zoomLevel
-                    )
-                )
+//                val markerOptions = MarkerOptions()
+//                    .position( currentLLoc)
+//                    .title("My Location")
+//                    .icon(
+//                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+//
+//                mMap.addMarker(markerOptions)
+//
+//                val zoomLevel = 8.0f
+//                mMap.moveCamera(
+//                    CameraUpdateFactory.newLatLngZoom(
+//                        currentLLoc,
+//                        zoomLevel
+//                    )
+//                )
 
             }
         }

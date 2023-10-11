@@ -20,6 +20,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Handler
 import kotlin.math.sqrt
 
 
@@ -33,6 +34,9 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
     private var isDataReady : Boolean = false
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometer: Sensor
+    private var isRecording = false
+    private val recordingDuration = 2 * 60 * 1000
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,7 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
                         getBusStopNotification{
                             notification->
                             if (notification){
+                                startRecording()
                               //  Log.d("Debug","Driver Notified Called Successfully ---------------------------------------------------")
                             }
                         }
@@ -96,6 +101,7 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
         // Unregister the sensor listener when the activity is paused
         sensorManager.unregisterListener(this@DriverJourneyActivity, accelerometer)
     }
+
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
             // Access accelerometer data
@@ -106,18 +112,28 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
             val thresholdValue = (5.0 / 3.6).toFloat()
 
             val magnitude = sqrt((x * x + y * y + z * z).toDouble())
-            if (magnitude < thresholdValue ) {
-                Log.d("Debug","Moving Very Slowly or Stopped-----------------------------------------")
-            }else{
-                Log.d("Debug","Moving Very Fast Indeed-----------------------------------------")
+            if (magnitude >= thresholdValue) {
+                Log.d("Debug", "Moving Very Slowly or Stopped-----------------------------------------")
+            } else {
+                Log.d("Debug", "Moving Very Fast Indeed-----------------------------------------")
             }
+
         }
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-      //nothing
+    private fun startRecording() {
+        isRecording = true
+        handler.postDelayed({
+            stopRecording()
+        }, recordingDuration.toLong())
     }
 
+    private fun stopRecording() {
+        if (isRecording) {
+            sensorManager.unregisterListener(this)
+            isRecording = false
+        }
+    }
     private fun getDriverData(callback: (Boolean) -> Unit){
         val userID = auth.currentUser?.uid
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
@@ -170,7 +186,6 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
             }
         })
     }
-
     private fun getBusStopNotification(callback: (Boolean) -> Unit) {
         val busNotiReference =
             FirebaseDatabase.getInstance().reference.child("BusNotify")
@@ -202,6 +217,9 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
         }
 
         busNotiReference.addValueEventListener(valueEventListener)
+    }
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+        //nothing
     }
 
 }
