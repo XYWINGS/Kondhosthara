@@ -1,4 +1,4 @@
-package com.example.myapplication.interfaces
+package com.example.myapplication
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import com.example.myapplication.LoginActivity
-import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -218,6 +216,7 @@ class DriverJourneyActivity : AppCompatActivity() , SensorEventListener {
 
         busNotiReference.addValueEventListener(valueEventListener)
     }
+
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         //nothing
     }

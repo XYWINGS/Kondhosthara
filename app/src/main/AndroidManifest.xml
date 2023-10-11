@@ -9,12 +9,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.ACCELEROMETER"/>
-
+    <uses-permission android:name="android.permission.ACCELEROMETER" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,10 @@
             android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
 
         <activity
+            android:name=".DriverMapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_driver_maps" />
+        <activity
             android:name=".BusViewMap"
             android:exported="false"
             android:label="@string/title_activity_bus_view_map" />
@@ -38,7 +43,7 @@
             android:name=".PassengerHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".interfaces.DriverJourneyActivity"
+            android:name=".DriverJourneyActivity"
             android:exported="false" />
         <activity
             android:name=".DriverActivity"

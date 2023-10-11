@@ -74,5 +74,6 @@
     <string name="complains">Complains</string>
     <string name="select_the_destination">Select the Destination</string>
     <string name="distance_traveled_0km">Distance Traveled 0km</string>
+    <string name="title_activity_driver_maps">DriverMapsActivity</string>
 
 </resources>
