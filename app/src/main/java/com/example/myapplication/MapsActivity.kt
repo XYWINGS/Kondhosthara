@@ -93,8 +93,7 @@ class MapsActivity :AppCompatActivity(),
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         textCurrentLocation =  findViewById(textViewUserCurrentLocation)
@@ -124,8 +123,8 @@ class MapsActivity :AppCompatActivity(),
             requestPermissions()
         }
         val sriLankaLatLng = LatLng(7.8731, 80.7718)
-        val zoomLevel = 8.0f
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, zoomLevel))
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, 15.0f))
         getUserData()
     }
 
@@ -145,7 +144,7 @@ class MapsActivity :AppCompatActivity(),
                 journeyLocations.clear()
                 getNewLocation()
                 val currentTime = Calendar.getInstance()
-                val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
+                val hours = currentTime.get(Calendar.HOUR_OF_DAY)
                 val minutes = currentTime.get(Calendar.MINUTE)
                 journeyStartedTime  = hashMapOf(
                     "hours" to hours,
@@ -165,8 +164,8 @@ class MapsActivity :AppCompatActivity(),
         locationsRequest = LocationRequest()
         locationsRequest.priority =
             LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationsRequest.interval = 3000
-        locationsRequest.fastestInterval = 2000
+        locationsRequest.interval = 7000
+        locationsRequest.fastestInterval = 5000
         locationsRequest.numUpdates = 200
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
 
@@ -185,8 +184,6 @@ class MapsActivity :AppCompatActivity(),
                 val cityName: String ?= getCityName(currentLocation.latitude, currentLocation.longitude)
                 val speed = currentLocation.speed
                 val speedKmph = (speed * 3.6).toInt()
-                val previousLocation = journeyLocations.last()
-                val distance = previousLocation.distanceTo(currentLocation)
 
                 if (cityName != null && cityName !=""){
                     textCurrentLocation.text = "Area name: $cityName"
@@ -195,21 +192,26 @@ class MapsActivity :AppCompatActivity(),
                 }
                 if (isJourneyStarted && journeyLocations.isNotEmpty()) {
 
-                if (distance > 1000) {
-                    totalDistance += distance
-                    textTravelDistance.text = totalDistance.toString()
-                }
+                    val previousLocation = journeyLocations.last()
+                    val distance = previousLocation.distanceTo(currentLocation)
 
-                textCurrentSpeed.text = "$speedKmph km/h"
-
-                    }else{
-                        mMap.addMarker(
-                        MarkerOptions().position(LatLng(currentLocation.latitude,currentLocation.longitude))
-                            .title("Origin Point")
-                            .icon(
-                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                        )
+                    if (distance > 1000) {
+                        totalDistance += distance
+                        textTravelDistance.text = totalDistance.toString()
                     }
+
+                    textCurrentSpeed.text = "$speedKmph km/h"
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation.latitude,currentLocation.longitude), 15.0f))
+
+                }else{
+                    mMap.addMarker(
+                    MarkerOptions().position(LatLng(currentLocation.latitude,currentLocation.longitude))
+                        .title("Origin Point")
+                        .icon(
+                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                    )
+                }
                 journeyLocations.add(currentLocation)
             }
         }
@@ -316,7 +318,7 @@ class MapsActivity :AppCompatActivity(),
                         "busID" to "",
                         "status" to "idle",
                         "walletBalance" to walletBalance,
-                        "distTraval" to totalDistance
+                        "distTravel" to totalDistance/1000
                     )
                     userReference.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
@@ -325,7 +327,7 @@ class MapsActivity :AppCompatActivity(),
                                 .child("UserTrips")
                                 .child(userID)
                                 .child(getCurrentDateTimeSnapshot())
-                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTime ))
+                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTime,busID))
                                 .addOnCompleteListener {
 
                                     if (busID != null) {

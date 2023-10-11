@@ -244,9 +244,9 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
 
             val driverID = busSnapshot.child("driverID").value.toString()
             if (driverID !=""){
-                val destinationLat = busSnapshot.child("currentLocation").child("lat").value
-                val destinationLong = busSnapshot.child("currentLocation").child("lng").value
-                val busLocation = LatLng(destinationLat as Double, destinationLong as Double)
+                val crntLat = busSnapshot.child("currentLocation").child("lat").value
+                val crntLong = busSnapshot.child("currentLocation").child("lng").value
+                val busLocation = LatLng(crntLat as Double, crntLong as Double)
                 val busID = busSnapshot.key.toString()
                 val destination = busSnapshot.child("journeyStatus").value.toString()
                 val userLoc = currentUserLocation

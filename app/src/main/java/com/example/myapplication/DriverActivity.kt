@@ -80,7 +80,7 @@ class DriverActivity : AppCompatActivity() {
                         .setPositiveButton("Yes") {_, _ ->
                             updateBusData { success ->
                                 if (success) {
-                                    val intent = Intent(this, DriverJourneyActivity::class.java)
+                                    val intent = Intent(this, DriverMapsActivity::class.java)
                                     startActivity(intent)
                                     finish()
                                 } else {
@@ -220,8 +220,6 @@ class DriverActivity : AppCompatActivity() {
                 if (dataSnapshot.exists()) {
                     DriverData = dataSnapshot
 
-
-//                    updateDriverDetails(dataSnapshot)
                     updateDriverDetails(dataSnapshot)
 
                 } else {
@@ -295,7 +293,7 @@ class DriverActivity : AppCompatActivity() {
             radioOrigin.visibility = View.GONE
             radioDestination.visibility = View.GONE
         }
-        val distanceTraveled = driverData.child("distTraval").value.toString()
+        val distanceTraveled = driverData.child("distTravel").value.toString()
         if ( distanceTraveled== "" || distanceTraveled == "0"){
             distanceView.text = "No Travel Records Yet"
         }else{

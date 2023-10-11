@@ -75,5 +75,10 @@
     <string name="select_the_destination">Select the Destination</string>
     <string name="distance_traveled_0km">Distance Traveled 0km</string>
     <string name="title_activity_driver_maps">DriverMapsActivity</string>
+    <string name="a_passenger_requesting_to_exit_the_bus">A Passenger Requesting to Exit the Bus</string>
+    <string name="please_stop_the_bus_in_the_bus_stop">Please Stop the bus in the bus stop.</string>
+    <string name="mute">Mute</string>
+    <string name="view_the_wallet">View the Wallet</string>
+    <string name="view_the_profile">View the Profile</string>
 
 </resources>

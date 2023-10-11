@@ -108,7 +108,7 @@
                 android:layout_margin="5dp"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="View the Wallet" />
+                android:text="@string/view_the_wallet" />
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -132,7 +132,7 @@
                 android:layout_margin="5dp"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="View the Profile" />
+                android:text="@string/view_the_profile" />
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton

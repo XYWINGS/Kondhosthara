@@ -10,7 +10,7 @@ data class Driver(
       val type:String? = null,
       val busID : String ?= null,
       val drvHrs : String ?= null,
-      val distTraval : String ?= null,
+      val distTravel : String ?= null,
       val uid : String ?= null,
       val status : String ? =null,
       val isJourneyStarted : Boolean ?= false

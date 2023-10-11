@@ -34,6 +34,10 @@ class PassengerHomeActivity : AppCompatActivity() {
         viewWalletBtn = findViewById(R.id.fabPassengerWallet)
         viewLogOutBtn = findViewById(R.id.fabPassengerLogout)
 
+        viewProfileBtn.setOnClickListener {
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+        }
 
         getUserData(auth.currentUser!!.uid)
 
