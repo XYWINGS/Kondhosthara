@@ -80,5 +80,11 @@
     <string name="mute">Mute</string>
     <string name="view_the_wallet">View the Wallet</string>
     <string name="view_the_profile">View the Profile</string>
+    <string name="running_time">running time</string>
+    <string name="driver_name">driver name</string>
+    <string name="delete">Delete</string>
+    <string name="routeid">routeID</string>
+    <string name="bus_name">Bus Name</string>
+    <string name="bus_id">Bus ID</string>
 
 </resources>

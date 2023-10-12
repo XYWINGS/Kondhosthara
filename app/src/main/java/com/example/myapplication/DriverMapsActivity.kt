@@ -283,7 +283,8 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         "driverID" to "",
                         "isJourneyStarted" to false,
                         "drvHrs" to newTotalHrs,
-                        "distTravel" to newDistTravel
+                        "distTravel" to newDistTravel,
+                        "driverName" to ""
                     )
                     busReference.updateChildren(updates as Map<String, Any>).addOnSuccessListener {
                         callback(true)

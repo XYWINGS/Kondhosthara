@@ -62,14 +62,14 @@ class UserTripAdaptor (private val userTripRecord:MutableList<UserTripRecord>): 
         val dis = record.distance.toString().toDouble() / 1000.0
         holder.distanceText.text =  "Travel Distance :" + String.format("%.2f", dis) + "Km"
 
-        val statTime  = record.startTime?.values.toString().replace(Regex("[\\[\\]]"), "")
-        holder.startTimeText.text = "Time of Enter :"+statTime[0]+" hours "+ statTime[1] + " minutes "
+        holder.startTimeText.text = "Time of Enter :"+record.startTime?.getValue("hours")+" hours "+record.startTime?.getValue("minutes") + " minutes "
 
-        val endTime =  record.endTime?.values.toString().replace(Regex("[\\[\\]]"), "")
-        holder.endTimeText.text =  "Time of Exit :"+endTime[0] +" hours "+ endTime[1] + " minutes "
+        holder.endTimeText.text =  "Time of Exit :"+record.endTime?.getValue("hours") +" hours "+record.endTime?.getValue("minutes") + " minutes "
 
         holder.recordLinearLayout.setBackgroundColor(Color.parseColor(color))
     }
+
+
 
 
     override fun getItemCount(): Int {

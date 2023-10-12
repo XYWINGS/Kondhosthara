@@ -186,7 +186,7 @@ class QRReadActivity : AppCompatActivity() {
         private fun updateUserData(busID: String, ownerID : String, callback: (Boolean) -> Unit) {
             runOnUiThread {
                 val userID = auth.currentUser?.uid
-
+                val emailName = auth.currentUser?.email?.split("@")?.get(0).toString()
                 val userReference =
                     FirebaseDatabase.getInstance().reference.child("Users").child(userID.toString())
 
@@ -202,7 +202,8 @@ class QRReadActivity : AppCompatActivity() {
                             }
                             val updates = hashMapOf(
                                 "driverID" to userID,
-                                "passngrCount" to passCount
+                                "passngrCount" to passCount,
+                                "driverName" to  emailName,
                             )
                             busReference.updateChildren(updates as Map<String, Any>)
                                 .addOnSuccessListener {

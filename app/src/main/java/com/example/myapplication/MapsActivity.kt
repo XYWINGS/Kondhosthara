@@ -63,7 +63,7 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationsRequest: LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
-    private var currentLocationMarker: Marker? = null
+   // private var currentLocationMarker: Marker? = null
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
     private lateinit var auth: FirebaseAuth
     private var hasRestarted = false
@@ -80,7 +80,7 @@ class MapsActivity :AppCompatActivity(),
 //    private var tripEndTime: Long = 0
 //    private var tripStartTime: Long = 0
     private var journeyStartedTime : HashMap<String,Any> ?= null
-    private var journeyEndedTime : HashMap<String,Any> ?= null
+ //   private var journeyEndedTime : HashMap<String,Any> ?= null
     private var usersData : DataSnapshot ?= null
     private var currentWalletBalance : Int?=null
 
@@ -238,10 +238,6 @@ class MapsActivity :AppCompatActivity(),
                 isJourneyStarted = false
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
                 val lastLocation = journeyLocations.last()
-                val currentTime = Calendar.getInstance()
-                val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
-                val minutes = currentTime.get(Calendar.MINUTE)
-
                 // Calculate total distance traveled
                 if (journeyLocations.size >= 2) {
                     for (i in 1 until journeyLocations.size) {
@@ -252,10 +248,6 @@ class MapsActivity :AppCompatActivity(),
                     }
                 }
 
-                journeyEndedTime  = hashMapOf(
-                    "hours" to hours,
-                    "minutes" to minutes
-                )
 
                 textTravelDistance.text = "Distance Traveled: ${String.format("%.2f", totalDistance/1000)} km"
 
@@ -309,6 +301,15 @@ class MapsActivity :AppCompatActivity(),
         val origin :String ?=  getCityName(journeyLocations.first().latitude,journeyLocations.first().longitude)
         val destination :String ?=  getCityName(journeyLocations.last().latitude,journeyLocations.last().longitude)
 
+        val currentTime = Calendar.getInstance()
+        val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
+        val minutes = currentTime.get(Calendar.MINUTE)
+         val  journeyEndedTimes :HashMap <String,Any> = hashMapOf(
+            "hours" to hours,
+            "minutes" to minutes
+        )
+
+
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             var busID : String ?= null
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -327,7 +328,7 @@ class MapsActivity :AppCompatActivity(),
                                 .child("UserTrips")
                                 .child(userID)
                                 .child(getCurrentDateTimeSnapshot())
-                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTime,busID))
+                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTimes,busID))
                                 .addOnCompleteListener {
 
                                     if (busID != null) {
