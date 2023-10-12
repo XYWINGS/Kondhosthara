@@ -1,5 +1,6 @@
 package com.example.myapplication.adaptors
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -32,30 +33,41 @@ class UserTripAdaptor (private val userTripRecord:MutableList<UserTripRecord>): 
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val color = colors[position % colors.size]
         val record = userTripRecord[position]
 
 
-        if (record.origin == null){
+        if (record.origin == null || record.origin == ""){
             holder.originText.text= "No Data"
         }else{
-            holder.originText.text = record.origin
+            holder.originText.text = "Origin : " +record.origin
         }
 
 
-        if (record.destination == null){
+        if (record.destination == null || record.destination=="" ){
             holder.destinationTest.text = "No Data"
         }else{
-            holder.destinationTest.text = record.destination
+            holder.destinationTest.text = "Destination : " + record.destination
         }
 
-        holder.busIDText.text = record.busID
-        holder.costText.text = record.cost
-        holder.endTimeText.text = record.endTime?.values.toString()
-        holder.distanceText.text = record.distance
-        holder.startTimeText.text = record.startTime?.values.toString()
+
+
+        holder.busIDText.text = "Bus Tag : " + record.busID
+        holder.costText.text = "Trip Cost : " + record.cost
+
+
+        val dis = record.distance.toString().toDouble() / 1000.0
+        holder.distanceText.text =  "Travel Distance :" + String.format("%.2f", dis) + "Km"
+
+        val statTime  = record.startTime?.values.toString().replace(Regex("[\\[\\]]"), "")
+        holder.startTimeText.text = "Time of Enter :"+statTime[0]+" hours "+ statTime[1] + " minutes "
+
+        val endTime =  record.endTime?.values.toString().replace(Regex("[\\[\\]]"), "")
+        holder.endTimeText.text =  "Time of Exit :"+endTime[0] +" hours "+ endTime[1] + " minutes "
+
         holder.recordLinearLayout.setBackgroundColor(Color.parseColor(color))
     }
 
