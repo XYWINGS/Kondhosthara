@@ -183,7 +183,6 @@ class LoginFragment : Fragment() {
     private fun handleDriverLogin(userID: String, emailName: String) {
         val driverReference = FirebaseDatabase.getInstance().reference.child("Drivers")
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
-
         try {
             driverReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -197,10 +196,16 @@ class LoginFragment : Fragment() {
                                 val newDriverReference = ownerID?.let { driverReference.child(it).child(userID) }
                                 userReference.setValue(driverData).addOnSuccessListener {
                                     newDriverReference?.setValue(driverData)?.addOnSuccessListener {
-                                        Toast.makeText(activity, "Logging as a driver", Toast.LENGTH_LONG).show()
-                                        activity?.let {
-                                            val intent = Intent(it, DriverActivity::class.java)
-                                            it.startActivity(intent)
+                                        val updates = hashMapOf(
+                                            "myUID" to userID,
+                                        )
+                                        newDriverReference.updateChildren(updates as Map<String, Any>)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(activity, "Logging in", Toast.LENGTH_LONG).show()
+                                                activity?.let {
+                                                    val intent = Intent(it, DriverActivity::class.java)
+                                                    it.startActivity(intent)
+                                            }
                                         }
                                     }
                                 }
@@ -212,7 +217,6 @@ class LoginFragment : Fragment() {
                     Toast.makeText(context, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
                 }
             })
-
         }catch (e : Exception){
             Toast.makeText(context, "Error Occurred ${e.message}", Toast.LENGTH_SHORT).show()
         }

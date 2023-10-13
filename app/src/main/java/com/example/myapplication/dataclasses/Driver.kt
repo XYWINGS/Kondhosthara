@@ -13,5 +13,6 @@ data class Driver(
       val distTravel : String ?= null,
       val uid : String ?= null,
       val status : String ? =null,
-      val isJourneyStarted : Boolean ?= false
+      val isJourneyStarted : Boolean ?= false,
+      val myUID : String ?= null
     )

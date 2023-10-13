@@ -48,6 +48,7 @@ class OwnerManageBusAdaptor (private val busList:MutableList<Bus>): RecyclerView
         holder.driverNameText.text = "Driver Name : "+ record.driverName
         holder.mileageText.text = "Mileage : "+ record.disTravel
         holder.layout.setBackgroundColor(Color.parseColor(color))
+
         holder.deleteRecordBtn.setOnClickListener {
             record.ownerUid?.let { it1 ->
                 record.busRegID?.let { it2 ->
