@@ -11,8 +11,8 @@ data class Bus(
     val busPermitID:String? = null,
     val routeID:String? = null,
 
-    val startLocation :Place? = null,
-    val endLocation : Place? = null,
+    val startLocation :Any? = null,
+    val endLocation : Any? = null,
 
     val driverID:String? = null,
     val driverName:String? = null,

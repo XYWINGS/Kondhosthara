@@ -86,5 +86,6 @@
     <string name="routeid">routeID</string>
     <string name="bus_name">Bus Name</string>
     <string name="bus_id">Bus ID</string>
+    <string name="remove_from_fleet">Remove from Fleet</string>
 
 </resources>

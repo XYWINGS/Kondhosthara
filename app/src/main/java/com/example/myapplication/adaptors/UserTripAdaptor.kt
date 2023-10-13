@@ -54,7 +54,6 @@ class UserTripAdaptor (private val userTripRecord:MutableList<UserTripRecord>): 
         }
 
 
-
         holder.busIDText.text = "Bus Tag : " + record.busID
         holder.costText.text = "Trip Cost : " + record.cost
 
