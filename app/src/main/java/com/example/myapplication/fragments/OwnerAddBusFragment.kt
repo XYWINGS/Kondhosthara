@@ -85,7 +85,12 @@ class OwnerAddBusFragment : Fragment() {
             val busPermitID = busPermID.text.toString()
             val busRegNumber =  busRegID.text.toString()
             val busName = busNme.text.toString()
-            val numOfSeats = parseInt(seatCount.text.toString())
+            var numOfSeats : Int
+            if (seatCount.text.isNotEmpty()){
+               numOfSeats = parseInt(seatCount.text.toString())
+            }else{
+                numOfSeats = 54
+            }
 
             if (checkPermission()){
                 if(validation(busName,busRegNumber,busPermitID,busRouteNumber,numOfSeats)){
@@ -161,7 +166,7 @@ class OwnerAddBusFragment : Fragment() {
             .child(busOwnerID)
             .child(busRegNumber)
             .setValue(Bus(busOwnerID,busName,busRegNumber,busPermitID,busRouteNumber,
-                startLocation,endLocation,"","",
+                startLocation,endLocation,"","Not Occupied",
                 "",0, numOfSeats,"","","Home",LatLng( 7.1635,80.5702),false,"0"))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

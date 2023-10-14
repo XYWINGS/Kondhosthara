@@ -1,5 +1,6 @@
 package com.example.myapplication.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -19,9 +20,7 @@ import com.example.myapplication.MapsActivity
 import com.example.myapplication.OwnerActivity
 import com.example.myapplication.PassengerHomeActivity
 import com.example.myapplication.R
-import com.example.myapplication.DriverJourneyActivity
 import com.example.myapplication.DriverMapsActivity
-import com.example.myapplication.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -29,6 +28,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import kotlin.math.log
 
 class LoginFragment : Fragment() {
 
@@ -180,47 +180,118 @@ class LoginFragment : Fragment() {
             }
         })
     }
+    @SuppressLint("SuspiciousIndentation")
     private fun handleDriverLogin(userID: String, emailName: String) {
-        val driverReference = FirebaseDatabase.getInstance().reference.child("Drivers")
-        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
-        try {
-            driverReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ownerSnapshot in dataSnapshot.children) {
-                        val ownerID = ownerSnapshot.key
-                        for (driverSnapshot in ownerSnapshot.children) {
-                            val driverEmailName = driverSnapshot.key
-                            if (driverEmailName == emailName){
-                                val driverData = driverSnapshot.value
-                                driverSnapshot.ref.removeValue()
-                                val newDriverReference = ownerID?.let { driverReference.child(it).child(userID) }
-                                userReference.setValue(driverData).addOnSuccessListener {
-                                    newDriverReference?.setValue(driverData)?.addOnSuccessListener {
-                                        val updates = hashMapOf(
-                                            "myUID" to userID,
-                                        )
-                                        newDriverReference.updateChildren(updates as Map<String, Any>)
-                                            .addOnSuccessListener {
-                                                Toast.makeText(activity, "Logging in", Toast.LENGTH_LONG).show()
-                                                activity?.let {
-                                                    val intent = Intent(it, DriverActivity::class.java)
-                                                    it.startActivity(intent)
+        val database = FirebaseDatabase.getInstance()
+        val usersRef = database.getReference("Users")
+
+        Log.d("debug", "im called  $userID  $emailName")
+
+        // Get the data from emailRef
+        usersRef.child(emailName).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Copy data to newRef
+                    usersRef.child(userID).setValue(dataSnapshot.value).addOnCompleteListener { copyTask ->
+                        if (copyTask.isSuccessful) {
+                            // Delete the data from emailRef
+                            usersRef.child(emailName).removeValue().addOnCompleteListener { deleteTask ->
+                                if (deleteTask.isSuccessful) {
+                                    // Update newRef with additional data
+                                    val updates = hashMapOf<String,Any>(
+                                        "uid" to userID,
+                                        "status" to "idle"
+                                    )
+                                    usersRef.child(userID).updateChildren(updates).addOnCompleteListener { updateTask ->
+                                        if (updateTask.isSuccessful) {
+                                            // Data copied, deleted, and updated successfully
+                                            Toast.makeText(context, "Logging in", Toast.LENGTH_SHORT).show()
+                                            activity?.let {
+                                                val intent = Intent(it, DriverActivity::class.java)
+                                                it.startActivity(intent)
                                             }
+                                        } else {
+                                            // Handle the update failure
                                         }
                                     }
+                                } else {
+                                    // Handle the delete failure
                                 }
                             }
+                        } else {
+                            // Handle the copy failure
                         }
                     }
+                } else {
+                    Toast.makeText(context, "Data not found", Toast.LENGTH_SHORT).show()
                 }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Toast.makeText(context, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }catch (e : Exception){
-            Toast.makeText(context, "Error Occurred ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(context, "Error Occurred ${databaseError.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    private fun handleDriverLogin(userID: String, emailName: String) {
+//        val newRef = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
+//        val emailRef = FirebaseDatabase.getInstance().reference.child("Users").child(emailName)
+//
+//        emailRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//
+//                    val data : DataSnapshot = dataSnapshot
+//                        newRef.setValue(data).addOnSuccessListener {
+//
+//                            emailRef.removeValue().addOnSuccessListener {
+//
+//                                val updates = hashMapOf(
+//                                    "uid" to userID,
+//                                    "status" to "idle"
+//                                )
+//                                newRef.updateChildren(updates as Map<String, Any>)
+//                                Toast.makeText(context, "Logging in ", Toast.LENGTH_SHORT).show()
+//                                activity?.let {
+//                                    val intent = Intent(it, DriverActivity::class.java)
+//                                    it.startActivity(intent)
+//                                }
+//                            }
+//                        }
+//
+//                } else {
+//                    Toast.makeText(context, "Data not found", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                Toast.makeText(
+//                    context,
+//                    "Error Occurred ${databaseError.message}",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        })
+//    }
+
+
 
     private fun arePermissionsGranted(permissions: Array<String>): Boolean {
         for (permission in permissions) {

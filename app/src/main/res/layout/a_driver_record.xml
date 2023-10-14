@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
-        android:text="@string/routeid"
+        android:text="@string/txtphone"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -66,6 +66,15 @@
         android:text="@string/running_time"
         android:textSize="16sp"
         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/drvPermTextViewManageDriverOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:text="@string/running_time"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/deleteBtnManageDriverOwner"
@@ -73,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
-        android:text="@string/remove_from_fleet"
+        android:text="@string/revoke_login_credentials"
         android:textSize="16sp"
         android:textStyle="bold" />
 

@@ -87,5 +87,8 @@
     <string name="bus_name">Bus Name</string>
     <string name="bus_id">Bus ID</string>
     <string name="remove_from_fleet">Remove from Fleet</string>
+    <string name="revoke_login_credentials">Revoke Login Credentials</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="view_the_fleet">View the Fleet</string>
 
 </resources>

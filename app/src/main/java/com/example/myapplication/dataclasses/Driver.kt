@@ -14,5 +14,5 @@ data class Driver(
       val uid : String ?= null,
       val status : String ? =null,
       val isJourneyStarted : Boolean ?= false,
-      val myUID : String ?= null
+      val permission: String ?= null
     )

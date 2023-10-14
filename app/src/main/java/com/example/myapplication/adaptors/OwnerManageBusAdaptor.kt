@@ -46,27 +46,33 @@ class OwnerManageBusAdaptor (private val busList:MutableList<Bus>): RecyclerView
         holder.busIDText.text = "Reg No : " + record.busRegID
         holder.routeIDText.text = "Route No : " + record.routeID
         holder.driverNameText.text = "Driver Name : "+ record.driverName
-        holder.mileageText.text = "Mileage : "+ record.disTravel
+        holder.mileageText.text = "Mileage : "+ record.disTravel + "km"
         holder.layout.setBackgroundColor(Color.parseColor(color))
 
         holder.deleteRecordBtn.setOnClickListener {
-            record.ownerUid?.let { it1 ->
-                record.busRegID?.let { it2 ->
-                    FirebaseDatabase.getInstance().reference
-                    .child("Buses")
-                    .child(it1)
-                    .child(it2)
-                    .removeValue()
-                    .addOnSuccessListener {
-                        busList.remove(record)
-                        notifyDataSetChanged()
-                        Toast.makeText(holder.itemView.context,"Bus Removed",Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(holder.itemView.context,"Failed to delete: ${e.message}",Toast.LENGTH_SHORT).show()
+
+            if (record.driverID?.isEmpty() == true){
+                record.ownerUid?.let { it1 ->
+                    record.busRegID?.let { it2 ->
+                        FirebaseDatabase.getInstance().reference
+                            .child("Buses")
+                            .child(it1)
+                            .child(it2)
+                            .removeValue()
+                            .addOnSuccessListener {
+                                busList.remove(record)
+                                Toast.makeText(holder.itemView.context,"Bus Removed",Toast.LENGTH_SHORT).show()
+                                notifyDataSetChanged()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(holder.itemView.context,"Failed to delete: ${e.message}",Toast.LENGTH_SHORT).show()
+                            }
                     }
                 }
+            }else{
+                Toast.makeText(holder.itemView.context,"Bus is currently Occupied. Please wait till return to yard.",Toast.LENGTH_LONG).show()
             }
+
         }
 
     }

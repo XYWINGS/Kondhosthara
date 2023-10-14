@@ -363,11 +363,11 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     busReference.updateChildren(updates as Map<String, LatLng>)
 
                 } else {
-                    Toast.makeText(
-                        this@DriverMapsActivity,
-                        "Bus Data not Found",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@DriverMapsActivity,
+//                        "Bus Data not Found",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             }
 

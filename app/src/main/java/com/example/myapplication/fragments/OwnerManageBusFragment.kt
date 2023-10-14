@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.adaptors.OwnerManageBusAdaptor
 import com.example.myapplication.dataclasses.Bus
+import com.example.myapplication.dataclasses.Driver
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -30,6 +31,7 @@ class OwnerManageBusFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_owner_manage_bus, container, false)
         auth = Firebase.auth
@@ -38,26 +40,33 @@ class OwnerManageBusFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        getBusStopNotification {it->
+        getBusData {
             if (it){
                 busAdaptor = OwnerManageBusAdaptor(busList)
                 recyclerView.adapter =busAdaptor
+                busAdaptor.notifyDataSetChanged()
             }
         }
         return view
     }
 
 
-    private fun getBusStopNotification(callback: (Boolean) -> Unit) {
+    private fun getBusData(callback: (Boolean) -> Unit) {
 
         val userID = auth.currentUser?.uid
         val busReference = FirebaseDatabase.getInstance().reference.child("Buses").child(userID.toString())
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    val updatedBusList = mutableListOf<Bus>()
+
                     for (busSnapshot in dataSnapshot.children) {
-                        busSnapshot.getValue(Bus::class.java)?.let { busList.add(it) }
+                        busSnapshot.getValue(Bus::class.java)?.let { updatedBusList.add(it) }
                     }
+
+                    busList.clear()
+                    busList.addAll(updatedBusList)
+
                     callback(true)
                 } else {
                     Toast.makeText(
