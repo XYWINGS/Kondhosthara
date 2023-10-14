@@ -101,7 +101,7 @@ class OwnerMainFragment : Fragment() {
                         FirebaseDatabase.getInstance().reference
                             .child("Users")
                             .child(emailData)
-                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "","0","0","","notLogged",false,"Granted"))
+                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "",5.0,5.0,"","notLogged",false,"Granted"))
                             .addOnCompleteListener {
                                 Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
                             }.addOnFailureListener {

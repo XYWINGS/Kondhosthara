@@ -64,9 +64,13 @@ class OwnerManageDriverFragment : Fragment() {
                     val updatedDriverList = mutableListOf<Driver>() // Create a new list
 
                     for (driverSnapshot in dataSnapshot.children) {
-                        driverSnapshot.getValue(Driver::class.java)?.let {
-                            if (it.ownerUid == userID) {
-                                updatedDriverList.add(it)
+                        val userType = driverSnapshot.child("type").value.toString()
+
+                        if (userType=="Driver"){
+                            val drvOwnerID = driverSnapshot.child("ownerUid").value.toString()
+                            if (drvOwnerID == userID){
+                                driverSnapshot.getValue(Driver::class.java)
+                                    ?.let { updatedDriverList.add(it) }
                             }
                         }
                     }

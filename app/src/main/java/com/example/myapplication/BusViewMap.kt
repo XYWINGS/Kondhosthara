@@ -114,8 +114,7 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
             requestPermissions()
         }
         val sriLankaLatLng = LatLng(7.8731, 80.7718)
-        val zoomLevel = 8.0f
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, zoomLevel))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sriLankaLatLng, 8.0f))
         startThings()
     }
 
@@ -294,11 +293,8 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
     ) {
 
         val decimalFormat = DecimalFormat("#.#")
-
         val lastResult =  decimalFormat.format(distance).toFloat() /1000
-
         val finalResult =  decimalFormat.format(lastResult).toFloat()
-
         val newMarker = mMap.addMarker(MarkerOptions()
             .position(latLng)
             .title("Bus ID : $busID")

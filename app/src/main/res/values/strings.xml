@@ -90,5 +90,7 @@
     <string name="revoke_login_credentials">Revoke Login Credentials</string>
     <string name="delete_account">Delete Account</string>
     <string name="view_the_fleet">View the Fleet</string>
+    <string name="title_activity_owner_bus_view_map">OwnerBusViewMap</string>
+    <string name="refresh">REFRESH</string>
 
 </resources>

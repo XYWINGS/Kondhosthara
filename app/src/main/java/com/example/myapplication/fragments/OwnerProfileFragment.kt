@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import com.example.myapplication.LoginActivity
+import com.example.myapplication.OwnerBusViewMap
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -75,9 +76,8 @@ class OwnerProfileFragment : Fragment() {
 
         viewFleetBtn.setOnClickListener {
             activity?.let {
-                val intent = Intent(it, LoginActivity::class.java)
+                val intent = Intent(it, OwnerBusViewMap::class.java)
                 it.startActivity(intent)
-                requireActivity().finish()
             }
         }
 

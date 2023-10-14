@@ -69,8 +69,6 @@ class DriverActivity : AppCompatActivity() {
 //            Log.d("Debug","destination selected  condition data  $selectedJourneyLocation")
 
 
-
-
             if (isBusSelected) {
 
                 if (checkRadioGroup()) {
@@ -141,12 +139,16 @@ class DriverActivity : AppCompatActivity() {
 
     private fun updateBusData(callback: (Boolean) -> Unit) {
         updateDriverData()
+        val userID = auth.currentUser?.uid
+        val userEmail = auth.currentUser?.email
         mainBusReference?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val updates = hashMapOf(
                         "journeyStatus" to selectedJourneyLocation,
-                        "isJourneyStarted" to true
+                        "isJourneyStarted" to true,
+                        "driverID" to userID,
+                        "driverName" to userEmail
                     )
                     mainBusReference!!.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {

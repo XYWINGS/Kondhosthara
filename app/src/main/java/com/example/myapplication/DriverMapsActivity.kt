@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -39,6 +40,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import java.lang.Integer.parseInt
 import java.util.Calendar
+import kotlin.math.pow
+import kotlin.math.round
 
 class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -147,7 +150,17 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         endJourneyBtn.setOnClickListener {
-            endDriverJourney()
+
+            AlertDialog.Builder(this)
+                .setTitle("Confirm the Trip End")
+                .setMessage("Are you going to end the trip ? ")
+                .setPositiveButton("Yes") { _, _ ->
+                    endDriverJourney()
+                }
+                .setNegativeButton("No") { _, _ ->
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                }
+                .show()
         }
     }
 
@@ -247,18 +260,31 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (dataReceived) {
             val currentTime = Calendar.getInstance()
-            val newTotalHrs =
-                parseInt(driverData.child("drvHrs").value.toString()) + currentTime.get(Calendar.HOUR_OF_DAY) - startTime
-            val newDistTravel =
-                parseInt(driverData.child("distTravel").value.toString()) + totalDistance/1000
-            val newBusDistTravel =
-                parseInt(busData.child("distTravel").value.toString()) + totalDistance/1000
+            val d1 = driverData.child("drvHrs").value.toString()
+            var newTotalHrs = 0.0
+            if (!d1.isNullOrEmpty()){
+                newTotalHrs = java.lang.Double.parseDouble(d1)
+                newTotalHrs += currentTime.get(Calendar.HOUR_OF_DAY) - startTime
+            }
+            val d2 = driverData.child("distTravel").value.toString()
+            var newDistTravel = 0.0
+            if (!d2.isNullOrEmpty()) {
+                val parsedValue = java.lang.Double.parseDouble(d2)
+                newDistTravel = (parsedValue + totalDistance / 1000).roundTo(2)
+            }
+
+            var newBusDistTravel = 0.0
+            val d3 = busData.child("distTravel").value.toString()
+            if (!d3.isNullOrEmpty() && !d3.equals("null", ignoreCase = true)) {
+                val parsedValue = java.lang.Double.parseDouble(d3)
+                newBusDistTravel = (parsedValue + totalDistance / 1000).roundTo(2)
+            }
 
       //      Log.d("Debug","$newTotalHrs , $newBusDistTravel , $newDistTravel--------------------------------------------")
 
             endBus(newTotalHrs, newDistTravel) { success1 ->
                 if (success1) {
-                    endDriver(newBusDistTravel){ success2 ->
+                    endDriver(newBusDistTravel,newTotalHrs){ success2 ->
                         if (success2) {
                             val intent = Intent(this, DriverActivity::class.java)
                             startActivity(intent)
@@ -270,7 +296,11 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun endBus(newTotalHrs :  Int,newDistTravel : Double , callback: (Boolean) -> Unit){
+    private fun Double.roundTo(decimalPlaces: Int): Double {
+        val multiplier = 10.0.pow(decimalPlaces)
+        return round(this * multiplier) / multiplier
+    }
+    private fun endBus(newTotalHrs :  Double,newDistTravel : Double , callback: (Boolean) -> Unit){
         val busReference =
             FirebaseDatabase.getInstance().reference.child("Buses")
                 .child(driverData.child("ownerUid").value.toString())
@@ -311,8 +341,9 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-    private fun endDriver(newBusDistTravel : Double, callback: (Boolean) -> Unit){
-        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(auth.currentUser?.uid.toString())
+    private fun endDriver(newBusDistTravel : Double,newTotalHrs :  Double, callback: (Boolean) -> Unit){
+        val userID = auth.currentUser?.uid.toString()
+        val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
 
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -320,7 +351,8 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     val updates = hashMapOf(
                         "busID" to "",
                         "status" to "idle",
-                        "distTravel" to newBusDistTravel
+                        "distTravel" to newBusDistTravel,
+                        "drvHrs" to newTotalHrs
                     )
                     userReference.updateChildren(updates as Map<String, Any>).addOnSuccessListener {
                         callback(true)
@@ -441,9 +473,7 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getBusStopNotification(callback: (Boolean) -> Unit) {
-        val busNotiReference =
-            FirebaseDatabase.getInstance().reference.child("BusNotify")
-                .child(driverData.child("busID").value.toString())
+        val busNotiReference = FirebaseDatabase.getInstance().reference.child("BusNotify").child(driverData.child("busID").value.toString())
 
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
