@@ -40,7 +40,7 @@ class UserTripAdaptor (private val userTripRecord:MutableList<UserTripRecord>): 
         val record = userTripRecord[position]
 
 
-        if (record.origin == null || record.origin == ""){
+        if (record.origin == null || record.origin == "" || record.origin =="null"){
             holder.originText.text= "No Data"
         }else{
             holder.originText.text = "Origin : " +record.origin

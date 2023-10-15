@@ -92,5 +92,13 @@
     <string name="view_the_fleet">View the Fleet</string>
     <string name="title_activity_owner_bus_view_map">OwnerBusViewMap</string>
     <string name="refresh">REFRESH</string>
+    <string name="topup_wallet">TopUp Wallet</string>
+    <string name="submit">SUBMIT</string>
+    <string name="cvv">CVV</string>
+    <string name="expiry_date_mm_yy">Expiry Date (MM/YY)</string>
+    <string name="cardholder_name">Cardholder Name</string>
+    <string name="card_number">Card Number</string>
+    <string name="testdata">TESTDATA</string>
+    <string name="amount">Amount</string>
 
 </resources>

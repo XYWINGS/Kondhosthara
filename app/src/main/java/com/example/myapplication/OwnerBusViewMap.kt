@@ -51,6 +51,8 @@ class OwnerBusViewMap : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         dataCaller()

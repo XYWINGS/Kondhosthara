@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import com.example.myapplication.R.*
 import com.example.myapplication.R.id.*
 import com.example.myapplication.databinding.ActivityMapsBinding
+import com.example.myapplication.dataclasses.BusEarn
 import com.example.myapplication.dataclasses.UserTripRecord
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -61,7 +62,6 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationsRequest: LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
-   // private var currentLocationMarker: Marker? = null
     private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
     private lateinit var auth: FirebaseAuth
     private var hasRestarted = false
@@ -69,23 +69,18 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var textCreditLeft : TextView
     private lateinit var textOrigin : TextView
     private lateinit var notifyExitBtn : FloatingActionButton
-//    private var startTime: Long = 0
-//    private var endTime: Long = 0
-//    private var destinationMarker: Marker? = null
-//    private var originMarker: Marker? = null
-//    private var endLocationLat  :Double = 0.0
-//    private var endLocationLng  :Double = 0.0
-//    private var tripEndTime: Long = 0
-//    private var tripStartTime: Long = 0
     private var journeyStartedTime : HashMap<String,Any> ?= null
- //   private var journeyEndedTime : HashMap<String,Any> ?= null
     private var usersData : DataSnapshot ?= null
     private var currentWalletBalance : Int?=null
+    private lateinit var ownerID: String
+    private  var busData : DataSnapshot ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         MapsInitializer.initialize(this, MapsInitializer.Renderer.LATEST) {
         }
+
 
         auth = Firebase.auth
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -109,6 +104,16 @@ class MapsActivity :AppCompatActivity(),
             stopJourney()
         }
 
+        val receivedIntent = intent
+        if (receivedIntent != null && receivedIntent.hasExtra("OwnerID")) {
+            ownerID = receivedIntent.getStringExtra("OwnerID").toString()
+            Log.d("debug","owner uid $ownerID")
+            intent.removeExtra("OwnerID")
+        }else{
+            ownerID = ""
+                //EWsWokLQPKMOjq4Jd8ggIlP35S43
+        }
+
     }
 
 
@@ -129,6 +134,12 @@ class MapsActivity :AppCompatActivity(),
     fun getCurrentDateTimeSnapshot(): String {
         val currentDateTime = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return currentDateTime.format(formatter)
+    }
+
+    fun getCurrentDateSnapshot(): String {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return currentDateTime.format(formatter)
     }
 
@@ -183,7 +194,7 @@ class MapsActivity :AppCompatActivity(),
                 val speed = currentLocation.speed
                 val speedKmph = (speed * 3.6).toInt()
 
-                if (cityName != null && cityName !=""){
+                if (!cityName.isNullOrEmpty()){
                     textCurrentLocation.text = "Area name: $cityName"
                 }else{
                     textCurrentLocation.text = "Not Available"
@@ -256,7 +267,8 @@ class MapsActivity :AppCompatActivity(),
                             BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 )
 
-                journeyStopDBHandler(calculateCost())
+
+                stopHandler(calculateCost())
 
             }
             .setNegativeButton("Cancel") { _, _ ->
@@ -264,6 +276,7 @@ class MapsActivity :AppCompatActivity(),
             }
             .show()
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun calculateCost() : Int{
@@ -290,29 +303,19 @@ class MapsActivity :AppCompatActivity(),
     }
 
     @SuppressLint("SetTextI18n")
-    private fun journeyStopDBHandler(totCost : Int) {
+    private fun stopHandler(totCost : Int) {
         val userID = auth.currentUser!!.uid
         val userReference = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
         val walletBalance = currentWalletBalance?.minus(totCost)
         textCreditLeft.text = "Wallet Balance Rs$walletBalance"
 
-        val origin :String ?=  getCityName(journeyLocations.first().latitude,journeyLocations.first().longitude)
-        val destination :String ?=  getCityName(journeyLocations.last().latitude,journeyLocations.last().longitude)
-
-        val currentTime = Calendar.getInstance()
-        val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
-        val minutes = currentTime.get(Calendar.MINUTE)
-         val  journeyEndedTimes :HashMap <String,Any> = hashMapOf(
-            "hours" to hours,
-            "minutes" to minutes
-        )
-
 
         userReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            var busID : String ?= null
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    busID = dataSnapshot.child("busID").value.toString()
+                    val busID : String = dataSnapshot.child("busID").value.toString()
+
                     val updates = hashMapOf(
                         "busID" to "",
                         "status" to "idle",
@@ -322,71 +325,40 @@ class MapsActivity :AppCompatActivity(),
                     userReference.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
 
-                            FirebaseDatabase.getInstance().reference
-                                .child("UserTrips")
-                                .child(userID)
-                                .child(getCurrentDateTimeSnapshot())
-                                .setValue(UserTripRecord(origin,destination,totalDistance.toString(),totCost.toString(),journeyStartedTime,journeyEndedTimes,busID))
-                                .addOnCompleteListener {
+                            if (busID.isNotEmpty()){
 
-                                    if (busID != null) {
-
-                                        FirebaseDatabase.getInstance().reference
-                                            .child("BusNotify")
-                                            .child(busID!!)
-                                            .setValue("Stop")
-                                            .addOnCompleteListener {
-                                                Toast.makeText(
-                                                    this@MapsActivity,
-                                                    "Journey Completed. Driver Notified",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-
-                                                val intent = Intent(
-                                                    this@MapsActivity,
-                                                    PassengerHomeActivity::class.java
-                                                )
-                                                this@MapsActivity.startActivity(intent)
-                                                this@MapsActivity.finish()
+                                setUserTripRecord(userID, busID,totCost){ it1 ->
+                                    if (it1){
+                                        busNotify(busID){ it2 ->
+                                            if (it2){
+                                                updateDailyEarnings(totCost,busID){
+                                                    if (it){
+                                                        val intent = Intent(this@MapsActivity, PassengerHomeActivity::class.java)
+                                                        startActivity(intent)
+                                                        finish()
+                                                    }else{
+                                                       // forceBack()
+                                                    }
+                                                }
+                                            }else{
+                                               // forceBack()
                                             }
+                                        }
                                     }else{
-
-                                        Toast.makeText(
-                                            this@MapsActivity,
-                                            "Please Notify the Driver to Exit",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-
-                                        val intent = Intent(
-                                            this@MapsActivity,
-                                            PassengerHomeActivity::class.java
-                                        )
-                                        this@MapsActivity.startActivity(intent)
-                                        this@MapsActivity.finish()
-
+                                        //forceBack()
                                     }
-                                }.addOnFailureListener {
-                                    Toast.makeText(
-                                        this@MapsActivity,
-                                        "Error Occurred ${it.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
                                 }
 
+
+                            }else{
+                                Toast.makeText(this@MapsActivity, "Error Occurred. Try Again", Toast.LENGTH_SHORT).show()
+                            }
+
                         }.addOnFailureListener {
-                            Toast.makeText(
-                                this@MapsActivity,
-                                "Error Occurred ${it.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this@MapsActivity, "Error Occurred ${it.message}", Toast.LENGTH_SHORT).show()
                         }
                 } else {
-                    Toast.makeText(
-                        this@MapsActivity,
-                        "User data not Found",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
+                    Toast.makeText(this@MapsActivity, "User data not Found", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -398,6 +370,107 @@ class MapsActivity :AppCompatActivity(),
                 ).show()
             }
         })
+    }
+
+    private fun forceBack() {
+        Toast.makeText(this@MapsActivity, "Please Notify the Driver to Exit", Toast.LENGTH_LONG).show()
+        val intent = Intent(
+            this@MapsActivity,
+           PassengerHomeActivity::class.java
+        )
+        this@MapsActivity.startActivity(intent)
+        this@MapsActivity.finish()
+    }
+
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun setUserTripRecord(userID: String, busID: String, totCost: Int, callback: (Boolean) -> Unit) {
+
+        val origin :String ?=  getCityName(journeyLocations.first().latitude,journeyLocations.first().longitude)
+        val destination :String ?=  getCityName(journeyLocations.last().latitude,journeyLocations.last().longitude)
+
+        val currentTime = Calendar.getInstance()
+        val hours = currentTime.get(Calendar.HOUR_OF_DAY) // 24-hour format
+        val minutes = currentTime.get(Calendar.MINUTE)
+
+        val  journeyEndedTimes :HashMap <String,Any> = hashMapOf(
+            "hours" to hours,
+            "minutes" to minutes
+        )
+            FirebaseDatabase.getInstance().reference
+                .child("UserTrips")
+                .child(userID)
+                .child(getCurrentDateTimeSnapshot())
+                .setValue(
+                    UserTripRecord(
+                        origin,
+                        destination,
+                        totalDistance.toString(),
+                        totCost.toString(),
+                        journeyStartedTime,
+                        journeyEndedTimes,
+                        busID
+                    )
+                )
+
+                .addOnCompleteListener {
+                    callback(true)
+                }.addOnFailureListener {
+                    Toast.makeText(
+                        this@MapsActivity,
+                        "Error Occurred ${it.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    callback(false)
+                }
+    }
+
+    private fun busNotify(busID: String,  callback: (Boolean) -> Unit ) {
+
+        FirebaseDatabase.getInstance().reference.child("BusNotify")
+            .child(busID!!)
+            .setValue(getCurrentDateTimeSnapshot())
+            .addOnCompleteListener {
+
+                Toast.makeText(this@MapsActivity, "Journey Completed. Driver Notified", Toast.LENGTH_LONG).show()
+                callback(true)
+
+            }.addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    private fun updateDailyEarnings( earnVal: Int, busID: String,   callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val busEarnDataReference = databaseReference.child("BusEarnData").child(ownerID).child(busID)
+        val currentDateSnapshot = getCurrentDateSnapshot()
+
+        busEarnDataReference.child(currentDateSnapshot).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()) {
+
+                val currentEarnings = dataSnapshot.child("earnVal").getValue(Double::class.java) ?: 0.0
+                val currentPassCount = dataSnapshot.child("userCount").getValue(Int::class.java) ?: 0
+
+                val newValue = currentEarnings + earnVal
+                val newPassCount = currentPassCount + 1
+
+                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(newValue,newPassCount))
+                    .addOnSuccessListener {
+                        Log.d("debug","bus earn updated")
+                        callback(true)
+                    }.addOnFailureListener {
+                        callback(false)
+                    }
+            }else{
+                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(earnVal.toDouble(),1))
+                    .addOnSuccessListener {
+                        callback(true)
+                        Log.d("debug","bus earn updated")
+                    }.addOnFailureListener {
+                        callback(false)
+                    }
+            }
+        }
     }
 
     private fun getUserData() {
@@ -457,6 +530,25 @@ class MapsActivity :AppCompatActivity(),
 
 }
 
+//val busReference = FirebaseDatabase.getInstance().reference.child("Buses").child(ownerID).child(busID!!)
+//
+//busReference.addListenerForSingleValueEvent(object : ValueEventListener {
+//    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//        if (dataSnapshot.exists()){
+//            busData = dataSnapshot
+//        }
+//    }
+//
+//    override fun onCancelled(error: DatabaseError) {
+//        Toast.makeText(
+//            this@MapsActivity,
+//            "Update Bus D",
+//            Toast.LENGTH_LONG
+//        ).show()
+//    }
+//
+//
+//})
 
 
 // line 214

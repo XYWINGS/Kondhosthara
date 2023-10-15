@@ -100,16 +100,13 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (busSuccess) {
                         getBusStopNotification { notification ->
                             if (notification) {
-                                dataReceived = true
-                                // Log.d("Debug","Driver Notification recevied Successfully ---------------------------------------------------")
-                                val newValue: String = notifyData.value.toString()
-                                if (newValue =="Stop"){
+                                 Log.d("Debug","Driver Notification recevied Successfully ---------------------------------------------------")
                                     if (notifyMessage.visibility == View.GONE) {
                                         notifyMessage.visibility = View.VISIBLE
                                         val handler = Handler()
                                         handler.postDelayed({
                                             notifyMessage.visibility = View.GONE
-                                            setNotifyStatus()
+                                        //   setNotifyStatus()
                                         }, 28000)
                                     }
                                     if (mediaPlayer != null) {
@@ -117,7 +114,6 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                             mediaPlayer!!.start()
                                         }
                                     }
-                                }
                             }
                         }
                     } else {

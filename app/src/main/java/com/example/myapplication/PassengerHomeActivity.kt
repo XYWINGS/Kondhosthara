@@ -34,6 +34,11 @@ class PassengerHomeActivity : AppCompatActivity() {
         viewWalletBtn = findViewById(R.id.fabPassengerWallet)
         viewLogOutBtn = findViewById(R.id.fabPassengerLogout)
 
+        viewWalletBtn.setOnClickListener {
+            val intent = Intent(this, PessengerWalletActivity::class.java)
+            startActivity(intent)
+        }
+
         viewProfileBtn.setOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)

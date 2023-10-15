@@ -1,8 +1,11 @@
 package com.example.myapplication
 
+import android.app.AlertDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,12 +25,18 @@ class UserProfileActivity : AppCompatActivity() {
     private var recordList:MutableList<UserTripRecord> = mutableListOf()
     private lateinit var recordAdaptor : UserTripAdaptor
     private lateinit var recordRecyclerView: RecyclerView
+    private lateinit var delAccBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
         recordRecyclerView = findViewById(R.id.tripRecordRecView)
         auth = Firebase.auth
+        delAccBtn = findViewById(R.id.deleteProfilePassenger)
+
+        delAccBtn.setOnClickListener {
+            deleteAccount()
+        }
 
         recordRecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -40,6 +49,36 @@ class UserProfileActivity : AppCompatActivity() {
                 recordAdaptor.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun deleteAccount() {
+        val user = Firebase.auth.currentUser
+        val userID = auth.currentUser!!.uid
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(userID)
+
+        AlertDialog.Builder(this@UserProfileActivity)
+            .setMessage("Are you sure you want to delete your account?")
+            .setPositiveButton("Yes") { _, _ ->
+                user?.delete()
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            if (userRef != null) {
+                                userRef.removeValue().addOnSuccessListener {
+                                    Toast.makeText(this@UserProfileActivity, "Account has been deleted", Toast.LENGTH_LONG).show()
+                                    val intent = Intent(this@UserProfileActivity, LoginActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this@UserProfileActivity, "Failed to delete account", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun getUserTrips(callback: (Boolean) -> Unit) {
