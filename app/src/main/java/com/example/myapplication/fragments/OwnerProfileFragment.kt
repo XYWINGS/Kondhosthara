@@ -37,6 +37,7 @@ class OwnerProfileFragment : Fragment() {
         viewEarnBtn.setOnClickListener {
             val transaction =  parentFragmentManager.beginTransaction()
             transaction.replace(R.id.ownerFragmentContainerView, OwnerViewRevenueFragment())
+            transaction.addToBackStack(null)
             transaction.commit()
         }
 
