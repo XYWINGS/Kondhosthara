@@ -20,6 +20,7 @@ class OwnerActivity : AppCompatActivity() {
         val manageDriverBtn : ImageButton = findViewById(R.id.imageButton4)
         val profileBtn : ImageButton = findViewById(R.id.imageButton5)
 
+
         manageBusBtn.setOnClickListener{
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.ownerFragmentContainerView,OwnerManageBusFragment())

@@ -42,6 +42,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import java.lang.Integer.parseInt
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -448,21 +449,24 @@ class MapsActivity :AppCompatActivity(),
         busEarnDataReference.child(currentDateSnapshot).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
 
-                val currentEarnings = dataSnapshot.child("earnVal").getValue(Double::class.java) ?: 0.0
-                val currentPassCount = dataSnapshot.child("userCount").getValue(Int::class.java) ?: 0
+                val currentEarnings = dataSnapshot.child("earnVal").value.toString()
+                val currentPassCount = dataSnapshot.child("userCount").value.toString()
 
-                val newValue = currentEarnings + earnVal
-                val newPassCount = currentPassCount + 1
+                if (currentEarnings.isNotEmpty() && currentPassCount.isNotEmpty()) {
+                    val newValue =  parseInt(currentEarnings) + earnVal
+                    val newPassCount =  parseInt(currentPassCount) + 1
 
-                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(newValue,newPassCount))
-                    .addOnSuccessListener {
-                        Log.d("debug","bus earn updated")
-                        callback(true)
-                    }.addOnFailureListener {
-                        callback(false)
-                    }
+
+                    busEarnDataReference.child(currentDateSnapshot)
+                        .setValue(BusEarn(newValue.toDouble(), newPassCount,false,ownerID,busID,currentDateSnapshot))
+                        .addOnSuccessListener {
+                            callback(true)
+                        }.addOnFailureListener {
+                            callback(false)
+                        }
+                }
             }else{
-                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(earnVal.toDouble(),1))
+                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(earnVal.toDouble(),1,false,ownerID,busID, currentDateSnapshot))
                     .addOnSuccessListener {
                         callback(true)
                         Log.d("debug","bus earn updated")

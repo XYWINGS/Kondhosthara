@@ -98,6 +98,7 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 //   Log.d("Debug","Get Driver Data OK---------------------------------------------------")
                 getBusData{ busSuccess ->
                     if (busSuccess) {
+                        dataReceived = true
                         getBusStopNotification { notification ->
                             if (notification) {
                                  Log.d("Debug","Driver Notification recevied Successfully ---------------------------------------------------")
@@ -276,7 +277,7 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 newBusDistTravel = (parsedValue + totalDistance / 1000).roundTo(2)
             }
 
-      //      Log.d("Debug","$newTotalHrs , $newBusDistTravel , $newDistTravel--------------------------------------------")
+           Log.d("Debug","$newTotalHrs , $newBusDistTravel , $newDistTravel--------------------------------------------")
 
             endBus(newTotalHrs, newDistTravel) { success1 ->
                 if (success1) {
@@ -455,7 +456,7 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 } else {
                     Toast.makeText(
                         this@DriverMapsActivity,
-                        "Error Occurred.Try Again.",
+                        "Data not found.Try Again.",
                         Toast.LENGTH_SHORT
                     ).show()
                     callback(false)
