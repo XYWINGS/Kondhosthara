@@ -80,7 +80,6 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_margin="16dp"
-            android:layout_gravity="top|end"
             android:contentDescription="@string/map"
             android:src="@drawable/baseline_share_location_24"
             app:backgroundTint="#DDBFFF"
@@ -88,8 +87,6 @@
             app:fabCustomSize="56dp"
             app:fabSize="normal"
             app:maxImageSize="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp" />
 

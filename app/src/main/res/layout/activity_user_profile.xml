@@ -6,13 +6,10 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context=".UserProfileActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tripRecordRecView"
-        android:layout_width="match_parent"
-        android:layout_height="605dp" />
-
+    tools:context=".UserProfileActivity"
+    android:layout_margin="10dp"
+    android:padding="3dp"
+    >
     <Button
         android:id="@+id/deleteProfilePassenger"
         android:layout_width="390dp"
@@ -20,4 +17,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/delete_account" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tripRecordRecView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:padding="10dp"/>
+
+
 </LinearLayout>

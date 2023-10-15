@@ -238,23 +238,24 @@ class BusViewMap : AppCompatActivity(), OnMapReadyCallback {
     private fun passDataToFilter() {
 
         removeAllMarkers()
+        if (!busDataList.isNullOrEmpty()) {
+            busDataList.forEach { busSnapshot ->
 
-        busDataList.forEach { busSnapshot ->
+                val driverID = busSnapshot.child("driverID").value.toString()
+                if (driverID != "") {
+                    Log.d("debug","b$busDataList")
+                    val crntLat = busSnapshot.child("currentLocation").child("latitude").value
+                    val crntLong = busSnapshot.child("currentLocation").child("longitude").value
+                    val busLocation = LatLng(crntLat as Double, crntLong as Double)
+                    val busID = busSnapshot.key.toString()
+                    val destination = busSnapshot.child("journeyStatus").value.toString()
+                    val userLoc = currentUserLocation
+                    val distance = areLatLngsWithinRadius(busLocation, userLoc)
 
-            val driverID = busSnapshot.child("driverID").value.toString()
-            if (driverID !=""){
-                val crntLat = busSnapshot.child("currentLocation").child("lat").value
-                val crntLong = busSnapshot.child("currentLocation").child("lng").value
-                val busLocation = LatLng(crntLat as Double, crntLong as Double)
-                val busID = busSnapshot.key.toString()
-                val destination = busSnapshot.child("journeyStatus").value.toString()
-                val userLoc = currentUserLocation
-                val distance = areLatLngsWithinRadius(busLocation,userLoc)
-                val seatsLeft  =   Integer.parseInt(busSnapshot.child("seatCount").value.toString()) -  Integer.parseInt(
-                    busSnapshot.child("passngrCount").value.toString()
-                )
-                if (distance  <= (selectedRadius*1000)){
-                    addMarker(busLocation , busID, distance , destination ,seatsLeft)
+                    val seatsLeft = Integer.parseInt(busSnapshot.child("seatCount").value.toString()) - Integer.parseInt(busSnapshot.child("passngrCount").value.toString())
+                    if (distance <= (selectedRadius * 1000)) {
+                        addMarker(busLocation, busID, distance, destination, seatsLeft)
+                    }
                 }
             }
         }
