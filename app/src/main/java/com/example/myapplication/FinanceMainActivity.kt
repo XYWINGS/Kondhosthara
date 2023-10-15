@@ -9,10 +9,9 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adaptors.FinanceEarnAdaptor
-import com.example.myapplication.adaptors.OwnerManageBusAdaptor
-import com.example.myapplication.dataclasses.Bus
 import com.example.myapplication.dataclasses.BusEarn
 import com.example.myapplication.dataclasses.FlattenEarnRecord
+import com.example.myapplication.dataclasses.GroupedOwnerData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import java.lang.Integer.parseInt
-import kotlin.math.log
 
 
 class FinanceMainActivity : AppCompatActivity() {
@@ -38,22 +36,18 @@ class FinanceMainActivity : AppCompatActivity() {
 
         getEarnData { it1 ->
             if (it1){
-               // Log.d("debug","$earnList")
 
-//                earnAdaptor = FinanceEarnAdaptor(earnList)
-//                recyclerView.adapter =earnAdaptor
-//                earnAdaptor.notifyDataSetChanged()
-                val flattenedData = flattenDataStructure()
-                val groupedData = flattenedData.groupBy { it.ownerID }
-                Log.d("debig", "$groupedData")
-//
-//                earnAdaptor = FinanceEarnAdaptor(groupedData)
-//                recyclerView.adapter =earnAdaptor
-//                earnAdaptor.notifyDataSetChanged()
+                val groupedData: Map<String, List<BusEarn>> =  earnList.groupBy { it.ownerID!! }
+                val groupedOwnerDataList = mutableListOf<GroupedOwnerData>()
+                for ((ownerId, busDataList) in groupedData) {
+                    val groupedOwnerData = GroupedOwnerData(ownerId, busDataList)
+                    groupedOwnerDataList.add(groupedOwnerData)
+                }
 
 
-
-
+                earnAdaptor = FinanceEarnAdaptor(groupedData)
+                recyclerView.adapter =earnAdaptor
+                earnAdaptor.notifyDataSetChanged()
 
             }
         }
@@ -82,7 +76,10 @@ class FinanceMainActivity : AppCompatActivity() {
                     for (ownerSnapshot in dataSnapshot.children) {
                         for (busSnapshot in ownerSnapshot.children) {
                             for (dateSnapshot in busSnapshot.children) {
-                                dateSnapshot.getValue(BusEarn::class.java)?.let { updatedList.add(it) }
+                                val isDone : Boolean = dateSnapshot.child("done").value as Boolean
+                                if (!isDone){
+                                    dateSnapshot.getValue(BusEarn::class.java)?.let { updatedList.add(it) }
+                                }
                             }
                         }
                     }
@@ -99,42 +96,6 @@ class FinanceMainActivity : AppCompatActivity() {
             }
         }
         earnReference.addValueEventListener(valueEventListener)
-    }
-
-    private fun flattenDataStructure() : List<FlattenEarnRecord> {
-        val flattenedList = mutableListOf<FlattenEarnRecord>()
-
-        if (allBusEarnData.exists()){
-
-            for (ownerData in allBusEarnData.children) {
-                for (busData in ownerData.children) {
-                    for (dateData in busData.children) {
-
-                        Log.d("degub","$dateData")
-
-                        val date = dateData.child("date").value.toString()
-                        val earnVal = parseInt(dateData.child("earnVal").value.toString())
-                        val userCount = parseInt(dateData.child("userCount").value.toString())
-                        val ownerID =  dateData.child("ownerID").value.toString()
-                        val busID =  dateData.child("busID").value.toString()
-                        val isDone : Boolean = dateData.child("done").value as Boolean
-
-                        flattenedList.add(
-                           FlattenEarnRecord(
-                                ownerID,
-                                busID,
-                                date,
-                                earnVal,
-                                userCount,
-                                isDone
-                            )
-                        )
-                    }
-                }
-            }
-    }
-
-        return flattenedList
     }
 
 }

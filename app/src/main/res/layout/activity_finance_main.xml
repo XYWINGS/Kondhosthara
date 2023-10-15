@@ -9,12 +9,24 @@
 
     <Button
         android:id="@+id/logoutBtnfinance"
-        android:layout_width="match_parent"
+        android:layout_width="346dp"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/logout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/financeDataViewRecView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" >
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/innerRecViewFinance"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" >-->
+
+<!--        </androidx.recyclerview.widget.RecyclerView>-->
+
+
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

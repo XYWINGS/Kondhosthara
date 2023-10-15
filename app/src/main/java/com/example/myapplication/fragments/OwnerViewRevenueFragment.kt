@@ -55,8 +55,6 @@ class OwnerViewRevenueFragment : Fragment() {
     }
 
 
-
-
     private fun getEarnData(callback: (Boolean) -> Unit) {
 
         val userID = auth.currentUser!!.uid
@@ -65,12 +63,17 @@ class OwnerViewRevenueFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     var updatedList = mutableListOf<BusEarn>()
-                    Log.d("debug","$dataSnapshot")
+                 //   Log.d("debug","$dataSnapshot")
                     earnList.clear()
 
                     for (busSnapshot in dataSnapshot.children) {
                         for (dateSnapshot in busSnapshot.children) {
-                            dateSnapshot.getValue(BusEarn::class.java)?.let { updatedList.add(it) }
+
+                            val isDone : Boolean = dateSnapshot.child("done").value as Boolean
+                            if (isDone){
+                                dateSnapshot.getValue(BusEarn::class.java)?.let { updatedList.add(it) }
+                            }
+
                         }
                     }
 

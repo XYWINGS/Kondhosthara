@@ -458,7 +458,7 @@ class MapsActivity :AppCompatActivity(),
 
 
                     busEarnDataReference.child(currentDateSnapshot)
-                        .setValue(BusEarn(newValue.toDouble(), newPassCount,false,ownerID,busID,currentDateSnapshot))
+                        .setValue(BusEarn(newValue.toDouble(), newPassCount,false,ownerID,busID,currentDateSnapshot,0))
                         .addOnSuccessListener {
                             callback(true)
                         }.addOnFailureListener {
@@ -466,7 +466,7 @@ class MapsActivity :AppCompatActivity(),
                         }
                 }
             }else{
-                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(earnVal.toDouble(),1,false,ownerID,busID, currentDateSnapshot))
+                busEarnDataReference.child(currentDateSnapshot).setValue(BusEarn(earnVal.toDouble(),1,false,ownerID,busID, currentDateSnapshot,0))
                     .addOnSuccessListener {
                         callback(true)
                         Log.d("debug","bus earn updated")

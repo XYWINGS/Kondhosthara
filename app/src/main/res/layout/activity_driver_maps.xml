@@ -13,7 +13,8 @@
         android:layout_width="344dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Button" />
+        android:text="Button"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/driverNotifyMessage"

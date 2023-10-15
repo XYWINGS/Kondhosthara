@@ -105,5 +105,7 @@
     <string name="passcount">passCount</string>
     <string name="ownerid">ownerID</string>
     <string name="view_earnings">View Earnings</string>
+    <string name="go_to_payment">Go to Payment</string>
+    <string name="comisview">comisView</string>
 
 </resources>

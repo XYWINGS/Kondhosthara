@@ -3,9 +3,10 @@
     android:id="@+id/aBusEarnRecordLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    >
 
     <TextView
         android:id="@+id/busIDTextViewEarnRecord"
@@ -48,15 +49,27 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-<!--    <Button-->
-<!--        android:id="@+id/"-->
-<!--        android:layout_width="201dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_margin="3dp"-->
-<!--        android:text="@string/delete"-->
-<!--        android:textSize="16sp"-->
-<!--        android:textStyle="bold" />-->
+    <TextView
+        android:id="@+id/comisViewEarnRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:text="@string/comisview"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
+
+    <Button
+        android:id="@+id/gotoPaymentFinBtn"
+        android:layout_width="201dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:text="@string/go_to_payment"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
 </LinearLayout>
