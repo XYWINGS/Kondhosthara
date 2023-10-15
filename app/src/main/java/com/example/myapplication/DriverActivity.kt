@@ -11,7 +11,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.example.myapplication.interfaces.DriverJourneyActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -70,8 +69,6 @@ class DriverActivity : AppCompatActivity() {
 //            Log.d("Debug","destination selected  condition data  $selectedJourneyLocation")
 
 
-
-
             if (isBusSelected) {
 
                 if (checkRadioGroup()) {
@@ -81,7 +78,7 @@ class DriverActivity : AppCompatActivity() {
                         .setPositiveButton("Yes") {_, _ ->
                             updateBusData { success ->
                                 if (success) {
-                                    val intent = Intent(this, DriverJourneyActivity::class.java)
+                                    val intent = Intent(this, DriverMapsActivity::class.java)
                                     startActivity(intent)
                                     finish()
                                 } else {
@@ -142,12 +139,16 @@ class DriverActivity : AppCompatActivity() {
 
     private fun updateBusData(callback: (Boolean) -> Unit) {
         updateDriverData()
+        val userID = auth.currentUser?.uid
+        val userEmail = auth.currentUser?.email
         mainBusReference?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val updates = hashMapOf(
                         "journeyStatus" to selectedJourneyLocation,
-                        "isJourneyStarted" to true
+                        "isJourneyStarted" to true,
+                        "driverID" to userID,
+                        "driverName" to userEmail
                     )
                     mainBusReference!!.updateChildren(updates as Map<String, Any>)
                         .addOnSuccessListener {
@@ -221,8 +222,6 @@ class DriverActivity : AppCompatActivity() {
                 if (dataSnapshot.exists()) {
                     DriverData = dataSnapshot
 
-
-//                    updateDriverDetails(dataSnapshot)
                     updateDriverDetails(dataSnapshot)
 
                 } else {
@@ -296,7 +295,7 @@ class DriverActivity : AppCompatActivity() {
             radioOrigin.visibility = View.GONE
             radioDestination.visibility = View.GONE
         }
-        val distanceTraveled = driverData.child("distTraval").value.toString()
+        val distanceTraveled = driverData.child("distTravel").value.toString()
         if ( distanceTraveled== "" || distanceTraveled == "0"){
             distanceView.text = "No Travel Records Yet"
         }else{

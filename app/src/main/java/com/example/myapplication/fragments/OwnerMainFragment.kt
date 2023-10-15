@@ -45,7 +45,6 @@ class OwnerMainFragment : Fragment() {
         val userPhnNum = view.findViewById<EditText>(R.id.editTextTextRegisterPhoneNumDriver)
 
         val submitBtn = view.findViewById<Button>(R.id.userRegBtnDriver)
-        val logouttBtn = view.findViewById<Button>(R.id.logoutBtnDriver)
 
         val testValBtn = view.findViewById<Button>(R.id.buttonTestValue)
 
@@ -59,13 +58,7 @@ class OwnerMainFragment : Fragment() {
              userPhnNum.setText("1234567890")
         }
 
-        logouttBtn.setOnClickListener {
-            Firebase.auth.signOut()
-            Toast.makeText(context, "Logging Out", Toast.LENGTH_SHORT).show()
-            val intent = Intent(context, LoginActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
-        }
+
         submitBtn.setOnClickListener {
             val email = userEmail.text.toString()
             val password = userPassword.text.toString()
@@ -99,21 +92,20 @@ class OwnerMainFragment : Fragment() {
                                      password: String
                                      ) : Boolean {
         return try{
-          //  val emailData =
+          //
 
+            val emailData = email.split("@")[0]
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { registrationTask ->
                     if (registrationTask.isSuccessful) {
                         FirebaseDatabase.getInstance().reference
-                            .child("Drivers")
-                            .child(ownerUid)
-                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "","0","0","","idle"))
-                            .addOnCompleteListener { registrationCompleteTask ->
-                                if (registrationCompleteTask.isSuccessful) {
-                                    Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
-                                } else {
-                                    Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
-                                }
+                            .child("Users")
+                            .child(emailData)
+                            .setValue(Driver(ownerUid, name, email, phoneNum, address, personID, "Driver", "",5.0,5.0,"","notLogged",false,"Granted"))
+                            .addOnCompleteListener {
+                                Toast.makeText(activity, "Driver added to the system...", Toast.LENGTH_LONG).show()
+                            }.addOnFailureListener {
+                                Toast.makeText(activity, "Registration failed.", Toast.LENGTH_LONG).show()
                             }
                     } else {
                         Toast.makeText(activity, "Registration failed. ${registrationTask.exception?.message}", Toast.LENGTH_LONG).show()

@@ -9,9 +9,10 @@ data class Driver(
       val nic:String? = null,
       val type:String? = null,
       val busID : String ?= null,
-      val drvHrs : String ?= null,
-      val distTraval : String ?= null,
+      val drvHrs : Double ?= null,
+      val distTravel : Double?= null,
       val uid : String ?= null,
       val status : String ? =null,
-      val isJourneyStarted : Boolean ?= false
+      val isJourneyStarted : Boolean ?= false,
+      val permission: String ?= null
     )

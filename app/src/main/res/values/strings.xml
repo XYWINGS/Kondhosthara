@@ -74,5 +74,31 @@
     <string name="complains">Complains</string>
     <string name="select_the_destination">Select the Destination</string>
     <string name="distance_traveled_0km">Distance Traveled 0km</string>
+    <string name="title_activity_driver_maps">DriverMapsActivity</string>
+    <string name="a_passenger_requesting_to_exit_the_bus">A Passenger Requesting to Exit the Bus</string>
+    <string name="please_stop_the_bus_in_the_bus_stop">Please Stop the bus in the bus stop.</string>
+    <string name="mute">Mute</string>
+    <string name="view_the_wallet">View the Wallet</string>
+    <string name="view_the_profile">View the Profile</string>
+    <string name="running_time">running time</string>
+    <string name="driver_name">driver name</string>
+    <string name="delete">Delete</string>
+    <string name="routeid">routeID</string>
+    <string name="bus_name">Bus Name</string>
+    <string name="bus_id">Bus ID</string>
+    <string name="remove_from_fleet">Remove from Fleet</string>
+    <string name="revoke_login_credentials">Revoke Login Credentials</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="view_the_fleet">View the Fleet</string>
+    <string name="title_activity_owner_bus_view_map">OwnerBusViewMap</string>
+    <string name="refresh">REFRESH</string>
+    <string name="topup_wallet">TopUp Wallet</string>
+    <string name="submit">SUBMIT</string>
+    <string name="cvv">CVV</string>
+    <string name="expiry_date_mm_yy">Expiry Date (MM/YY)</string>
+    <string name="cardholder_name">Cardholder Name</string>
+    <string name="card_number">Card Number</string>
+    <string name="testdata">TESTDATA</string>
+    <string name="amount">Amount</string>
 
 </resources>

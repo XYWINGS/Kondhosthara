@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PessengerWalletActivity">
+
+    <TextView
+        android:id="@+id/passengerWalletBalacne"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text=""
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnWalletTopUp"
+        android:layout_width="291dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/topup_wallet" />
+
+    <LinearLayout
+        android:id="@+id/linerLayoutWalletData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="invisible">
+
+        <EditText
+            android:id="@+id/editTextCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="creditCardNumber"
+            android:hint="@string/card_number"
+            android:inputType="number"
+            android:maxLength="16"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextCardHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints=""
+            android:hint="@string/cardholder_name"
+            android:inputType="text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextExpiryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="@string/expiry_date_mm_yy"
+            android:hint="@string/expiry_date_mm_yy"
+            android:inputType="date"
+            android:maxLength="5"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextCVV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="@string/cvv"
+            android:hint="@string/cvv"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="@string/amount"
+            android:hint="@string/amount"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="20sp" />
+
+
+
+        <Button
+            android:id="@+id/btnTestWalletData"
+            android:layout_width="291dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/testdata" />
+
+
+        <Button
+            android:id="@+id/btnSubmitWalletData"
+            android:layout_width="291dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/submit" />
+
+    </LinearLayout>
+
+</LinearLayout>

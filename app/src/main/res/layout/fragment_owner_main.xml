@@ -108,20 +108,11 @@
             android:text="@string/regBtn" />
 
         <Button
-            android:id="@+id/logoutBtnDriver"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:text="@string/txtlogout" />
-
-        <Button
             android:id="@+id/buttonTestValue"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="5dp"
-            android:text="Button" />
+            android:text="TestData" />
 
     </LinearLayout>
 </ScrollView>
