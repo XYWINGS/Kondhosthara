@@ -17,6 +17,15 @@
         android:gravity="center"
         android:text="@string/view_the_fleet" />
 
+
+    <Button
+        android:id="@+id/viewEarnsOwnerProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/view_earnings" />
+
     <Button
         android:id="@+id/buttonLogoutOwnerMain"
         android:layout_width="match_parent"

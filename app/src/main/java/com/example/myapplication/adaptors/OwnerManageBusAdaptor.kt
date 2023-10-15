@@ -19,7 +19,6 @@ class OwnerManageBusAdaptor (private val busList:MutableList<Bus>): RecyclerView
 
     private val colors = arrayOf("#E1BEE7","#D1C4E9", "#C5CAE9", "#BBDEFB", "#B3E5FC", "#B2EBF2", "#B2DFDB", "#C8E6C9")
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
         val busIDText: TextView = itemView.findViewById(R.id.busIDTextViewManageBusOwner)
         val busNameText : TextView = itemView.findViewById(R.id.busNameTextViewManageBusOwner)
         val routeIDText : TextView = itemView.findViewById(R.id.routeIDTextViewManageBusOwner)

@@ -21,6 +21,7 @@ import com.example.myapplication.OwnerActivity
 import com.example.myapplication.PassengerHomeActivity
 import com.example.myapplication.R
 import com.example.myapplication.DriverMapsActivity
+import com.example.myapplication.FinanceMainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -169,6 +170,12 @@ class LoginFragment : Fragment() {
                                 it.startActivity(intent)
                                 it.finish()
                             }
+                        }
+                    }else if (userType=="Finance"){
+                        activity?.let {
+                            val intent = Intent(it, FinanceMainActivity::class.java)
+                            it.startActivity(intent)
+                            it.finish()
                         }
                     }
                 }else{

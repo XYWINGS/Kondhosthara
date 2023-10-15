@@ -32,6 +32,13 @@ class OwnerProfileFragment : Fragment() {
         val dltAccBtn = view.findViewById<Button>(R.id.buttonDeleteAccountOwner)
         val logOutBtn =  view.findViewById<Button>(R.id.buttonLogoutOwnerMain)
         val viewFleetBtn = view.findViewById<Button>(R.id.viewFleetOwner)
+        val viewEarnBtn = view.findViewById<Button>(R.id.viewEarnsOwnerProfile)
+
+        viewEarnBtn.setOnClickListener {
+            val transaction =  parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.ownerFragmentContainerView, OwnerViewRevenueFragment())
+            transaction.commit()
+        }
 
         logOutBtn.setOnClickListener {
             Firebase.auth.signOut()

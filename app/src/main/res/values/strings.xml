@@ -100,5 +100,12 @@
     <string name="card_number">Card Number</string>
     <string name="testdata">TESTDATA</string>
     <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="earns">earns</string>
+    <string name="passcount">passCount</string>
+    <string name="ownerid">ownerID</string>
+    <string name="view_earnings">View Earnings</string>
+    <string name="go_to_payment">Go to Payment</string>
+    <string name="comisview">comisView</string>
 
 </resources>
