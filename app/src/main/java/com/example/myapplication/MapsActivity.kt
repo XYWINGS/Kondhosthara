@@ -76,6 +76,10 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var ownerID: String
     private  var busData : DataSnapshot ? = null
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -132,13 +136,13 @@ class MapsActivity :AppCompatActivity(),
         getUserData()
     }
 
-    fun getCurrentDateTimeSnapshot(): String {
+    private fun getCurrentDateTimeSnapshot(): String {
         val currentDateTime = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return currentDateTime.format(formatter)
     }
 
-    fun getCurrentDateSnapshot(): String {
+    private fun getCurrentDateSnapshot(): String {
         val currentDateTime = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return currentDateTime.format(formatter)
