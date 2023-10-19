@@ -1,11 +1,10 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Kondhosthara</string>
     <string name="title_activity_maps">KONDOSTHARA</string>
     <string name="getLoc">Get Location</string>
     <string name="conBtn">CalculateRoute</string>
     <string name="qrGen">Generate QR Code</string>
     <string name="readQR">Read QR Code</string>
-    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>

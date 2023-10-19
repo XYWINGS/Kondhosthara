@@ -62,7 +62,7 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val journeyLocations: MutableList<Location> = mutableListOf()
     private var totalDistance = 0.0
     private var startTime = 0
-    private var endTime = 0
+   // private var endTime = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
