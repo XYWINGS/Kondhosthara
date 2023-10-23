@@ -35,7 +35,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
+            android:value="ask me for the key" />
 
         <activity
             android:name=".OwnerBusViewMap"
