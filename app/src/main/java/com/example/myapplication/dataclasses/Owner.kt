@@ -8,6 +8,5 @@ data class Owner(
     val address:String? = null,
     val nic:String? = null,
     val type:String? = null,
-    var buses: List<Bus>? = null,
-    var drivers : List<Driver> ? = null
+    val passID: String ?=null,
 )
