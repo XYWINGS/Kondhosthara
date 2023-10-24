@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".FinanceHomeActivity"
+    android:layout_margin="10dp"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/goToFinanceMainBtnFina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/go_to_payments" />
+
+    <Button
+        android:id="@+id/goToHistoryBtnFina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/payment_history" />
+
+    <Button
+        android:id="@+id/goToOwnerDataBtnFina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/owner_details" />
+
+
+    <Button
+        android:id="@+id/logoutBtnfinance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/logout" />
+
+
+
+</LinearLayout>

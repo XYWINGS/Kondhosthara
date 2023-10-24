@@ -27,6 +27,15 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".FinanceViewOwnersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinanceViewHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinanceHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinanceMainActivity"
             android:exported="false" />
         <activity
