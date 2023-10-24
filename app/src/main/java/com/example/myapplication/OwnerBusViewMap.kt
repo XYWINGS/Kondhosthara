@@ -77,20 +77,34 @@ class OwnerBusViewMap : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun markerPrinter() {
 
-        val crntLat = 7.9
-        val crntLong = 80.0
         clearMarkers()
         busDataList.forEach { busSnapshot ->
 
-            val driverName = busSnapshot.child("driverName").value.toString()
+            var driverName = busSnapshot.child("driverName").value.toString()
             val crntLat = busSnapshot.child("currentLocation").child("latitude").value
             val crntLong = busSnapshot.child("currentLocation").child("longitude").value
             val busLocation = LatLng(crntLat as Double, crntLong as Double)
             val busID = busSnapshot.key.toString()
 
-            val seatsLeft  =   Integer.parseInt(busSnapshot.child("seatCount").value.toString()) -  Integer.parseInt(
-                busSnapshot.child("passngrCount").value.toString()
-            )
+            val sCount = busSnapshot.child("seatCount").value.toString()
+            val pCount = busSnapshot.child("passngrCount").value.toString()
+
+            val seatCount : Int
+            val passCount : Int
+
+            if (sCount.isNullOrEmpty() || pCount.isNullOrEmpty()){
+                seatCount = 50
+                passCount = 0
+            }else{
+                seatCount =  Integer.parseInt(sCount)
+                passCount =   Integer.parseInt(pCount)
+            }
+
+            val seatsLeft  = seatCount - passCount
+
+            if (driverName.isNullOrEmpty()){
+                driverName = "No Driver"
+            }
 
             val newMarker = mMap.addMarker(MarkerOptions()
                 .position(busLocation)
