@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class FinaOwnerAdaptor(private val driverList:MutableList<Owner>): RecyclerView.Adapter<FinaOwnerAdaptor.ViewHolder>() {
+class FinaOwnerAdaptor(private val owners:MutableList<Owner>): RecyclerView.Adapter<FinaOwnerAdaptor.ViewHolder>() {
 
     private val colors = arrayOf("#E1BEE7","#D1C4E9", "#C5CAE9", "#BBDEFB", "#B3E5FC", "#B2EBF2", "#B2DFDB", "#C8E6C9")
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -30,10 +30,11 @@ class FinaOwnerAdaptor(private val driverList:MutableList<Owner>): RecyclerView.
         val revokeAccessBtn : Button = itemView.findViewById(R.id.finaRevokeAccessOwnerBtn)
         val nicText : TextView = itemView.findViewById(R.id.finaViewOwnerNIC)
         val phoneText : TextView = itemView.findViewById(R.id.finaViewOwnerPhone)
+        val permText : TextView = itemView.findViewById(R.id.finaViewOwnerPerm)
     }
 
     override fun getItemCount(): Int {
-        return driverList.size
+        return owners.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,10 +46,9 @@ class FinaOwnerAdaptor(private val driverList:MutableList<Owner>): RecyclerView.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val color = colors[position % colors.size]
-        val record =driverList[position]
+        val record =owners[position]
         holder.layout.setBackgroundColor(Color.parseColor(color))
-
-        var isDelete = false
+        var permGrated = true
 
         holder.nameText.text ="Owner Name : ${record.name}"
         holder.uIDText.text = "UID : ${record.uid} "
@@ -56,31 +56,35 @@ class FinaOwnerAdaptor(private val driverList:MutableList<Owner>): RecyclerView.
         holder.nicText.text = "NIC No : " + record.nic
         holder.phoneText.text = "Phone No : " + record.phone
 
-        val permStat =  record.pas.toString()
-        if (permStat=="Granted"){
-            holder.deleteRecordBtn.text = "Revoke Login Permissions"
-        }else if (permStat=="Revoked"){
-            holder.deleteRecordBtn.text = "Grant Login Permissions"
+        val permStat : String ?=  record.passID.toString()
+
+        if (permStat.isNullOrEmpty()){
+            holder.revokeAccessBtn.text = "Revoke Login Permissions"
+            holder.permText.text = "Permission Status : Granted"
+        }else{
+            holder.revokeAccessBtn.text = "Grant Login Permissions"
+            holder.permText.text = "Permission Status : Revoked"
+            permGrated = false
         }
-        holder.permText.text = "Permission Status :  $permStat"
 
-        holder.deleteRecordBtn.setOnClickListener {
 
-            holder.deleteRecordBtn.text = "Are you sure?"
-            holder.deleteRecordBtn.setOnClickListener {
+
+        holder.revokeAccessBtn.setOnClickListener {
+
+            holder.revokeAccessBtn.text = "Are you sure?"
+            holder.revokeAccessBtn.setOnClickListener {
 
                 var updates = hashMapOf<String, String>()
                 val userReference =
                     FirebaseDatabase.getInstance().reference.child("Users").child(record.uid!!)
 
-                if (permStat == "Granted") {
+                if (permGrated){
                     updates = hashMapOf(
-                        "permission" to "Revoked",
+                        "passID" to "Revoked",
                     )
-
-                } else if (permStat == "Revoked") {
+                }else{
                     updates = hashMapOf(
-                        "permission" to "Granted",
+                        "passID" to "",
                     )
                 }
 
@@ -90,11 +94,11 @@ class FinaOwnerAdaptor(private val driverList:MutableList<Owner>): RecyclerView.
 
                             userReference.updateChildren(updates as Map<String, String>)
                                 .addOnSuccessListener {
-                                    driverList.remove(record)
+                                    owners.remove(record)
                                     //notifyDataSetChanged()
                                     Toast.makeText(
                                         holder.itemView.context,
-                                        "Driver Access Changed",
+                                        "Owner Access Changed",
                                         Toast.LENGTH_LONG
                                     ).show()
 
