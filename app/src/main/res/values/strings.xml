@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Kondhosthara</string>
-    <string name="title_activity_maps">KONDOSTHARA</string>
+    <string name="title_activity_maps">Kondhosthara</string>
     <string name="getLoc">Get Location</string>
     <string name="conBtn">CalculateRoute</string>
     <string name="qrGen">Generate QR Code</string>
