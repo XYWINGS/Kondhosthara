@@ -81,40 +81,58 @@ class OwnerBusViewMap : AppCompatActivity(), OnMapReadyCallback {
         busDataList.forEach { busSnapshot ->
 
             var driverName = busSnapshot.child("driverName").value.toString()
-            val crntLat = busSnapshot.child("currentLocation").child("latitude").value
-            val crntLong = busSnapshot.child("currentLocation").child("longitude").value
-            val busLocation = LatLng(crntLat as Double, crntLong as Double)
-            val busID = busSnapshot.key.toString()
 
-            val sCount = busSnapshot.child("seatCount").value.toString()
-            val pCount = busSnapshot.child("passngrCount").value.toString()
+            val currentLocationSnapshot = busSnapshot.child("currentLocation")
+            val busLocation: LatLng
 
-            val seatCount : Int
-            val passCount : Int
+            if (currentLocationSnapshot.hasChild("latitude") && currentLocationSnapshot.hasChild("longitude")) {
+                val crntLat = currentLocationSnapshot.child("latitude").value as? Double
+                val crntLong = currentLocationSnapshot.child("longitude").value as? Double
 
-            if (sCount.isNullOrEmpty() || pCount.isNullOrEmpty()){
-                seatCount = 50
-                passCount = 0
-            }else{
-                seatCount =  Integer.parseInt(sCount)
-                passCount =   Integer.parseInt(pCount)
+                if (crntLat != null && crntLong != null) {
+                    busLocation = LatLng(crntLat, crntLong)
+
+                    val busID = busSnapshot.key.toString()
+
+                    Log.d("debug", "$busDataList")
+                    Log.d("debug", "$crntLat  adn $crntLong")
+
+                    val sCount = busSnapshot.child("seatCount").value.toString()
+                    val pCount = busSnapshot.child("passngrCount").value.toString()
+
+                    val seatCount: Int
+                    val passCount: Int
+
+                    if (sCount.isNullOrEmpty() || pCount.isNullOrEmpty()) {
+                        seatCount = 50
+                        passCount = 0
+                    } else {
+                        seatCount = Integer.parseInt(sCount)
+                        passCount = Integer.parseInt(pCount)
+                    }
+
+                    val seatsLeft = seatCount - passCount
+
+                    if (driverName.isNullOrEmpty()) {
+                        driverName = "No Driver"
+                    }
+
+                    val newMarker = mMap.addMarker(
+                        MarkerOptions()
+                            .position(busLocation)
+                            .title("Bus ID : $busID")
+                            .snippet("Driver: $driverName Seats Left: $seatsLeft")
+                    )
+
+                    if (newMarker != null) {
+                        busMarkersList.add(newMarker)
+                    }
+
+                } else {
+                    Toast.makeText(this@OwnerBusViewMap, "No Bus Data", Toast.LENGTH_SHORT).show()
+                }
+
             }
-
-            val seatsLeft  = seatCount - passCount
-
-            if (driverName.isNullOrEmpty()){
-                driverName = "No Driver"
-            }
-
-            val newMarker = mMap.addMarker(MarkerOptions()
-                .position(busLocation)
-                .title("Bus ID : $busID")
-                .snippet("Driver: $driverName Seats Left: $seatsLeft"))
-
-            if (newMarker != null) {
-                busMarkersList.add(newMarker)
-            }
-
         }
     }
 
