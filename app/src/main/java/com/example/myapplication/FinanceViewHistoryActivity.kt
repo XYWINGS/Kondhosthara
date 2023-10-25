@@ -1,39 +1,31 @@
 package com.example.myapplication
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adaptors.FinanceEarnAdaptor
 import com.example.myapplication.dataclasses.BusEarn
-import com.example.myapplication.dataclasses.FlattenEarnRecord
 import com.example.myapplication.dataclasses.GroupedOwnerData
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import java.lang.Integer.parseInt
 
+class FinanceViewHistoryActivity : AppCompatActivity() {
 
-class FinanceMainActivity : AppCompatActivity() {
     private  var earnList : MutableList<BusEarn> = mutableListOf()
     private lateinit var earnAdaptor : FinanceEarnAdaptor
     private lateinit var recyclerView: RecyclerView
     private lateinit var allBusEarnData : DataSnapshot
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_finance_main)
+        setContentView(R.layout.activity_finance_view_history)
 
-        recyclerView = findViewById(R.id.financeDataViewRecView)
-        recyclerView.layoutManager = LinearLayoutManager(this@FinanceMainActivity)
+        recyclerView = findViewById(R.id.financeViewHistoryRecView)
+        recyclerView.layoutManager = LinearLayoutManager(this@FinanceViewHistoryActivity)
 
         getEarnData { it1 ->
             if (it1){
@@ -51,8 +43,6 @@ class FinanceMainActivity : AppCompatActivity() {
             }
         }
 
-
-
     }
 
     private fun getEarnData(callback: (Boolean) -> Unit) {
@@ -69,7 +59,7 @@ class FinanceMainActivity : AppCompatActivity() {
                         for (busSnapshot in ownerSnapshot.children) {
                             for (dateSnapshot in busSnapshot.children) {
                                 val isDone : Boolean = dateSnapshot.child("done").value as Boolean
-                                if (!isDone){
+                                if (isDone){
                                     dateSnapshot.getValue(BusEarn::class.java)?.let { updatedList.add(it) }
                                 }
                             }
@@ -78,16 +68,15 @@ class FinanceMainActivity : AppCompatActivity() {
                     earnList.addAll(updatedList)
                     callback(true)
                 } else {
-                    Toast.makeText(this@FinanceMainActivity, "No Data Found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FinanceViewHistoryActivity, "No Data Found", Toast.LENGTH_SHORT).show()
                     callback(false)
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@FinanceMainActivity, "Database Error ${databaseError.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FinanceViewHistoryActivity, "Database Error ${databaseError.message}", Toast.LENGTH_SHORT).show()
                 callback(false)
             }
         }
         earnReference.addValueEventListener(valueEventListener)
     }
-
 }

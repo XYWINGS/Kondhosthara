@@ -106,5 +106,8 @@
     <string name="view_earnings">View Earnings</string>
     <string name="go_to_payment">Go to Payment</string>
     <string name="comisview">comisView</string>
+    <string name="go_to_payments">Go to Payments</string>
+    <string name="payment_history">Payment History</string>
+    <string name="owner_details">Owner Details</string>
 
 </resources>

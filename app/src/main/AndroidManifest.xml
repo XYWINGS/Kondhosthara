@@ -27,6 +27,15 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".FinanceViewOwnersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinanceViewHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinanceHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinanceMainActivity"
             android:exported="false" />
         <activity
@@ -35,7 +44,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
+            android:value="ask me for the key" />
 
         <activity
             android:name=".OwnerBusViewMap"

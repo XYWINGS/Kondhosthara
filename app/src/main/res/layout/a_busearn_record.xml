@@ -3,10 +3,10 @@
     android:id="@+id/aBusEarnRecordLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp"
     android:layout_margin="10dp"
-    >
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/busIDTextViewEarnRecord"
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/bus_id"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/date"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -35,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/earns"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -45,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/passcount"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -55,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/comisview"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -67,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:text="@string/go_to_payment"
         android:textSize="16sp"
         android:textStyle="bold"

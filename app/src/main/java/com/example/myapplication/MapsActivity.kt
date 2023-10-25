@@ -63,7 +63,7 @@ class MapsActivity :AppCompatActivity(),
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationsRequest: LocationRequest
     private val journeyLocations: MutableList<Location> = mutableListOf()
-    private val APIKEY = "AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524"
+    private val APIKEY = "Ask_me_for_the_key"
     private lateinit var auth: FirebaseAuth
     private var hasRestarted = false
     private lateinit var textCurrentSpeed : TextView
