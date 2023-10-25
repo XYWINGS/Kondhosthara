@@ -25,6 +25,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/view_earnings" />
+    <Button
+        android:id="@+id/chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Chat" />
 
     <Button
         android:id="@+id/buttonLogoutOwnerMain"

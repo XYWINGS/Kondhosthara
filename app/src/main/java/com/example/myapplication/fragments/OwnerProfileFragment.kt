@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import com.example.myapplication.ChatActivity
 import com.example.myapplication.LoginActivity
 import com.example.myapplication.OwnerBusViewMap
 import com.example.myapplication.R
@@ -33,13 +34,22 @@ class OwnerProfileFragment : Fragment() {
         val logOutBtn =  view.findViewById<Button>(R.id.buttonLogoutOwnerMain)
         val viewFleetBtn = view.findViewById<Button>(R.id.viewFleetOwner)
         val viewEarnBtn = view.findViewById<Button>(R.id.viewEarnsOwnerProfile)
+        val chatBtn = view.findViewById<Button>(R.id.chat)
 
         viewEarnBtn.setOnClickListener {
             val transaction =  parentFragmentManager.beginTransaction()
             transaction.replace(R.id.ownerFragmentContainerView, OwnerViewRevenueFragment())
             transaction.addToBackStack(null)
+
             transaction.commit()
         }
+        chatBtn.setOnClickListener{
+            val intent = Intent(context, ChatActivity::class.java)
+
+            startActivity(intent)
+
+        }
+
 
         logOutBtn.setOnClickListener {
             Firebase.auth.signOut()
