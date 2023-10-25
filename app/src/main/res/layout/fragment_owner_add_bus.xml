@@ -19,7 +19,15 @@
         android:orientation="vertical"
         tools:context=".fragments.OwnerMainFragment">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:text="ADD NEW BUS"
+            android:textSize="30dp"
+            android:textAlignment="center"
 
+            />
         <EditText
             android:id="@+id/editTextBusName"
             android:layout_width="match_parent"
@@ -117,7 +125,7 @@
             android:id="@+id/ownerBusQRView"
             android:layout_width="match_parent"
             android:layout_height="145dp"
-            android:src="@android:drawable/ic_menu_gallery" />
+            android:src="@drawable/baseline_qr_code_scanner_24" />
 
     </LinearLayout>
 </ScrollView>

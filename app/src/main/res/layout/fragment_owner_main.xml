@@ -16,6 +16,15 @@
         android:gravity="center"
         android:orientation="vertical"
         tools:context=".fragments.OwnerMainFragment">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:text="ADD NEW DRIVER"
+            android:textSize="30dp"
+            android:textAlignment="center"
+
+            />
 
         <EditText
             android:id="@+id/editTextTextRegisterNameDriver"

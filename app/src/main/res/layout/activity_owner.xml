@@ -21,9 +21,17 @@
         android:orientation="horizontal"
         android:background="@drawable/embosed_background"
         android:elevation="4dp"
+        android:paddingLeft="20dp"
         android:layout_marginRight="6dp"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="3dp">
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/menubtn"
+            app:srcCompat="@drawable/sharp_directions_bus_24"
+            android:layout_margin="10dp"/>
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -31,29 +39,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:contentDescription="@string/menubtn"
-            app:srcCompat="@android:drawable/ic_menu_compass" />
+            app:srcCompat="@drawable/baseline_person_add_24" />
 
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/menubtn"
-            app:srcCompat="@android:drawable/ic_menu_compass"
-            android:layout_margin="10dp"/>
+
 
         <ImageButton
             android:id="@+id/imageButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/menubtn"
-            app:srcCompat="@android:drawable/ic_menu_compass"
+            app:srcCompat="@drawable/baseline_bus_alert_24"
             android:layout_margin="10dp"/>
         <ImageButton
             android:id="@+id/imageButton4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/menubtn"
-            app:srcCompat="@android:drawable/ic_menu_compass"
+            app:srcCompat="@drawable/baseline_perm_identity_24"
             android:layout_margin="10dp"/>
 
         <ImageButton
@@ -61,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/menubtn"
-            app:srcCompat="@android:drawable/ic_menu_compass"
+            app:srcCompat="@drawable/round_logout_24"
             android:layout_margin="10dp"/>
 
     </LinearLayout>
