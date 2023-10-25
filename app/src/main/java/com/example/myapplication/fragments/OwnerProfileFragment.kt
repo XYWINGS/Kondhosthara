@@ -43,6 +43,7 @@ class OwnerProfileFragment : Fragment() {
 
             transaction.commit()
         }
+
         chatBtn.setOnClickListener{
             val intent = Intent(context, ChatActivity::class.java)
 

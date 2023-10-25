@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.w3c.dom.Text
 import com.example.myapplication.fragments.ChatFragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class ChatActivity : AppCompatActivity() {
@@ -48,14 +50,16 @@ class ChatActivity : AppCompatActivity() {
             finish()
         }
 
-        chatId =  getChatId(currentUserId, otherUserId)
+
         currentUserName = "You"
         otherUserName = "Help"
         otherUserId = "xRiGfNi3ryR7wTnuRCM8RL1U1QP2"
 
-        mAuth = FirebaseAuth.getInstance()
+        mAuth = Firebase.auth
         mDbRef = FirebaseDatabase.getInstance("https://maad-bb9db-default-rtdb.asia-southeast1.firebasedatabase.app").reference
         currentUserId = mAuth.currentUser?.uid ?: ""
+
+        chatId =  getChatId(currentUserId, otherUserId)
 
         messageList = ArrayList()
         adapter = MessageAdapter(this, messageList, currentUserId)
