@@ -52,21 +52,8 @@ class FinanceHomeActivity : AppCompatActivity() {
         }
 
         chatBtn.setOnClickListener {
-            val fragment = ChatFragment()
-
-            // Dynamically create a FrameLayout to act as the container for the fragment
-            val frameLayout = FrameLayout(this)
-            frameLayout.id = View.generateViewId() // Generate a unique ID for the FrameLayout
-
-            // Add the FrameLayout to the parent view
-            val parentLayout = findViewById<LinearLayout>(R.id.financeLayout) // Replace with the ID of the parent layout in your XML
-            parentLayout.addView(frameLayout)
-
-            val fragmentManager = supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(frameLayout.id, fragment) // Use the ID of the dynamically created FrameLayout
-            transaction.addToBackStack(null) // Optional: Allows the user to navigate back to the previous fragment.
-            transaction.commit()
+            val intent = Intent(this, ChatFinActivity::class.java)
+            startActivity(intent)
         }
 
     }
