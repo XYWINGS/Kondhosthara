@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:id="@+id/chatLayout"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/message"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgUser"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:src="@drawable/profile_pic"
+        />
+
+    <TextView
+        android:id="@+id/tvChatName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:text="jhkjfh dkjfhdk jffffdhfk djhfkd fhkjkfh jfh"
+        android:maxHeight="26dp"
+        android:maxWidth="200dp"
+        android:textColor="@color/white"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/tvRecMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvChatName"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="2dp"
+        android:maxWidth="250dp"
+        android:maxHeight="26dp"
+        android:text="skdjlskjdls kjsld ksjl fffskdjsl ksjl skjds ksj"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+
+
+        />
+    <TextView
+        android:id="@+id/tvRecTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="3.44PM"
+        android:textColor="@color/white"
+        android:layout_alignParentEnd="true"
+        android:textSize="17sp"
+        />
+    <TextView
+        android:id="@+id/tvMsgCount"
+        android:layout_below="@+id/tvRecTime"
+        android:layout_alignParentEnd="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/red"
+        android:background="@drawable/circle"
+        />
+
+</RelativeLayout>

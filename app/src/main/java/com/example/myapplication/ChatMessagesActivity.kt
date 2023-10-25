@@ -16,7 +16,7 @@ import org.w3c.dom.Text
 import com.example.myapplication.fragments.ChatFragment
 
 
-class ChatActivity : AppCompatActivity() {
+class ChatMessagesActivity : AppCompatActivity() {
 
     lateinit var mAuth: FirebaseAuth
     lateinit var mDbRef: DatabaseReference
@@ -48,10 +48,10 @@ class ChatActivity : AppCompatActivity() {
             finish()
         }
 
-        chatId =  getChatId(currentUserId, otherUserId)
-        currentUserName = "You"
-        otherUserName = "Help"
-        otherUserId = "xRiGfNi3ryR7wTnuRCM8RL1U1QP2"
+        chatId = intent.getStringExtra("chatId") ?: ""
+        currentUserName = intent.getStringExtra("currentUserName") ?: ""
+        otherUserName = intent.getStringExtra("otherUserName") ?: ""
+        otherUserId = intent.getStringExtra("otherUserId") ?: ""
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance("https://maad-bb9db-default-rtdb.asia-southeast1.firebasedatabase.app").reference
@@ -122,14 +122,6 @@ class ChatActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
 
-    }
-
-    private fun getChatId(currentUserId: String, otherUserId: String): String {
-        return if (currentUserId < otherUserId) {
-            "$currentUserId-$otherUserId"
-        } else {
-            "$otherUserId-$currentUserId"
-        }
     }
 
     fun sendMessage(message: String) {

@@ -30,6 +30,9 @@
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
+            android:name=".ChatMessagesActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinanceViewOwnersActivity"
             android:exported="false" />
         <activity

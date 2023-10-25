@@ -109,5 +109,11 @@
     <string name="go_to_payments">Go to Payments</string>
     <string name="payment_history">Payment History</string>
     <string name="owner_details">Owner Details</string>
+    <string name="deleteChat">Delete Chat</string>
+    <string name="editMsg">Edit Message</string>
+    <string name="deleteMsg">Delete Message</string>
+    <string name="messages">Messages</string>
+    <string name="search">Search</string>
+    <string name="message">Your Message</string>
 
 </resources>

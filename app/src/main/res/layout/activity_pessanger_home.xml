@@ -29,11 +29,12 @@
         >
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/embosed_background"
             android:elevation="4dp"
+            android:backgroundTint="#FAF4FF"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp"
@@ -48,11 +49,12 @@
                 android:layout_margin="16dp"
                 android:contentDescription="@string/scan_qr"
                 android:src="@drawable/baseline_qr_code_scanner_24"
-                app:backgroundTint="#BB8BF3"
+                android:tint="#ffff"
+                app:backgroundTint="#9D31C3"
                 app:elevation="6dp"
                 app:fabCustomSize="90dp"
                 app:maxImageSize="56dp"
-                app:rippleColor="@color/white" />
+                app:rippleColor="@color/white"/>
 
             <TextView
                 android:id="@+id/textViewPassengerScanBus"
@@ -71,7 +73,7 @@
                 android:layout_margin="16dp"
                 android:contentDescription="@string/map"
                 android:src="@android:drawable/ic_dialog_map"
-                app:backgroundTint="#DDBFFF"
+                app:backgroundTint="#9D31C3"
                 app:elevation="6dp"
                 app:fabCustomSize="90dp"
                 app:maxImageSize="56dp"
@@ -95,7 +97,7 @@
                 android:layout_margin="16dp"
                 android:contentDescription="@string/wallet"
                 android:src="@drawable/outline_wallet_24"
-                app:backgroundTint="#D8C0F3"
+                app:backgroundTint="#9D31C3"
                 app:elevation="6dp"
                 app:fabCustomSize="90dp"
                 app:maxImageSize="56dp"
@@ -119,7 +121,7 @@
                 android:layout_margin="16dp"
                 android:contentDescription="@string/logout"
                 android:src="@drawable/baseline_perm_identity_24"
-                app:backgroundTint="#ECDDFD"
+                app:backgroundTint="#9D31C3"
                 app:elevation="6dp"
                 app:fabCustomSize="90dp"
                 app:maxImageSize="56dp"
@@ -143,7 +145,7 @@
                 android:layout_margin="16dp"
                 android:contentDescription="@string/logout"
                 android:src="@drawable/baseline_logout_24"
-                app:backgroundTint="#ECDDFD"
+                app:backgroundTint="#9D31C3"
                 app:elevation="6dp"
                 app:fabCustomSize="90dp"
                 app:maxImageSize="56dp"
