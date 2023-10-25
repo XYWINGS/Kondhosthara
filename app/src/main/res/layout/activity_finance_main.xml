@@ -9,6 +9,14 @@
     android:layout_margin="10dp"
     android:padding="3dp">
 
+    <Button
+        android:id="@+id/logoutBtnfinance"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="center"
+        android:text="@string/logout" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/financeDataViewRecView"
         android:layout_width="match_parent"
