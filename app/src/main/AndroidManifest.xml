@@ -44,10 +44,9 @@
         <activity
             android:name=".PessengerWalletActivity"
             android:exported="false" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="ask me for the key" />
+            android:value="AIzaSyBtydB5hJ7sw4uFbMQOINK9N-5SCObh524" />
 
         <activity
             android:name=".OwnerBusViewMap"

@@ -38,16 +38,17 @@ class FinanceMainActivity : AppCompatActivity() {
         getEarnData { it1 ->
             if (it1){
 
-                val groupedData: Map<String, List<BusEarn>> =  earnList.groupBy { it.ownerID!! }
-                val groupedOwnerDataList = mutableListOf<GroupedOwnerData>()
-                for ((ownerId, busDataList) in groupedData) {
-                    val groupedOwnerData = GroupedOwnerData(ownerId, busDataList)
-                    groupedOwnerDataList.add(groupedOwnerData)
+                if (!earnList.isNullOrEmpty()) {
+                    val groupedData: Map<String, List<BusEarn>> = earnList.groupBy { it.ownerID!! }
+                    val groupedOwnerDataList = mutableListOf<GroupedOwnerData>()
+                    for ((ownerId, busDataList) in groupedData) {
+                        val groupedOwnerData = GroupedOwnerData(ownerId, busDataList)
+                        groupedOwnerDataList.add(groupedOwnerData)
+                    }
+                    earnAdaptor = FinanceEarnAdaptor(groupedData)
+                    recyclerView.adapter = earnAdaptor
+                    earnAdaptor.notifyDataSetChanged()
                 }
-                earnAdaptor = FinanceEarnAdaptor(groupedData)
-                recyclerView.adapter =earnAdaptor
-                earnAdaptor.notifyDataSetChanged()
-
             }
         }
 
