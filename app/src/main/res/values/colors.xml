@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#D50000</color>
+    <color name="white1">#E4E4E4</color>
+    <color name="purple_250">#EEE2FF</color>
+    <color name="purple_300">#9941FF</color>
 </resources>
 
 <!--<color name="purple_200">#FFBB86FC</color>-->

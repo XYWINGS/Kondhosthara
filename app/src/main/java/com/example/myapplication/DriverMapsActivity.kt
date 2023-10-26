@@ -481,11 +481,6 @@ class DriverMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     callback(true)
 
                 } else {
-                    Toast.makeText(
-                        this@DriverMapsActivity,
-                        "Error Occurred. Try Again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     callback(false)
                 }
             }

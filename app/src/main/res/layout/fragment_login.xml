@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo__1_"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:scaleType="centerCrop"/>
+<LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,75 +18,76 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".fragments.LoginFragment"
-    android:background="@drawable/embosed_background"
-    android:elevation="4dp"
-    android:layout_marginLeft="3dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginRight="6dp"
-    android:layout_marginBottom="0dp"
-    android:padding="4dp">
+    android:background="@drawable/gradient_background"
+    android:elevation="8dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="200dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:padding="16dp">
+
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edittext_background"
         android:autofillHints="@string/hintemail"
-        android:ems="10"
         android:gravity="center"
         android:hint="@string/hintemail"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="#FFFFFF" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edittext_background"
         android:autofillHints="@string/hintpassword"
-        android:ems="10"
         android:gravity="center"
         android:hint="@string/hintpassword"
         android:inputType="textPassword"
-        android:text="123456" />
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:text="@string/txtlogin" />
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/txtlogin"
+        android:background="@drawable/login_button_background"
+        android:textColor="#FFFFFF"
+         />
 
     <Button
         android:id="@+id/regBtn"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:gravity="center"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/purple_700"
+        android:background="@drawable/register_button_background"
+        android:textColor="#FFFFFF"
         android:text="@string/regBtn" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="28dp" />
+        android:layout_height="4dp"
+        android:layout_marginTop="12dp"
+        android:progressTint="#FF4081" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/txtacrecover"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:textColor="#FF4081"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
-
-
-
-
-
-
+</RelativeLayout>
