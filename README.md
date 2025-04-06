@@ -14,7 +14,7 @@ Key features include:
 
 - **Kotlin**
 - **Android Studio**
-- **Firebase Realtime Database**
+- **Firebase Realtime Database and Auth**
 - **Google Maps API**
 
 ---
