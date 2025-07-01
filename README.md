@@ -1,4 +1,4 @@
-```markdown
+
 # 🚌 Kondosthara — Public Transport Companion App
 
 **Kondosthara** is a mobile application designed to modernize and streamline Sri Lanka’s public transportation system. It offers a one-stop solution for passengers, bus owners, conductors, and drivers—specifically focusing on **highway buses**.
@@ -73,4 +73,3 @@ Kondosthara is still under development and is currently tailored to highway bus 
 ---
 
 Feel free to contribute or raise issues. Let’s build a smarter transport experience for Sri Lanka!
-```
